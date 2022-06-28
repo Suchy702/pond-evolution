@@ -16,4 +16,4 @@ class Fish(PondObject):
         self.energy -= FISH_ENERGY_SPOIL
 
     def find_pos_to_move(self) -> Position:
-        return self.pos.changed(randint(-1, 1), randint(-1, 1))
+        return self.pos.changed(randint(-self._speed, self._speed), randint(-self._speed, self._speed))

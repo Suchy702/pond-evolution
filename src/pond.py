@@ -30,10 +30,12 @@ class Pond:
 
     def add(self, obj: PondObject) -> None:
         if obj in self.get_spot(obj.pos):
-            raise Exception("Object already in Spot")
+            raise Exception("Object already in Spot!")
         self.get_spot(obj.pos).add(obj)
 
     def remove(self, obj: PondObject) -> None:
+        if obj not in self.get_spot(obj.pos):
+            raise Exception("Object not in Spot!")
         self.get_spot(obj.pos).remove(obj)
 
     def change_pos(self, obj: PondObject, new_pos: Position) -> None:
