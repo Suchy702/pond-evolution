@@ -1,7 +1,7 @@
 from src.pond_object import PondObject
 
 
-class PondObjectBase:
+class PondObjectDatabase:
     def __init__(self):
         self._base: dict[int, PondObject] = {}
         self._id_counter: int = 0
@@ -16,10 +16,12 @@ class PondObjectBase:
 
     def add(self, obj: PondObject) -> None:
         if obj.id in self._base:
-            raise Exception("Object already belongs to base!")
+            raise Exception("Object already in base!")
         self._id_counter += 1
         obj.set_id(self._id_counter)
         self._base[obj.id] = obj
 
     def remove(self, obj: PondObject) -> None:
+        if obj.id not in self._base:
+            raise Exception("Object not in base!")
         self._base.pop(obj.id)

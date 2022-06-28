@@ -2,14 +2,14 @@ from typing import Iterable
 from abc import ABC
 
 from src.pond import Pond
-from src.pond_object_base import PondObjectBase
+from src.pond_object_database import PondObjectDatabase
 from src.pond_object import PondObject
 
 
 class PondObjectHandler(ABC):
     def __init__(self, pond_height: int, pond_width: int):
         self._pond: Pond = Pond(pond_height, pond_width)
-        self._base: PondObjectBase = PondObjectBase()
+        self._base: PondObjectDatabase = PondObjectDatabase()
 
     @property
     def amount(self):
