@@ -14,4 +14,4 @@ class PlantHandler:
 
     def detach_algs_from_alg_makers(self) -> None:
         for alg_maker in self.alg_maker_handler.alg_makers:
-            self.alg_handler.add_many(self._make_algs_by_alg_maker(alg_maker))
+            self.alg_handler.add_all(self._make_algs_by_alg_maker(alg_maker))

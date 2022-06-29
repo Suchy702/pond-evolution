@@ -15,4 +15,4 @@ class AlgaeMakerHandler(PondObjectHandler):
         return AlgaeMaker(Position(self._pond.height-1, self._pond.random_pos().x))
 
     def plant_alg_makers(self, num_of_alg_makers: int) -> None:
-        self.add_many([self._create_random_alg_maker() for _ in range(num_of_alg_makers)])
+        self.add_all([self._create_random_alg_maker() for _ in range(num_of_alg_makers)])

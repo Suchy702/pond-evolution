@@ -27,10 +27,10 @@ class PondObjectHandler(ABC):
         self._base.remove(obj)
         self._pond.remove(obj)
 
-    def add_many(self, objects: Iterable[PondObject]):
+    def add_all(self, objects: Iterable[PondObject]):
         for obj in objects:
             self._add(obj)
 
-    def remove_many(self, objects: Iterable[PondObject]):
+    def remove_all(self, objects: Iterable[PondObject]):
         for obj in objects:
             self._remove(obj)

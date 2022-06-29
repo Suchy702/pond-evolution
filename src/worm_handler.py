@@ -17,7 +17,7 @@ class WormHandler(PondObjectHandler):
         return Worm(WORM_ENERGY_VAL, Position(0, self._pond.random_pos().x), self._pond.dimensions)
 
     def send_worms(self, num_of_worms: int) -> None:
-        self.add_many([self._create_random_worm() for _ in range(num_of_worms)])
+        self.add_all([self._create_random_worm() for _ in range(num_of_worms)])
 
     def move_worms(self) -> None:
         for worm in self.worms:

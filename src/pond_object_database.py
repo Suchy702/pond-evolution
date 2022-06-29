@@ -18,7 +18,7 @@ class PondObjectDatabase:
         if obj.id in self._base:
             raise Exception("Object already in base!")
         self._id_counter += 1
-        obj.set_id(self._id_counter)
+        obj.id = self._id_counter
         self._base[obj.id] = obj
 
     def remove(self, obj: PondObject) -> None:

@@ -16,10 +16,11 @@ class PondObject(ABC):
     def id(self):
         return self._id
 
-    def set_id(self, id_):
+    @id.setter
+    def id(self, id_):
         if self._id != -1:
-            raise Exception("Id already setted!")
+            raise Exception("ID already set!")
         self._id = id_
 
     def __str__(self):
-        return self._kind + str(self._id)
+        return f'{self._kind}{self._id}'
