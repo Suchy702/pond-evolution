@@ -6,6 +6,7 @@ from src.position import Position
 POND_HEIGHT = 5
 POND_WIDTH = 10
 
+
 class Engine:
     def __init__(self):
         self.fish_h: FishHandler = FishHandler(POND_HEIGHT, POND_WIDTH)
@@ -14,7 +15,7 @@ class Engine:
 
     @property
     def all_objects(self):
-        return self.fish_h.fishes+self.worm_h.worms+self.plant_h.plants
+        return self.fish_h.fishes + self.worm_h.worms + self.plant_h.plants
 
     def find_pos_where_eat(self) -> list[Position]:
         pos_where_eat = []
@@ -34,13 +35,13 @@ class Engine:
         for pos in pos_where_eat:
             self.eat_at_one_pos(pos)
 
+    # beta function for testing
     def preparations(self) -> None:
         self.fish_h.add_random_fishes(5)
         self.worm_h.send_worms(5)
         self.plant_h.alg_maker_handler.plant_alg_makers(5)
 
     def show_pond(self) -> None:
-        self.preparations()
         board: list[list[list[str]]] = [[[] for _ in range(POND_WIDTH)] for _ in range(POND_HEIGHT)]
         for obj in self.all_objects:
             board[obj.pos.y][obj.pos.x].append(str(obj))
