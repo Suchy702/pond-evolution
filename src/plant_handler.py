@@ -9,6 +9,10 @@ class PlantHandler:
         self.alg_handler: AlgaeHandler = AlgaeHandler(pond_height, pond_width)
         self.alg_maker_handler: AlgaeMakerHandler = AlgaeMakerHandler(pond_height, pond_width)
 
+    @property
+    def plants(self):
+        return self.alg_handler.algs + self.alg_maker_handler.alg_makers
+
     def _make_algs_by_alg_maker(self, alg_maker: AlgaeMaker) -> list[Algae]:
         return [self.alg_handler.create_alg(alg_maker.pos) for _ in range(alg_maker.created_algs_amonut)]
 
