@@ -1,7 +1,7 @@
 from src.worm_handler import WormHandler
 from src.plant_handler import PlantHandler
 from src.fish_handler import FishHandler
-from src.pond_object import PondObject
+
 
 POND_HEIGHT = 5
 POND_WIDTH = 10
