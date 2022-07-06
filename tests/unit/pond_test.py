@@ -46,3 +46,11 @@ def test_correct_pos(sample_pond, pos):
     assert 0 <= corr_pos.y < sample_pond.height and 0 <= corr_pos.x < sample_pond.width
 
 
+@pytest.mark.parametrize("pos", (Position(4, 1), Position(4, 0), Position(4, 3)))
+def test_is_on_the_ground_when_is_on_the_ground(sample_pond, pos):
+    assert sample_pond.is_on_the_ground(pos) is True
+
+
+@pytest.mark.parametrize("pos", (Position(0, 0), Position(1, 1), Position(2, 0)))
+def test_is_on_the_gound_when_not_on_the_ground(sample_pond, pos):
+    assert sample_pond.is_on_the_ground(pos) is False
