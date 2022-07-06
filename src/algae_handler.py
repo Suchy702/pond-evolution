@@ -20,3 +20,9 @@ class AlgaeHandler(PondObjectHandler):
         for algae in self.algs:
             self._pond.change_pos(algae, self._pond.correct_pos(algae))
 
+    def del_algs_on_surface(self) -> None:
+        to_del = []
+        for alg in self.algs:
+            if self._pond.is_on_surface(alg.pos):
+                to_del.append(alg)
+        self.remove_all(to_del)
