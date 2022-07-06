@@ -54,3 +54,8 @@ def test_is_on_the_ground_when_is_on_the_ground(sample_pond, pos):
 @pytest.mark.parametrize("pos", (Position(0, 0), Position(1, 1), Position(2, 0)))
 def test_is_on_the_gound_when_not_on_the_ground(sample_pond, pos):
     assert sample_pond.is_on_the_ground(pos) is False
+
+
+@pytest.mark.parametrize("pos", (Position(0, 0), Position(1, 1), Position(0, 4)))
+def test_is_on_surface(sample_pond, pos):
+    assert sample_pond.is_on_surface(pos) == (pos.y == 0)
