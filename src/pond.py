@@ -48,3 +48,6 @@ class Pond:
 
     def random_pos(self) -> Position:
         return Position(randint(0, self._height-1), randint(0, self._width-1))
+
+    def is_on_the_ground(self, obj: PondObject) -> bool:
+        return obj.pos.y == self.height-1
