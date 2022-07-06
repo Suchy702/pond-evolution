@@ -3,6 +3,7 @@ from random import randint
 from src.pond_object_handler import PondObjectHandler
 from src.fish import Fish
 from src.pond import Pond
+from src.position import Position
 
 FISH_MIN_SPEED = 5
 FISH_MAX_SPEED = 10

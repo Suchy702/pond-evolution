@@ -4,6 +4,7 @@ from abc import ABC
 from src.pond import Pond
 from src.pond_object_database import PondObjectDatabase
 from src.pond_object import PondObject
+from src.position import Position
 
 
 class PondObjectHandler(ABC):
@@ -18,6 +19,15 @@ class PondObjectHandler(ABC):
     @property
     def all_objects(self):
         return self._base.objects
+
+    # nie mozna ustawic zwracanego typu na set[PondObject] bo czasem zwracany jest Worm, czasem Fish i powstaje kolizja
+    # gdy wiemy ze mamy fish i chcemy uzyc jej atrybutu, jednak Pycharm podpowiada nam ze PondObject nie ma takiego
+    # atrybutu
+    def get_spot_obj(self, pos: Position):
+        return self._pond.get_spot(pos)
+
+    def remove_at_spot(self, pos: Position):
+        self.remove_all(self._pond.get_spot(pos))
 
     def _add(self, obj: PondObject) -> None:
         self._base.add(obj)

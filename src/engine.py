@@ -24,7 +24,11 @@ class Engine:
         return pos_where_eat
 
     def eat_at_one_pos(self, pos: Position) -> None:
-        pass
+        energy_val = sum(self.worm_h.get_spot_obj(pos)) + sum(self.plant_h.alg_handler.get_spot_obj(pos))
+        for fish in self.fish_h.get_spot_obj(pos):
+            fish.energy += energy_val // len(self.fish_h.get_spot_obj(pos))
+        self.worm_h.remove_at_spot(pos)
+        self.plant_h.alg_handler.remove_at_spot(pos)
 
     def feed_fish(self, pos_where_eat) -> None:
         for pos in pos_where_eat:

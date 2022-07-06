@@ -7,6 +7,7 @@ class PondObject(ABC):
         self._id: int = -1
         self._kind: str = obj_kind
         self.pos: Position = obj_pos
+        self.energy_val: int = 0
 
     @property
     def kind(self):
