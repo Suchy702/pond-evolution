@@ -34,3 +34,7 @@ class PondObjectHandler(ABC):
     def remove_all(self, objects: Iterable[PondObject]):
         for obj in objects:
             self._remove(obj)
+
+    def is_sth_at_pos(self, pos) -> bool:
+        return len(self._pond.get_spot(pos)) > 0
+
