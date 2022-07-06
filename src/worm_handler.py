@@ -22,3 +22,10 @@ class WormHandler(PondObjectHandler):
     def move_worms(self) -> None:
         for worm in self.worms:
             self._pond.change_pos(worm, self._pond.correct_pos(worm.find_pos_to_move))
+
+    def del_worms_from_the_ground(self) -> None:
+        to_del = []
+        for worm in self.worms:
+            if self._pond.is_on_the_ground(worm.pos):
+                to_del.append(worm)
+        self.remove_all(to_del)
