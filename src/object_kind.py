@@ -8,6 +8,7 @@ class ObjectKind(Enum):
     PLANT = auto()
     WORM = auto()
     MAKER = auto()
+    FAKE = auto()
 
     def __str__(self):
         return self.name
