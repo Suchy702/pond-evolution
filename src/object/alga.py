@@ -8,7 +8,7 @@ from src.position import Position
 
 class Alga(PondObject):
     def __init__(self, energy: int, pos: Position, pond_height: int):
-        super().__init__(ObjectKind.ALGAE, pos)
+        super().__init__(ObjectKind.ALGA, pos)
         self._energy: int = energy
         self._surfacing_speed: int = max(1, pond_height // ALGA_SURFACING_STEPS)
 

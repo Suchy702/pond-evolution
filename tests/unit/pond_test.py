@@ -3,7 +3,7 @@ import pytest
 from src.pond import Pond
 from src.position import Position
 
-from tests.unit.helper_with_testing import get_object
+from tests.unit.helper import get_object
 
 INF = 1_000_000_000
 

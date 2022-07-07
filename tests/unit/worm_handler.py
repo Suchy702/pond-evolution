@@ -1,7 +1,7 @@
 import pytest
 
 from src.object_handler.worm_handler import WormHandler
-from tests.unit.helper_with_testing import get_object
+from tests.unit.helper import get_object
 from src.position import Position
 
 
