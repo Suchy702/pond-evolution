@@ -1,13 +1,15 @@
 import pytest
 
+from src.object_kind import ObjectKind
 from src.pond_object_database import PondObjectDatabase
 from src.object.pond_object import PondObject
 from src.position import Position
+from tests.unit.helper import get_object
 
 
 @pytest.fixture
 def obj():
-    return PondObject('T', Position(0, 0))
+    return get_object()
 
 
 @pytest.fixture
@@ -38,14 +40,14 @@ def test_removing_obj_which_not_in_base(obj, sample_base):
 
 
 def test_id_counter_behaviour_when_adding(sample_base):
-    objects = [PondObject('T', Position(1, 1)), PondObject('F', Position(1, 1))]
+    objects = [get_object(), get_object()]
     sample_base.add(objects[0])
     sample_base.add(objects[1])
     assert sample_base._id_counter == 2
 
 
 def test_id_counter_behaviour_when_removing(sample_base):
-    objects = [PondObject('T', Position(1, 1)), PondObject('F', Position(1, 1))]
+    objects = [get_object(), get_object()]
     sample_base.add(objects[0])
     sample_base.add(objects[1])
     sample_base.remove(objects[1])

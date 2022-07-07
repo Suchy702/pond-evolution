@@ -2,6 +2,7 @@ import pytest
 
 from src.pond import Pond
 from src.position import Position
+from src.simulation_settings import SimulationSettings
 
 from tests.unit.helper import get_object
 
@@ -10,7 +11,10 @@ INF = 1_000_000_000
 
 @pytest.fixture
 def sample_pond():
-    return Pond(5, 10)
+    s = SimulationSettings()
+    s.pond_height = 5
+    s.pond_width = 10
+    return Pond(s)
 
 
 @pytest.fixture
