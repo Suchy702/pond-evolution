@@ -8,11 +8,6 @@ class PondObject(ABC):
         self._id: int = -1
         self._kind: ObjectKind = obj_kind
         self.pos: Position = obj_pos
-        self._energy: int = 0
-
-    @property
-    def energy(self):
-        return self._energy
 
     @property
     def kind(self) -> ObjectKind:

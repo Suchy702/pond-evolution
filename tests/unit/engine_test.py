@@ -33,10 +33,10 @@ def test_eat_at_one_spot(sample_engine):
     a = get_object(ObjectKind.ALGA, pos=Position(1, 1), energy_val=20)
     f1 = get_object(ObjectKind.FISH, pos=Position(1, 1))
     f2 = get_object(ObjectKind.FISH, pos=Position(1, 1))
-    f1._energy = 0
-    f2._energy = 0
+    f1.vitality = 0
+    f2.vitality = 0
     sample_engine._worm_handler.add_all([w])
     sample_engine._plant_handler.alga_handler.add_all([a])
     sample_engine._fish_handler.add_all([f1, f2])
     sample_engine._eat_at_one_spot(Position(1, 1))
-    assert f1.energy == 15 and f2.energy == 15
+    assert f1.vitality == 15 and f2.vitality == 15

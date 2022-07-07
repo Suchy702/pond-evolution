@@ -11,10 +11,10 @@ class Fish(PondObject):
         super().__init__(ObjectKind.FISH, pos)
         self._speed: int = speed
         self._size: int = size
-        self._energy: int = self._speed + self._size
+        self._vitality: int = self._speed + self._size
 
     def spoil_energy(self) -> None:
-        self._energy -= FISH_ENERGY_SPOIL_RATE
+        self._vitality -= FISH_ENERGY_SPOIL_RATE
 
     def find_pos_to_move(self) -> Position:
         return self.pos.changed(randint(-self._speed, self._speed), randint(-self._speed, self._speed))

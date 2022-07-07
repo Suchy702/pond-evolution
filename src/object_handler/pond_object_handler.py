@@ -51,13 +51,13 @@ class PondObjectHandler(ABC):
     # Nie mozna ustawic zwracanego typu na set[PondObject] bo czasem zwracany jest Worm, czasem Fish i powstaje kolizja
     # gdy wiemy ze mamy fish i chcemy uzyc jej atrybutu, jednak Pycharm podpowiada nam ze PondObject nie ma takiego
     # atrybutu
-    # TODO możemy dać set[PondObject] i wtedy trzeba będzie castować na Fish/Worm czy cokolwiek. Tak samo jak robi się to
-    #  w Javie :( Jeżeli chcemy type hinty to musimy niestety odejsć troche od pythonowosci
+    # TODO: możemy dać set[PondObject] i wtedy trzeba będzie castować na Fish/Worm czy cokolwiek. Tak samo jak robi się
+    # to w Javie :( Jeżeli chcemy type hinty to musimy niestety odejsć troche od pythonowosci
     def get_spot_obj(self, pos: Position):
         return self._pond.get_spot(pos)
 
     def get_spot_energy_val(self, pos: Position) -> int:
-        return sum([obj.energy for obj in self.get_spot_obj(pos)])
+        return sum([obj.energy_val for obj in self.get_spot_obj(pos)])
 
     # Wyrazenie listowe zeby zapobiec przekazaniu dalej referencji, co zmienialoby rozmiar setu podczas iteracji
     def remove_at_spot(self, pos: Position):
