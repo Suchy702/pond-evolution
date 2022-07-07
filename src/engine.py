@@ -36,17 +36,17 @@ class Engine:
 
     def _find_pos_where_eat(self) -> list[Position]:
         pos_where_eat = []
-        for fish in self.fish_h.fishes:
-            if self.worm_h.is_sth_at_pos(fish.pos) or self.plant_h.alg_handler.is_sth_at_pos(fish.pos):
+        for fish in self._fish_handler.objects:
+            if self._worm_handler.is_sth_at_pos(fish.pos) or self._plant_handler.alga_handler.is_sth_at_pos(fish.pos):
                 pos_where_eat.append(fish.pos)
         return pos_where_eat
 
     def _eat_at_one_spot(self, pos: Position) -> None:
-        energy_val = self.worm_h.get_spot_energy_val(pos) + self.plant_h.alg_handler.get_spot_energy_val(pos)
-        for fish in self.fish_h.get_spot_obj(pos):
-            fish.energy += energy_val // len(self.fish_h.get_spot_obj(pos))
-        self.worm_h.remove_at_spot(pos)
-        self.plant_h.alg_handler.remove_at_spot(pos)
+        energy_val = self._worm_handler.get_spot_energy_val(pos) + self._plant_handler.alga_handler.get_spot_energy_val(pos)
+        for fish in self._fish_handler.get_spot_obj(pos):
+            fish.energy += energy_val // len(self._fish_handler.get_spot_obj(pos))
+        self._worm_handler.remove_at_spot(pos)
+        self._plant_handler.alg_handler.remove_at_spot(pos)
 
     def feed_fish(self, pos_where_eat) -> None:
         self._find_pos_where_eat()
