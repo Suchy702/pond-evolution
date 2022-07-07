@@ -52,5 +52,6 @@ class Pond:
     def is_on_the_ground(self, pos: Position) -> bool:
         return pos.y == self.height-1
 
-    def is_on_surface(self, pos: Position) -> bool:
+    @staticmethod
+    def is_on_surface(pos: Position) -> bool:
         return pos.y == 0

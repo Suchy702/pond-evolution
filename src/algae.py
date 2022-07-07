@@ -10,9 +10,5 @@ class Algae(PondObject):
         self._energy_val: int = energy_val
         self._surfacing_speed: int = max(1, pond_height // ALGAE_SURFACING_SPEED_DIV)
 
-    @property
-    def energy_val(self):
-        return self._energy_val
-
     def find_pos_to_move(self) -> Position:
         return self.pos.changed(-self._surfacing_speed, 0)

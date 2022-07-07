@@ -17,25 +17,26 @@ class Engine:
     def all_objects(self):
         return self.fish_h.fishes + self.worm_h.worms + self.plant_h.plants
 
-    def find_pos_where_eat(self) -> list[Position]:
+    def _find_pos_where_eat(self) -> list[Position]:
         pos_where_eat = []
         for fish in self.fish_h.fishes:
             if self.worm_h.is_sth_at_pos(fish.pos) or self.plant_h.alg_handler.is_sth_at_pos(fish.pos):
                 pos_where_eat.append(fish.pos)
         return pos_where_eat
 
-    def eat_at_one_pos(self, pos: Position) -> None:
-        energy_val = sum(self.worm_h.get_spot_obj(pos)) + sum(self.plant_h.alg_handler.get_spot_obj(pos))
+    def _eat_at_one_spot(self, pos: Position) -> None:
+        energy_val = self.worm_h.get_spot_energy_val(pos) + self.plant_h.alg_handler.get_spot_energy_val(pos)
         for fish in self.fish_h.get_spot_obj(pos):
             fish.energy += energy_val // len(self.fish_h.get_spot_obj(pos))
         self.worm_h.remove_at_spot(pos)
         self.plant_h.alg_handler.remove_at_spot(pos)
 
     def feed_fish(self, pos_where_eat) -> None:
+        self._find_pos_where_eat()
         for pos in pos_where_eat:
-            self.eat_at_one_pos(pos)
+            self._eat_at_one_spot(pos)
 
-    # beta function for testing
+    # Beta function for testing
     def preparations(self) -> None:
         self.fish_h.add_random_fishes(5)
         self.worm_h.send_worms(5)
