@@ -1,7 +1,5 @@
 from random import randint
 
-from overrides import overrides
-
 from src.constants import FISH_ENERGY_SPOIL_RATE
 from src.object.pond_object import PondObject
 from src.object_kind import ObjectKind
@@ -18,10 +16,5 @@ class Fish(PondObject):
     def spoil_energy(self) -> None:
         self._energy -= FISH_ENERGY_SPOIL_RATE
 
-    # TODO: move to update() or new class
     def find_pos_to_move(self) -> Position:
         return self.pos.changed(randint(-self._speed, self._speed), randint(-self._speed, self._speed))
-
-    @overrides
-    def update(self) -> None:
-        pass

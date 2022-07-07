@@ -1,5 +1,3 @@
-from random import randint
-
 from src.object.pond_object import PondObject
 from src.position import Position
 from src.simulation_settings import SimulationSettings
@@ -9,7 +7,6 @@ class Pond:
     def __init__(self, settings: SimulationSettings):
         self._height: int = settings.pond_height
         self._width: int = settings.pond_width
-        # TODO: maybe dict of coordinates instead?
         self._pond: list[list[set[PondObject]]] = [[set() for _ in range(self._width)] for _ in range(self._height)]
 
     @property

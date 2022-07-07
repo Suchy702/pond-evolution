@@ -1,5 +1,3 @@
-from overrides import overrides
-
 from src.constants import ALGA_SURFACING_STEPS
 from src.object.pond_object import PondObject
 from src.object_kind import ObjectKind
@@ -16,10 +14,5 @@ class Alga(PondObject):
     def energy(self):
         return self._energy
 
-    # TODO: move to update() or new class
     def find_pos_to_move(self) -> Position:
         return self.pos.changed(-self._surfacing_speed, 0)
-
-    @overrides
-    def update(self) -> None:
-        pass

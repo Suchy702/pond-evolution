@@ -1,7 +1,5 @@
 from random import randint
 
-from overrides import overrides
-
 from src.constants import WORM_FALLING_STEPS, WORM_BOUNCE_STEPS
 from src.object.pond_object import PondObject
 from src.object_kind import ObjectKind
@@ -19,10 +17,5 @@ class Worm(PondObject):
     def energy(self):
         return self._energy
 
-    # TODO: move to update() or new class
     def find_pos_to_move(self) -> Position:
         return self.pos.changed(self._falling_speed, randint(-self._bounce_ratio, self._bounce_ratio))
-
-    @overrides
-    def update(self) -> None:
-        pass

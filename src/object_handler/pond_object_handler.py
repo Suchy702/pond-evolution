@@ -37,10 +37,6 @@ class PondObjectHandler(ABC):
         for obj in objects:
             self.remove(obj)
 
-    def update(self) -> None:
-        for obj in self.objects:
-            obj.update()
-
     def add_random(self, amount: int) -> None:
         self.add_all(self.create_random(amount))
 

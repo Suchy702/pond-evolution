@@ -1,5 +1,4 @@
 from random import randint
-from typing import Generator
 
 from overrides import overrides
 
@@ -21,7 +20,7 @@ class FishHandler(PondObjectHandler):
         size = randint(FISH_MIN_SIZE, FISH_MAX_SIZE)
         return Fish(speed, size, self._pond.random_position())
 
-    # TODO: move to update() or new class or make private
+    # TODO Pycharm wyrzuca blad, PondObject nie ma metody find_pos_to_move, typehinty przeszkadzaja
     def move_fishes(self, pond: Pond) -> None:
         for fish in self._object_database.objects:
             pond.change_position(fish, pond.trim_position(fish.find_pos_to_move()))
