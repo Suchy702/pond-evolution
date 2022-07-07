@@ -31,4 +31,3 @@ class FishHandler(PondObjectHandler):
     def add_random_fishes(self, num_of_fishes: int) -> None:
         for _ in range(num_of_fishes):
             self._add(self._create_random_fish())
-
