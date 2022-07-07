@@ -1,9 +1,6 @@
 import pytest
 
-from src.object_kind import ObjectKind
 from src.pond_object_database import PondObjectDatabase
-from src.object.pond_object import PondObject
-from src.position import Position
 from tests.unit.helper import get_object
 
 

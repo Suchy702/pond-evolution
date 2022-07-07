@@ -10,11 +10,16 @@ INF = 1_000_000_000
 
 
 @pytest.fixture
-def sample_pond():
+def settings():
     s = SimulationSettings()
-    s.pond_height = 5
     s.pond_width = 10
-    return Pond(s)
+    s.pond_height = 5
+    return s
+
+
+@pytest.fixture
+def sample_pond(settings):
+    return Pond(settings)
 
 
 @pytest.fixture
@@ -51,12 +56,12 @@ def test_correct_pos(sample_pond, pos):
 
 
 @pytest.mark.parametrize("pos", (Position(4, 1), Position(4, 0), Position(4, 3)))
-def test_is_on_the_ground_when_is_on_the_ground(sample_pond, pos):
+def test_is_on_ground_when_is_on_ground(sample_pond, pos):
     assert sample_pond.is_on_ground(pos) is True
 
 
 @pytest.mark.parametrize("pos", (Position(0, 0), Position(1, 1), Position(2, 0)))
-def test_is_on_the_gound_when_not_on_the_ground(sample_pond, pos):
+def test_is_on_ground_when_not_on_the_ground(sample_pond, pos):
     assert sample_pond.is_on_ground(pos) is False
 
 

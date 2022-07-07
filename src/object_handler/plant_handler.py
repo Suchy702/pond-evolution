@@ -1,6 +1,6 @@
 from src.object.pond_object import PondObject
-from src.object_handler.alga_handler import AlgaeHandler
-from src.object_handler.alga_maker_handler import AlgaeMakerHandler
+from src.object_handler.alga_handler import AlgaHandler
+from src.object_handler.alga_maker_handler import AlgaMakerHandler
 from src.object.alga_maker import AlgaMaker
 from src.object.alga import Alga
 from src.object_handler.pond_object_handler import PondObjectHandler
@@ -10,8 +10,8 @@ from src.simulation_settings import SimulationSettings
 class PlantHandler(PondObjectHandler):
     def __init__(self, settings: SimulationSettings):
         super().__init__(settings)
-        self.alga_handler: AlgaeHandler = AlgaeHandler(settings)
-        self.alga_maker_handler: AlgaeMakerHandler = AlgaeMakerHandler(settings)
+        self.alga_handler: AlgaHandler = AlgaHandler(settings)
+        self.alga_maker_handler: AlgaMakerHandler = AlgaMakerHandler(settings)
 
     def create_random_single(self) -> PondObject:
         return self.alga_maker_handler.create_random_single()

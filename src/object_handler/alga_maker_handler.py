@@ -7,7 +7,7 @@ from src.position import Position
 from src.simulation_settings import SimulationSettings
 
 
-class AlgaeMakerHandler(PondObjectHandler):
+class AlgaMakerHandler(PondObjectHandler):
     def __init__(self, settings: SimulationSettings):
         super().__init__(settings)
 

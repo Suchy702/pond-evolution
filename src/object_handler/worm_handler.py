@@ -24,7 +24,7 @@ class WormHandler(PondObjectHandler):
             self._pond.change_position(worm, self._pond.trim_position(worm.find_pos_to_move()))
 
     # TODO: move to update() or new class or make private
-    def del_worms_from_the_ground(self) -> None:
+    def del_worms_from_ground(self) -> None:
         to_del = []
         for worm in self.objects:
             if self._pond.is_on_ground(worm.pos):
