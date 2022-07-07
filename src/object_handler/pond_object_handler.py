@@ -55,6 +55,8 @@ class PondObjectHandler(ABC):
     # Nie mozna ustawic zwracanego typu na set[PondObject] bo czasem zwracany jest Worm, czasem Fish i powstaje kolizja
     # gdy wiemy ze mamy fish i chcemy uzyc jej atrybutu, jednak Pycharm podpowiada nam ze PondObject nie ma takiego
     # atrybutu
+    # TODO możemy dać set[PondObject] i wtedy trzeba będzie castować na Fish/Worm czy cokolwiek. Tak samo jak robi się to
+    #  w Javie :( Jeżeli chcemy type hinty to musimy niestety odejsć troche od pythonowosci
     def get_spot_obj(self, pos: Position):
         return self._pond.get_spot(pos)
 
