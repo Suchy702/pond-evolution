@@ -6,7 +6,7 @@ from src.object.alga import Alga
 from src.object_handler.pond_object_handler import PondObjectHandler
 from src.simulation_settings import SimulationSettings
 
-
+# TODO Ta klasa posiada własne database/pond ale nic z nimi nie robi. TO NIE JEST SOLID!
 class PlantHandler(PondObjectHandler):
     def __init__(self, settings: SimulationSettings):
         super().__init__(settings)

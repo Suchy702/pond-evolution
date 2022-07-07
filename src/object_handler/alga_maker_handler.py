@@ -6,7 +6,7 @@ from src.object_handler.pond_object_handler import PondObjectHandler
 from src.position import Position
 from src.simulation_settings import SimulationSettings
 
-
+# TODO ta klasa troche nic nie robi. Może ją zmergować z PlantHandler?
 class AlgaMakerHandler(PondObjectHandler):
     def __init__(self, settings: SimulationSettings):
         super().__init__(settings)

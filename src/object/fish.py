@@ -15,10 +15,6 @@ class Fish(PondObject):
         self._size: int = size
         self._energy: int = self._speed + self._size
 
-    @property
-    def energy(self) -> int:
-        return self._energy
-
     def spoil_energy(self) -> None:
         self._energy -= FISH_ENERGY_SPOIL_RATE
 

@@ -8,7 +8,7 @@ class PondObject(ABC):
         self._id: int = -1
         self._kind: ObjectKind = obj_kind
         self.pos: Position = obj_pos
-        self._energy: int = 0
+        self._energy: int = 0  # TODO czemu tu jest energy?
 
     @property
     def energy(self):
