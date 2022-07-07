@@ -1,6 +1,6 @@
 import pytest
 
-from src.worm_handler import WormHandler
+from src.object_handler.worm_handler import WormHandler
 from tests.unit.helper_with_testing import get_object
 from src.position import Position
 
@@ -17,4 +17,4 @@ def test_del_worms_from_the_ground(sample_worm_h):
     w33 = get_object('W', pos=Position(4, 2))
     sample_worm_h.add_all([w1, w2, w3, w33])
     sample_worm_h.del_worms_from_the_ground()
-    assert sample_worm_h._base.size == 1
+    assert sample_worm_h._object_database.size == 1

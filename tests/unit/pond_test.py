@@ -42,18 +42,18 @@ def test_removing_object_which_not_in_spot(sample_pond, obj):
 
 @pytest.mark.parametrize("pos", (Position(-1, -1), Position(INF, INF), Position(0, 0), Position(1, 1)))
 def test_correct_pos(sample_pond, pos):
-    corr_pos = sample_pond.correct_pos(pos)
+    corr_pos = sample_pond.trim_position(pos)
     assert 0 <= corr_pos.y < sample_pond.height and 0 <= corr_pos.x < sample_pond.width
 
 
 @pytest.mark.parametrize("pos", (Position(4, 1), Position(4, 0), Position(4, 3)))
 def test_is_on_the_ground_when_is_on_the_ground(sample_pond, pos):
-    assert sample_pond.is_on_the_ground(pos) is True
+    assert sample_pond.is_on_ground(pos) is True
 
 
 @pytest.mark.parametrize("pos", (Position(0, 0), Position(1, 1), Position(2, 0)))
 def test_is_on_the_gound_when_not_on_the_ground(sample_pond, pos):
-    assert sample_pond.is_on_the_ground(pos) is False
+    assert sample_pond.is_on_ground(pos) is False
 
 
 @pytest.mark.parametrize("pos", (Position(0, 0), Position(1, 1), Position(0, 4)))

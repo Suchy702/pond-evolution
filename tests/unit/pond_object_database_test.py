@@ -1,7 +1,7 @@
 import pytest
 
 from src.pond_object_database import PondObjectDatabase
-from src.pond_object import PondObject
+from src.object.pond_object import PondObject
 from src.position import Position
 
 
@@ -17,7 +17,7 @@ def sample_base():
 
 def test_add(obj, sample_base):
     sample_base.add(obj)
-    assert sample_base._base[obj.id] == obj
+    assert sample_base._object_database[obj.id] == obj
 
 
 def test_adding_same_obj_twice(obj, sample_base):
