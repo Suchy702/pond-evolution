@@ -1,6 +1,6 @@
 import pytest
 
-from src.algae_handler import AlgaeHandler
+from src.object_handler.alga_handler import AlgaeHandler
 from tests.unit.helper_with_testing import get_object
 from src.position import Position
 
@@ -16,5 +16,5 @@ def test_del_algs_on_surface(sample_alg_h):
     a3 = get_object('A', pos=Position(0, 2))
     a33 = get_object('A', pos=Position(0, 2))
     sample_alg_h.add_all([a1, a2, a3, a33])
-    sample_alg_h.del_algs_on_surface()
-    assert sample_alg_h._base.size == 1
+    sample_alg_h.kill_algae_on_surface()
+    assert sample_alg_h._object_database.size == 1

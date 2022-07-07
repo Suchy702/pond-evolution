@@ -1,30 +1,33 @@
-from src.worm_handler import WormHandler
-from src.plant_handler import PlantHandler
-from src.fish_handler import FishHandler
+from functools import reduce
 
-
-POND_HEIGHT = 5
-POND_WIDTH = 10
+from src.object_handler.worm_handler import WormHandler
+from src.object_handler.plant_handler import PlantHandler
+from src.object_handler.fish_handler import FishHandler
+from src.simulation_settings import SimulationSettings
 
 
 class Engine:
-    def __init__(self):
-        self.fish_h: FishHandler = FishHandler(POND_HEIGHT, POND_WIDTH)
-        self.worm_h: WormHandler = WormHandler(POND_HEIGHT, POND_WIDTH)
-        self.plant_h: PlantHandler = PlantHandler(POND_HEIGHT, POND_WIDTH)
+    def __init__(self, settings: SimulationSettings):
+        self.settings = settings
+
+        self._fish_handler: FishHandler = FishHandler(settings)
+        self._worm_handler: WormHandler = WormHandler(settings)
+        self._plant_handler: PlantHandler = PlantHandler(settings)
+        self._handlers = [self._fish_handler, self._worm_handler, self._plant_handler]
 
     @property
     def all_objects(self):
-        return self.fish_h.fishes+self.worm_h.worms+self.plant_h.plants
+        return reduce(lambda list_, handler: list_ + handler.objects, self._handlers, [])
 
     # beta function for testing
     def preparations(self):
-        self.fish_h.add_random_fishes(5)
-        self.worm_h.send_worms(5)
-        self.plant_h.alg_maker_handler.plant_alg_makers(5)
+        for handler in self._handlers:
+            handler.add_random(5)
 
     def show_pond(self):
-        board: list[list[list[str]]] = [[[] for _ in range(POND_WIDTH)] for _ in range(POND_HEIGHT)]
+        board: list[list[list[str]]] = [
+            [[] for _ in range(self.settings.pond_width)] for _ in range(self.settings.pond_height)
+        ]
         for obj in self.all_objects:
             board[obj.pos.y][obj.pos.x].append(str(obj))
         for row in board:

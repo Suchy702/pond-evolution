@@ -1,6 +1,6 @@
 import pytest
 
-from src.pond_object import PondObject
+from src.object.pond_object import PondObject
 from src.position import Position
 
 
