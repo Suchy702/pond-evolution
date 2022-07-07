@@ -34,6 +34,7 @@ class Engine:
         for row in board:
             print(row)
 
+    # TODO Ja bym to wszystko przeniosl do nowej klasy odpowiedzialnej za zależności między obiektami
     def _find_pos_where_eat(self) -> list[Position]:
         pos_where_eat = []
         for fish in self._fish_handler.objects:
