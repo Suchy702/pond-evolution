@@ -17,7 +17,7 @@ class Engine:
     def all_objects(self):
         return self.fish_h.fishes+self.worm_h.worms+self.plant_h.plants
 
-    # beta function for testing
+    # Beta function for testing
     def preparations(self) -> None:
         self.fish_h.add_random_fishes(5)
         self.worm_h.send_worms(5)
