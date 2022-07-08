@@ -34,3 +34,6 @@ class FishHandler(PondObjectHandlerHomogeneous):
     def spoil_fishes_vitality(self) -> None:
         for fish in self.fishes:
             fish.spoil_vitality()
+
+    def breed_fishes(self) -> None:
+        pass
