@@ -1,7 +1,10 @@
 from random import randint
+
 from typing import cast
 
 from overrides import overrides
+
+from itertools import chain
 
 from src.constants import FISH_MIN_SPEED, FISH_MAX_SPEED, FISH_MIN_SIZE, FISH_MAX_SIZE
 from src.object.fish import Fish
@@ -36,4 +39,5 @@ class FishHandler(PondObjectHandlerHomogeneous):
             fish.spoil_vitality()
 
     def breed_fishes(self) -> None:
-        pass
+        self.add_all(chain.from_iterable([fish.brith_fishes() for fish in self.fishes if fish.is_breeding()]))
+        self.remove_all([fish for fish in self.fishes if fish.is_breeding()])
