@@ -53,7 +53,6 @@ class Pond:
     def is_on_ground(self, pos: Position) -> bool:
         return pos.y == self.height - 1
 
-    # TODO: jak damy staticmethod to trzeba to bedzie wywolywac jako Pond.is_on_surface. A takie is_on_ground co jest wyzej
-    #   trzeba wywoływać jako obj.is_on_ground()
+    @staticmethod
     def is_on_surface(pos: Position) -> bool:
         return pos.y == 0

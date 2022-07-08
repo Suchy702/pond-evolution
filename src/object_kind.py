@@ -7,7 +7,7 @@ class ObjectKind(Enum):
     FISH = auto()
     PLANT = auto()
     WORM = auto()
-    MAKER = auto()
+    ALGA_MAKER = auto()
     FAKE = auto()
 
     def __str__(self):

@@ -1,7 +1,7 @@
 from overrides import overrides
 
 from src.object_handler.alga_handler import AlgaHandler
-from src.object_handler.alga_maker_handler import AlgaMakerHandler, _make_algae_with_alga_maker
+from src.object_handler.alga_maker_handler import AlgaMakerHandler
 from src.object_handler.pond_object_handler import PondObjectHandlerBundler
 from src.simulation_settings import SimulationSettings
 

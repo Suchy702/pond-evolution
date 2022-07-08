@@ -9,7 +9,7 @@ from src.position import Position
 
 class AlgaMaker(PondObject):
     def __init__(self, pos: Position):
-        super().__init__(ObjectKind.MAKER, pos)
+        super().__init__(ObjectKind.ALGA_MAKER, pos)
         self.min_algae_to_create: int = MIN_ALGAE_TO_CREATE
         self.max_algae_to_create: int = MAX_ALGAE_TO_CREATE
 
