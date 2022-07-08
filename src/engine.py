@@ -1,8 +1,10 @@
+from src.events.event import Event
+from src.events.event_handler import EventHandler
 from src.interactor import Interactor
 from src.simulation_settings import SimulationSettings
 
 
-class Engine:
+class Engine(EventHandler):
     def __init__(self, settings: SimulationSettings):
         self._settings: SimulationSettings = settings
         self._interactor: Interactor = Interactor(self._settings)
@@ -10,7 +12,6 @@ class Engine:
 
     def demo(self):
         self._interactor.preparations()
-        self.show_pond()
 
     @property
     def all_objects(self):
@@ -49,6 +50,8 @@ class Engine:
             next_cycle_stop = input()
             self._cycle_count += 1
 
+    def handle_events(self, events: list[Event]) -> None:
+        pass
 
 if __name__ == "__main__":
     engine = Engine(SimulationSettings(10, 5))
