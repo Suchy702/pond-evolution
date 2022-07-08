@@ -22,9 +22,10 @@ class GUI(EventHandler):
         self._image_handlers: list[ImageHandler] = get_image_handlers(handlers)
 
         self._screen: Surface = pygame.display.set_mode([self._settings.screen_width, self._settings.screen_height])
-        self._cell_size: int = 50  # length of square cell in px
-        self.x_offset: int = 100
-        self.y_offset: int = 100
+        self._cell_size: int = 20  # length of square cell in px
+        self.x_offset: int = 0
+        self.y_offset: int = 0
+        self._center_view()
 
         self._event_handler = EventManager()
 
@@ -143,6 +144,10 @@ class GUI(EventHandler):
 
         for image in self._get_images(x, y):
             self._screen.blit(image, rect)
+
+    def _center_view(self):
+        self.x_offset = self._settings.screen_width // 2 - self._settings.pond_width * self._cell_size // 2
+        self.y_offset = self._settings.screen_height // 2 - self._settings.pond_height * self._cell_size // 2
 
     def handle_events(self, events: list[Event]) -> None:
         for event in events:
