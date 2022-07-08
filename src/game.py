@@ -11,7 +11,7 @@ from pygame.locals import (
 
 from src.constants import FPS
 from src.engine import Engine
-from src.gui import GUI
+from src.graphics.gui import GUI
 from src.simulation_settings import SimulationSettings
 
 
@@ -22,7 +22,8 @@ class Game:
         self._settings.pond_height = 20
 
         self._engine = Engine(self._settings)
-        self._gui = GUI(self._settings, [])
+        self._engine.demo()
+        self._gui = GUI(self._settings, self._engine.all_handlers)
 
     def run(self) -> None:
         clock = pygame.time.Clock()
