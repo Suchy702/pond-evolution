@@ -20,7 +20,7 @@ class AlgaMaker(PondObject):
     def choose_algae_amount(self) -> int:
         return int(randint(self.min_algae_to_create, self.max_algae_to_create))
 
-    def make_algae(self) -> list[Alga]:
+    def create_algae(self) -> list[Alga]:
         return [self.create_alga() for _ in range(self.choose_algae_amount())]
 
     def _find_pos_to_create_alg(self) -> Position:
