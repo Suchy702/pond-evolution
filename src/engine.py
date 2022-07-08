@@ -1,5 +1,5 @@
-from src.simulation_settings import SimulationSettings
 from src.interactor import Interactor
+from src.simulation_settings import SimulationSettings
 
 
 class Engine:
@@ -7,9 +7,17 @@ class Engine:
         self._settings: SimulationSettings = settings
         self._interactor: Interactor = Interactor(self._settings)
 
+    def demo(self):
+        self._interactor.preparations()
+        self.show_pond()
+
     @property
     def all_objects(self):
         return self._interactor.all_objects
+
+    @property
+    def all_handlers(self):
+        return self._interactor.handlers
 
     def show_pond(self) -> None:
         board: list[list[list[str]]] = [

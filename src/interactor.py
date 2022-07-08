@@ -1,5 +1,4 @@
 from functools import reduce
-
 from typing import cast
 
 from src.object.fish import Fish
@@ -17,15 +16,15 @@ class Interactor:
         self._fish_handler: FishHandler = FishHandler(settings)
         self._worm_handler: WormHandler = WormHandler(settings)
         self._plant_handler: PlantHandler = PlantHandler(settings)
-        self._handlers: list[PondObjectHandler] = [self._fish_handler, self._worm_handler, self._plant_handler]
+        self.handlers: list[PondObjectHandler] = [self._fish_handler, self._worm_handler, self._plant_handler]
 
     @property
     def all_objects(self) -> list[PondObject]:
-        return reduce(lambda list_, handler: list_ + handler.objects, self._handlers, [])
+        return reduce(lambda list_, handler: list_ + handler.objects, self.handlers, [])
 
     # beta function for testing
     def preparations(self) -> None:
-        for handler in self._handlers:
+        for handler in self.handlers:
             handler.add_random(5)
 
     def _find_pos_where_eat(self) -> list[Position]:

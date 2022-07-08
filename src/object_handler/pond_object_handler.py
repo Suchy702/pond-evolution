@@ -27,6 +27,10 @@ class PondObjectHandler(ABC):
     def objects(self) -> list[PondObject]:
         pass
 
+    @abstractmethod
+    def get_spot_obj(self, pos: Position) -> set[PondObject]:
+        pass
+
 
 class PondObjectHandlerHomogeneous(PondObjectHandler):
     def __init__(self, settings: SimulationSettings):
@@ -72,6 +76,7 @@ class PondObjectHandlerHomogeneous(PondObjectHandler):
     def create_random_single(self) -> PondObject:
         pass
 
+    @overrides
     def get_spot_obj(self, pos: Position) -> set[PondObject]:
         return self._pond.get_spot(pos)
 
