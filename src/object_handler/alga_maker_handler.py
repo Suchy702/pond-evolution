@@ -26,5 +26,5 @@ class AlgaMakerHandler(PondObjectHandlerHomogeneous):
         return AlgaMaker(pos, self._pond.height)
 
     def create_algae(self) -> list[Alga]:
-        return list(chain.from_iterable([alga_maker.create_algae() for alga_maker in self.alga_makers]))
+        return list(chain.from_iterable([alga_maker.create_algae(self._pond) for alga_maker in self.alga_makers]))
 

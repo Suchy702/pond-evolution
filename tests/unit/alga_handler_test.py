@@ -19,6 +19,6 @@ def test_kill_algae_on_surface(sample_alga_handler):
     a4 = get_object(ObjectKind.ALGA, pos=Position(0, 2))
 
     sample_alga_handler.add_all([a1, a2, a3, a4])
-    sample_alga_handler.kill_algae_on_surface()
+    sample_alga_handler.remove_algae_on_surface()
 
     assert sample_alga_handler._object_database.size == 1

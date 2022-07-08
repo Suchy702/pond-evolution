@@ -26,5 +26,5 @@ class AlgaHandler(PondObjectHandlerHomogeneous):
         for algae in self.algae:
             self._pond.change_position(algae, self._pond.trim_position(algae.find_pos_to_move()))
 
-    def kill_algae_on_surface(self) -> None:
+    def remove_algae_on_surface(self) -> None:
         self.remove_all([alga for alga in self.algae if self._pond.is_on_surface(alga.pos)])
