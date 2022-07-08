@@ -13,8 +13,8 @@ from src.simulation_settings import SimulationSettings
 class Game(EventHandler):
     def __init__(self):
         self._settings = SimulationSettings()
-        self._settings.pond_width = 100
-        self._settings.pond_height = 100
+        self._settings.pond_width = 50
+        self._settings.pond_height = 50
 
         self._engine = Engine(self._settings)
         self._engine._interactor.preparations()
