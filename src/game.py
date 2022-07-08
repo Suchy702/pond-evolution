@@ -1,4 +1,7 @@
+import pygame
+
 from src.engine import Engine
+from src.gui import GUI
 from src.simulation_settings import SimulationSettings
 
 
@@ -14,3 +17,12 @@ class Game:
         engine = Engine(settings)
         engine.preparations()
         engine.show_pond()
+
+        gui = GUI(settings, [])
+        cnt = 0
+
+        while True:
+            gui.draw_frame()
+            cnt += 1
+            if cnt == 10000:
+                pygame.quit()
