@@ -2,7 +2,7 @@ from typing import cast
 
 from overrides import overrides
 
-from src.constants import WORM_ENERGY_VALUE, NUM_OF_NEW_WORMS_AT_ONE_CYCLE
+from src.constants import WORM_ENERGY_VALUE, NUM_OF_NEW_WORMS_AT_CYCLE
 from src.object.pond_object import PondObject
 from src.object.worm import Worm
 from src.object_handler.pond_object_handler import PondObjectHandlerHomogeneous
@@ -24,7 +24,7 @@ class WormHandler(PondObjectHandlerHomogeneous):
         return Worm(WORM_ENERGY_VALUE, pos, self._pond.shape)
 
     def put_new_worms(self) -> None:
-        self.add_all([self.create_random_single() for _ in range(NUM_OF_NEW_WORMS_AT_ONE_CYCLE)])
+        self.add_all([self.create_random_single() for _ in range(NUM_OF_NEW_WORMS_AT_CYCLE)])
 
     def move_worms(self) -> None:
         for worm in self.worms:
