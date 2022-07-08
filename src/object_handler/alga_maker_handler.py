@@ -17,11 +17,11 @@ class AlgaMakerHandler(PondObjectHandlerHomogeneous):
     def create_random_single(self) -> PondObject:
         pos = self._pond.random_position()
         pos.y = self._pond.height - 1
-        return AlgaMaker(pos)
+        return AlgaMaker(pos, self._pond.height)
 
     def create_algae(self) -> list[Alga]:
         algae = []
-        for handler in self.objects:
-            handler = cast(AlgaMaker, handler)
-            algae.extend(handler.create_algae())
+        for algae_maker in self.objects:
+            algae_maker = cast(AlgaMaker, algae_maker)
+            algae.extend(algae_maker.create_algae())
         return algae
