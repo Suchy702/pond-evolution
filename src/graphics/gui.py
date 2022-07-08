@@ -4,6 +4,9 @@ from math import ceil
 import pygame
 from pygame.surface import Surface
 
+from src.events.event import Event, EventType
+from src.events.event_handler import EventHandler
+from src.events.event_manager import EventManager
 from src.graphics.image_handler.image_handler import ImageHandler
 from src.graphics.image_handler.utility import get_image_handlers
 from src.object_handler.pond_object_handler import PondObjectHandler
@@ -13,7 +16,7 @@ from src.simulation_settings import SimulationSettings
 VERBOSE = True
 
 
-class GUI:
+class GUI(EventHandler):
     def __init__(self, settings: SimulationSettings, handlers: list[PondObjectHandler]):
         self._settings: SimulationSettings = settings
         self._image_handlers: list[ImageHandler] = get_image_handlers(handlers)
@@ -22,6 +25,8 @@ class GUI:
         self._cell_size: int = 50  # length of square cell in px
         self.x_offset: int = 100
         self.y_offset: int = 100
+
+        self._event_handler = EventManager()
 
     @property
     def cell_size(self):
@@ -138,3 +143,20 @@ class GUI:
 
         for image in self._get_images(x, y):
             self._screen.blit(image, rect)
+
+    def handle_events(self, events: list[Event]) -> None:
+        for event in events:
+            if event.event_type == EventType.KEY_PRESSED:
+                match event.args["key"]:
+                    case "up":
+                        self.y_offset -= 50
+                    case "down":
+                        self.y_offset += 50
+                    case "left":
+                        self.x_offset -= 50
+                    case "right":
+                        self.x_offset += 50
+                    case "equals":
+                        self.cell_size += 5
+                    case "minus":
+                        self.cell_size -= 5

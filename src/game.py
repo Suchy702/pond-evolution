@@ -1,58 +1,42 @@
 import pygame
-from pygame.locals import (
-    K_UP,
-    K_DOWN,
-    K_LEFT,
-    K_RIGHT,
-    K_MINUS,
-    K_EQUALS,
-    QUIT
-)
+from overrides import overrides
 
 from src.constants import FPS
 from src.engine import Engine
+from src.events.event import Event, EventType
+from src.events.event_handler import EventHandler
+from src.events.event_manager import EventManager
 from src.graphics.gui import GUI
 from src.simulation_settings import SimulationSettings
 
 
-class Game:
+class Game(EventHandler):
     def __init__(self):
         self._settings = SimulationSettings()
-        self._settings.pond_width = 20
-        self._settings.pond_height = 20
+        self._settings.pond_width = 100
+        self._settings.pond_height = 100
 
         self._engine = Engine(self._settings)
-        self._engine.demo()
+        self._engine._interactor.preparations()
         self._gui = GUI(self._settings, self._engine.all_handlers)
+
+        self._event_handler = EventManager()
+        self._event_handler.add_handlers([self, self._engine, self._gui])
+
+        self._running = True
 
     def run(self) -> None:
         clock = pygame.time.Clock()
-        running = True
 
-        while running:
+        while self._running:
             clock.tick(FPS)
 
+            self._engine.cycle()
             self._gui.draw_frame()
-            running = self.handle_events()
+            self._event_handler.handle_events()
 
-    def handle_events(self) -> bool:
-        running = True
-        for event in pygame.event.get():
-            if event.type == QUIT:
-                running = False
-
-        keys = pygame.key.get_pressed()
-        if keys[K_UP]:
-            self._gui.y_offset -= 50
-        elif keys[K_DOWN]:
-            self._gui.y_offset += 50
-        elif keys[K_LEFT]:
-            self._gui.x_offset -= 50
-        elif keys[K_RIGHT]:
-            self._gui.x_offset += 50
-        elif keys[K_EQUALS]:
-            self._gui.cell_size += 5
-        elif keys[K_MINUS]:
-            self._gui.cell_size -= 5
-
-        return running
+    @overrides
+    def handle_events(self, events: list[Event]):
+        for event in events:
+            if event.event_type == EventType.QUIT:
+                self._running = False
