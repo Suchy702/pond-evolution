@@ -1,5 +1,12 @@
+# Game
+FPS: int = 30
+
+# Screen
+SCREEN_WIDTH = 1080
+SCREEN_HEIGHT = 720
+
 # Pond
-POND_WIDTH: int = 5
+POND_WIDTH: int = 10
 POND_HEIGHT: int = 10
 
 # Algae
