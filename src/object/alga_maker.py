@@ -12,7 +12,7 @@ class AlgaMaker(PondObject):
         super().__init__(ObjectKind.ALGA_MAKER, pos)
         self.min_algae_to_create: int = MIN_ALGAE_TO_CREATE
         self.max_algae_to_create: int = MAX_ALGAE_TO_CREATE
-        self._pond_height = pond_height
+        self._pond_height: int = pond_height
 
     def create_alga(self) -> Alga:
         return Alga(ALGA_ENERGY_VALUE, self._find_pos_to_create_alg(), self._pond_height)
