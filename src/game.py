@@ -23,9 +23,6 @@ class Game:
         self._settings.pond_height = 10
 
         self._engine = Engine(self._settings)
-        self._engine.preparations()
-        self._engine.show_pond()
-
         self._gui = GUI(self._settings, [])
 
     def run(self) -> None:
