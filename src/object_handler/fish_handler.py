@@ -4,13 +4,13 @@ from overrides import overrides
 
 from src.constants import FISH_MIN_SPEED, FISH_MAX_SPEED, FISH_MIN_SIZE, FISH_MAX_SIZE
 from src.object.pond_object import PondObject
-from src.object_handler.pond_object_handler import PondObjectHandler
+from src.object_handler.pond_object_handler import PondObjectHandlerHomogeneous
 from src.object.fish import Fish
 from src.pond import Pond
 from src.simulation_settings import SimulationSettings
 
 
-class FishHandler(PondObjectHandler):
+class FishHandler(PondObjectHandlerHomogeneous):
     def __init__(self, settings: SimulationSettings):
         super().__init__(settings)
 

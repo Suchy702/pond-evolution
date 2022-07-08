@@ -3,11 +3,11 @@ from overrides import overrides
 from src.constants import ALGA_ENERGY_VALUE
 from src.object.alga import Alga
 from src.object.pond_object import PondObject
-from src.object_handler.pond_object_handler import PondObjectHandler
+from src.object_handler.pond_object_handler import PondObjectHandlerHomogeneous
 from src.simulation_settings import SimulationSettings
 
 
-class AlgaHandler(PondObjectHandler):
+class AlgaHandler(PondObjectHandlerHomogeneous):
     def __init__(self, settings: SimulationSettings):
         super().__init__(settings)
 

@@ -1,5 +1,8 @@
+from functools import reduce
 from typing import Iterable, Generator
 from abc import ABC, abstractmethod
+
+from overrides import overrides
 
 from src.pond import Pond
 from src.pond_object_database import PondObjectDatabase
@@ -10,14 +13,34 @@ from src.simulation_settings import SimulationSettings
 
 class PondObjectHandler(ABC):
     def __init__(self, settings: SimulationSettings):
+        pass
+
+    @abstractmethod
+    def add_random(self, amount: int) -> None:
+        pass
+
+    @abstractmethod
+    def size(self) -> int:
+        pass
+
+    @abstractmethod
+    def objects(self) -> list[PondObject]:
+        pass
+
+
+class PondObjectHandlerHomogeneous(PondObjectHandler):
+    def __init__(self, settings: SimulationSettings):
+        super().__init__(settings)
         self._pond: Pond = Pond(settings)
         self._object_database: PondObjectDatabase = PondObjectDatabase()
 
     @property
+    @overrides
     def size(self) -> int:
         return self._object_database.size
 
     @property
+    @overrides
     def objects(self) -> list[PondObject]:
         return self._object_database.objects
 
@@ -37,6 +60,7 @@ class PondObjectHandler(ABC):
         for obj in objects:
             self.remove(obj)
 
+    @overrides
     def add_random(self, amount: int) -> None:
         self.add_all(self.create_random(amount))
 
@@ -65,3 +89,23 @@ class PondObjectHandler(ABC):
 
     def is_sth_at_pos(self, pos) -> bool:
         return len(self._pond.get_spot(pos)) > 0
+
+
+class PondObjectHandlerBundler(PondObjectHandler):
+    def __init__(self, settings: SimulationSettings):
+        super().__init__(settings)
+        self._handlers: list[PondObjectHandlerHomogeneous] = []
+
+    @property
+    @overrides
+    def size(self) -> int:
+        return reduce(lambda acc, h: acc + h.size, self._handlers, 0)
+
+    @property
+    @overrides
+    def objects(self) -> list[PondObject]:
+        return reduce(lambda list_, handler: list_ + handler.objects, self._handlers, [])
+
+    @abstractmethod
+    def add_random(self, amount: int) -> None:
+        pass

@@ -3,11 +3,11 @@ from overrides import overrides
 from src.constants import WORM_ENERGY_VALUE
 from src.object.pond_object import PondObject
 from src.object.worm import Worm
-from src.object_handler.pond_object_handler import PondObjectHandler
+from src.object_handler.pond_object_handler import PondObjectHandlerHomogeneous
 from src.simulation_settings import SimulationSettings
 
 
-class WormHandler(PondObjectHandler):
+class WormHandler(PondObjectHandlerHomogeneous):
     def __init__(self, settings: SimulationSettings):
         super().__init__(settings)
 
