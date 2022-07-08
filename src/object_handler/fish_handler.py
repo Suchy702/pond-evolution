@@ -16,7 +16,7 @@ class FishHandler(PondObjectHandlerHomogeneous):
 
     @property
     def fishes(self) -> list[Fish]:
-        return [cast(Fish, fish) for fish in self._object_database.objects]
+        return [cast(Fish, fish) for fish in self.objects]
 
     @overrides
     def create_random_single(self) -> PondObject:
