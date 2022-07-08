@@ -13,6 +13,10 @@ class WormHandler(PondObjectHandlerHomogeneous):
     def __init__(self, settings: SimulationSettings):
         super().__init__(settings)
 
+    @property
+    def worms(self):
+        return [cast(Worm, worm) for worm in self.objects]
+
     @overrides
     def create_random_single(self) -> PondObject:
         pos = self._pond.random_position()
@@ -20,13 +24,8 @@ class WormHandler(PondObjectHandlerHomogeneous):
         return Worm(WORM_ENERGY_VALUE, pos, self._pond.shape)
 
     def move_worms(self) -> None:
-        for worm in self.objects:
-            worm = cast(Worm, worm)
+        for worm in self.worms:
             self._pond.change_position(worm, self._pond.trim_position(worm.find_pos_to_move()))
 
     def kill_worms_on_ground(self) -> None:
-        to_del = []
-        for worm in self.objects:
-            if self._pond.is_on_ground(worm.pos):
-                to_del.append(worm)
-        self.remove_all(to_del)
+        self.remove_all([worm for worm in self.worms if self._pond.is_on_ground(worm.pos)])
