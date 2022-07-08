@@ -1,8 +1,10 @@
+import os
+
 import pygame
 from overrides import overrides
 from pygame.surface import Surface
 
-from src.graphics.image_handler.image_handler import ImageHandler
+from src.graphics.image_handler.image_handler import ImageHandler, IMG_DIR_PATH
 from src.object.pond_object import PondObject
 from src.object_handler.pond_object_handler import PondObjectHandler
 
@@ -15,5 +17,5 @@ class WormImageHandler(ImageHandler):
     @overrides
     def _get_object_image(self, obj: PondObject) -> Surface:
         if self._cache is None:
-            self._cache = pygame.image.load('tux.svg')
+            self._cache = pygame.image.load(os.path.join(IMG_DIR_PATH, 'worm.svg'))
         return self._cache

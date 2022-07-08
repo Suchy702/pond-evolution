@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os.path
 from abc import ABC, abstractmethod
 
 from pygame.surface import Surface
@@ -7,6 +8,8 @@ from pygame.surface import Surface
 from src.object.pond_object import PondObject
 from src.object_handler.pond_object_handler import PondObjectHandler
 from src.position import Position
+
+IMG_DIR_PATH = os.path.join('resources', 'object_images')
 
 
 class ImageHandler(ABC):
