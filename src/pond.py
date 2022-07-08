@@ -45,14 +45,15 @@ class Pond:
         self.add(obj)
 
     def trim_position(self, pos: Position) -> Position:
-        return Position(min(self._height-1, max(0, pos.y)), min(self._width-1, max(0, pos.x)))
+        return Position(min(self._height - 1, max(0, pos.y)), min(self._width - 1, max(0, pos.x)))
 
     def random_position(self) -> Position:
-        return Position.random_position(0, self.height-1, 0, self._width-1)
+        return Position.random_position(0, self.height - 1, 0, self._width - 1)
 
     def is_on_ground(self, pos: Position) -> bool:
-        return pos.y == self.height-1
+        return pos.y == self.height - 1
 
-    @staticmethod
+    # TODO: jak damy staticmethod to trzeba to bedzie wywolywac jako Pond.is_on_surface. A takie is_on_ground co jest wyzej
+    #   trzeba wywoływać jako obj.is_on_ground()
     def is_on_surface(pos: Position) -> bool:
         return pos.y == 0

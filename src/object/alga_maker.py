@@ -13,6 +13,7 @@ class AlgaMaker(PondObject):
         self.min_algae_to_create: int = MIN_ALGAE_TO_CREATE
         self.max_algae_to_create: int = MAX_ALGAE_TO_CREATE
 
+    # TODO: trzeba zaimplementowac
     def create_alga(self) -> Alga:
         pass
 

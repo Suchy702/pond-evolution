@@ -16,6 +16,7 @@ class AlgaHandler(PondObjectHandlerHomogeneous):
         pos = self._pond.random_position()
         return Alga(ALGA_ENERGY_VALUE, pos, self._pond.height)
 
+    # TODO: czy to zadziala? change_position potrzebuje znac aktualna pozycje algae, a chyba algae.pos zawiera juz nową pozycje
     def move_algae(self) -> None:
         for algae in self.objects:
             self._pond.change_position(algae, self._pond.trim_position(algae.pos))
