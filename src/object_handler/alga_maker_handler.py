@@ -1,5 +1,8 @@
+from typing import cast
+
 from overrides import overrides
 
+from src.object.alga import Alga
 from src.object.alga_maker import AlgaMaker
 from src.object.pond_object import PondObject
 from src.object_handler.pond_object_handler import PondObjectHandlerHomogeneous
@@ -15,3 +18,10 @@ class AlgaMakerHandler(PondObjectHandlerHomogeneous):
         pos = self._pond.random_position()
         pos.y = self._pond.height - 1
         return AlgaMaker(pos)
+
+    def make_algae(self) -> list[Alga]:
+        algae = []
+        for h in self.objects:
+            h = cast(AlgaMaker, h)
+            algae.extend(h.make_algae())
+        return algae
