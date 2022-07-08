@@ -30,7 +30,7 @@ class Engine:
         self._interactor.remove_unnecessary_objects()
         self._interactor.move_objects()
         self._interactor.feed_fishes()
-        self._interactor.put_new_objects()
+        self._interactor.put_new_objects(self._cycle_count)
 
     # Symulacja dla testow, normalnie powinno byc  w Game
     def symulation(self):

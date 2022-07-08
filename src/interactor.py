@@ -56,7 +56,7 @@ class Interactor:
         self._worm_handler.remove_worms_on_the_ground()
         self._plant_handler.alga_handler.remove_algae_on_surface()
 
-    def _move_food(self):
+    def _move_food(self) -> None:
         self._worm_handler.move_worms()
         self._plant_handler.alga_handler.move_algae()
 
@@ -71,11 +71,11 @@ class Interactor:
     # Kolejnosc:
     # Jedzenie
     # Rybki
-    def move_objects(self):
+    def move_objects(self) -> None:
         self._move_food()
         self._fish_handler.move_fishes()
 
-    def put_new_objects(self, cycle_count: int):
+    def put_new_objects(self, cycle_count: int) -> None:
         if self._is_time_to_put_new_worms(cycle_count):
             self._worm_handler.put_new_worms()
         if self._is_time_to_detach_algae(cycle_count):
