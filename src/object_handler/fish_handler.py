@@ -14,13 +14,23 @@ class FishHandler(PondObjectHandlerHomogeneous):
     def __init__(self, settings: SimulationSettings):
         super().__init__(settings)
 
+    @property
+    def fishes(self) -> list[Fish]:
+        return [cast(Fish, fish) for fish in self._object_database.objects]
+
     @overrides
     def create_random_single(self) -> PondObject:
         speed = randint(FISH_MIN_SPEED, FISH_MAX_SPEED)
         size = randint(FISH_MIN_SIZE, FISH_MAX_SIZE)
         return Fish(speed, size, self._pond.random_position())
 
-    def move_fish(self) -> None:
-        for fish in self._object_database.objects:
-            fish = cast(Fish, fish)
+    def move_fishes(self) -> None:
+        for fish in self.fishes:
             self._pond.change_position(fish, self._pond.trim_position(fish.find_pos_to_move()))
+
+    def remove_dead_fishes(self) -> None:
+        self.remove_all([fish for fish in self.fishes if fish.is_dead()])
+
+    def spoil_fishes_vitality(self) -> None:
+        for fish in self.fishes:
+            fish.spoil_vitality()
