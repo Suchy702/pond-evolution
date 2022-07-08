@@ -19,7 +19,5 @@ class PlantHandler(PondObjectHandlerBundler):
         self.alga_handler.add_random(amount)
         self.alga_maker_handler.add_random(amount)
 
-    # TODO: type hintsy sie wala
-    def detach_algs_from_alg_makers(self) -> None:
-        for alg_maker in self.alga_maker_handler.objects:
-            self.alga_handler.add_all(_make_algae_with_alga_maker(self.alga_handler, alg_maker))
+    def detach_algae_from_makers(self) -> None:
+        self.alga_handler.add_all(self.alga_maker_handler.make_algae())
