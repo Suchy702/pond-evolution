@@ -1,3 +1,4 @@
+import random
 from math import ceil
 
 import pygame
@@ -123,6 +124,7 @@ class GUI:
             for img in img_handler.get_images_at_spot(pos):
                 images.append(pygame.transform.scale(img, (self._cell_size, self._cell_size)))
 
+        random.shuffle(images)
         return images
 
     def _draw_images(self, x, y, show_grid=False) -> None:
