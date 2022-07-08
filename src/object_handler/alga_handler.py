@@ -1,3 +1,5 @@
+from typing import cast
+
 from overrides import overrides
 
 from src.constants import ALGA_ENERGY_VALUE
@@ -16,10 +18,10 @@ class AlgaHandler(PondObjectHandlerHomogeneous):
         pos = self._pond.random_position()
         return Alga(ALGA_ENERGY_VALUE, pos, self._pond.height)
 
-    # TODO: czy to zadziala? change_position potrzebuje znac aktualna pozycje algae, a chyba algae.pos zawiera juz nową pozycje
     def move_algae(self) -> None:
         for algae in self.objects:
-            self._pond.change_position(algae, self._pond.trim_position(algae.pos))
+            algae = cast(Alga, algae)
+            self._pond.change_position(algae, self._pond.trim_position(algae.find_pos_to_move()))
 
     def kill_algae_on_surface(self) -> None:
         to_del = []
