@@ -5,6 +5,7 @@ from src.object.fish import Fish
 from src.object_handler.fish_handler import FishHandler
 from src.object_handler.plant_handler import PlantHandler
 from src.object_handler.pond_object_handler import PondObjectHandler
+from src.object.pond_object import PondObject
 from src.object_handler.worm_handler import WormHandler
 from src.position import Position
 from src.simulation_settings import SimulationSettings
@@ -20,15 +21,15 @@ class Engine:
         self._handlers: list[PondObjectHandler] = [self._fish_handler, self._worm_handler, self._plant_handler]
 
     @property
-    def all_objects(self):
+    def all_objects(self) -> list[PondObject]:
         return reduce(lambda list_, handler: list_ + handler.objects, self._handlers, [])
 
     # beta function for testing
-    def preparations(self):
+    def preparations(self) -> None:
         for handler in self._handlers:
             handler.add_random(5)
 
-    def show_pond(self):
+    def show_pond(self) -> None:
         board: list[list[list[str]]] = [
             [[] for _ in range(self.settings.pond_width)] for _ in range(self.settings.pond_height)
         ]
