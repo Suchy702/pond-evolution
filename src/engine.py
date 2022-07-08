@@ -1,11 +1,11 @@
 from functools import reduce
 
-from src.object_handler.pond_object_handler import PondObjectHandlerHomogeneous, PondObjectHandler
-from src.object_handler.worm_handler import WormHandler
-from src.object_handler.plant_handler import PlantHandler
 from src.object_handler.fish_handler import FishHandler
-from src.simulation_settings import SimulationSettings
+from src.object_handler.plant_handler import PlantHandler
+from src.object_handler.pond_object_handler import PondObjectHandler
+from src.object_handler.worm_handler import WormHandler
 from src.position import Position
+from src.simulation_settings import SimulationSettings
 
 
 class Engine:
