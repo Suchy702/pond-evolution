@@ -1,5 +1,7 @@
 from functools import reduce
+from typing import cast
 
+from src.object.fish import Fish
 from src.object_handler.fish_handler import FishHandler
 from src.object_handler.plant_handler import PlantHandler
 from src.object_handler.pond_object_handler import PondObjectHandler
@@ -46,8 +48,11 @@ class Engine:
     def _eat_at_one_spot(self, pos: Position) -> None:
         energy_val = self._worm_handler.get_spot_energy_val(pos)
         energy_val += self._plant_handler.alga_handler.get_spot_energy_val(pos)
+
         for fish in self._fish_handler.get_spot_obj(pos):
+            fish = cast(Fish, fish)
             fish.vitality += energy_val // len(self._fish_handler.get_spot_obj(pos))
+
         self._worm_handler.remove_at_spot(pos)
         self._plant_handler.alga_handler.remove_at_spot(pos)
 

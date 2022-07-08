@@ -72,12 +72,7 @@ class PondObjectHandlerHomogeneous(PondObjectHandler):
     def create_random_single(self) -> PondObject:
         pass
 
-    # Nie mozna ustawic zwracanego typu na set[PondObject] bo czasem zwracany jest Worm, czasem Fish i powstaje kolizja
-    # gdy wiemy ze mamy fish i chcemy uzyc jej atrybutu, jednak Pycharm podpowiada nam ze PondObject nie ma takiego
-    # atrybutu
-    # TODO: możemy dać set[PondObject] i wtedy trzeba będzie castować na Fish/Worm czy cokolwiek. Tak samo jak robi się
-    # to w Javie :( Jeżeli chcemy type hinty to musimy niestety odejsć troche od pythonowosci
-    def get_spot_obj(self, pos: Position):
+    def get_spot_obj(self, pos: Position) -> set[PondObject]:
         return self._pond.get_spot(pos)
 
     def get_spot_energy_val(self, pos: Position) -> int:
@@ -85,7 +80,7 @@ class PondObjectHandlerHomogeneous(PondObjectHandler):
 
     # Wyrazenie listowe zeby zapobiec przekazaniu dalej referencji, co zmienialoby rozmiar setu podczas iteracji
     def remove_at_spot(self, pos: Position):
-        self.remove_all([obj for obj in self._pond.get_spot(pos)])
+        self.remove_all(list(self._pond.get_spot(pos)))
 
     def is_sth_at_pos(self, pos) -> bool:
         return len(self._pond.get_spot(pos)) > 0

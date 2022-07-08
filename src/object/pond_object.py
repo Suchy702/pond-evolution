@@ -1,13 +1,23 @@
+from abc import ABC
+
 from src.object_kind import ObjectKind
 from src.position import Position
-from abc import ABC
 
 
 class PondObject(ABC):
     def __init__(self, obj_kind: ObjectKind, obj_pos: Position):
         self._id: int = -1
         self._kind: ObjectKind = obj_kind
-        self.pos: Position = obj_pos
+        self._pos: Position = obj_pos
+        self._energy_val: int = 0
+
+    @property
+    def pos(self) -> Position:
+        return self._pos
+
+    @property
+    def energy_val(self) -> int:
+        return self._energy_val
 
     @property
     def kind(self) -> ObjectKind:
