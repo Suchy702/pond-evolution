@@ -23,7 +23,7 @@ class WormHandler(PondObjectHandlerHomogeneous):
         pos.y = 0
         return Worm(WORM_ENERGY_VALUE, pos, self._pond.shape)
 
-    def put_new_worms(self) -> None:
+    def add_worms(self) -> None:
         self.add_all([self.create_random_single() for _ in range(NUM_OF_NEW_WORMS_AT_CYCLE)])
 
     def move_worms(self) -> None:

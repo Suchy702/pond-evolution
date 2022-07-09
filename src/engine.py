@@ -38,21 +38,9 @@ class Engine(EventHandler):
     def cycle(self):
         self._interactor.remove_unnecessary_objects()
         self._interactor.move_objects()
-        self._interactor.feed_fishes()
-        self._interactor.put_new_objects(self._cycle_count)
-
-    # Symulacja dla testow, normalnie powinno byc  w Game
-    def symulation(self):
-        self._interactor.preparations()
-        while True:
-            self.show_pond()
-            self.cycle()
-            next_cycle_stop = input()
-            self._cycle_count += 1
+        self._interactor.feed_fish()
+        self._interactor.add_new_objects(self._cycle_count)
+        self._cycle_count += 1
 
     def handle_events(self, events: list[Event]) -> None:
         pass
-
-if __name__ == "__main__":
-    engine = Engine(SimulationSettings(10, 5))
-    engine.symulation()

@@ -1,10 +1,8 @@
+from itertools import chain
 from random import randint
-
 from typing import cast
 
 from overrides import overrides
-
-from itertools import chain
 
 from src.constants import FISH_MIN_SPEED, FISH_MAX_SPEED, FISH_MIN_SIZE, FISH_MAX_SIZE
 from src.object.fish import Fish
@@ -27,7 +25,7 @@ class FishHandler(PondObjectHandlerHomogeneous):
         size = randint(FISH_MIN_SIZE, FISH_MAX_SIZE)
         return Fish(speed, size, self._pond.random_position())
 
-    def move_fishes(self) -> None:
+    def move_fish(self) -> None:
         for fish in self.fishes:
             self._pond.change_position(fish, self._pond.trim_position(fish.find_pos_to_move()))
 
@@ -38,6 +36,6 @@ class FishHandler(PondObjectHandlerHomogeneous):
         for fish in self.fishes:
             fish.spoil_vitality()
 
-    def breed_fishes(self) -> None:
+    def breed_fish(self) -> None:
         self.add_all(chain.from_iterable([fish.brith_fishes() for fish in self.fishes if fish.is_breeding()]))
         self.remove_all([fish for fish in self.fishes if fish.is_breeding()])

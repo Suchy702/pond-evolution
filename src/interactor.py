@@ -1,6 +1,7 @@
 from functools import reduce
 from typing import cast
 
+from src.constants import HOW_OFTEN_CYCLES_MAKING_WORMS, HOW_OFTEN_CYCLES_MAKING_ALGAE
 from src.object.fish import Fish
 from src.object.pond_object import PondObject
 from src.object_handler.fish_handler import FishHandler
@@ -9,7 +10,6 @@ from src.object_handler.pond_object_handler import PondObjectHandler
 from src.object_handler.worm_handler import WormHandler
 from src.position import Position
 from src.simulation_settings import SimulationSettings
-from src.constants import HOW_OFTEN_CYCLES_MAKING_WORMS, HOW_OFTEN_CYCLES_MAKING_ALGAE
 
 
 class Interactor:
@@ -46,7 +46,7 @@ class Interactor:
         self._worm_handler.remove_at_spot(pos)
         self._plant_handler.alga_handler.remove_at_spot(pos)
 
-    def feed_fishes(self) -> None:
+    def feed_fish(self) -> None:
         for pos in self._find_pos_where_eat():
             self._eat_at_one_spot(pos)
 
@@ -60,7 +60,7 @@ class Interactor:
         self._plant_handler.alga_handler.move_algae()
 
     @staticmethod
-    def _is_time_to_put_new_worms(cycle_count: int) -> bool:
+    def _is_time_to_add_worms(cycle_count: int) -> bool:
         return cycle_count % HOW_OFTEN_CYCLES_MAKING_WORMS == 0
 
     @staticmethod
@@ -72,11 +72,11 @@ class Interactor:
     # Rybki
     def move_objects(self) -> None:
         self._move_food()
-        self._fish_handler.move_fishes()
+        self._fish_handler.move_fish()
 
-    def put_new_objects(self, cycle_count: int) -> None:
-        if self._is_time_to_put_new_worms(cycle_count):
-            self._worm_handler.put_new_worms()
+    def add_new_objects(self, cycle_count: int) -> None:
+        if self._is_time_to_add_worms(cycle_count):
+            self._worm_handler.add_worms()
         if self._is_time_to_detach_algae(cycle_count):
             self._plant_handler.detach_algae_from_makers()
-        self._fish_handler.breed_fishes()
+        self._fish_handler.breed_fish()
