@@ -16,6 +16,10 @@ class PlantHandler(PondObjectHandlerBundler):
 
         self._handlers.extend([self.alga_handler, self.alga_maker_handler])
 
+    def move(self):
+        self.alga_handler.move_algae()
+        self.alga_maker_handler.move_alga_maker()
+
     @overrides
     def add_random(self, amount: int) -> None:
         self.alga_handler.add_random(amount)

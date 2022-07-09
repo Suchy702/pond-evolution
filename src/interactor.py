@@ -57,7 +57,7 @@ class Interactor:
 
     def _move_food(self) -> None:
         self._worm_handler.move_worms()
-        self._plant_handler.alga_handler.move_algae()
+        self._plant_handler.move()
 
     @staticmethod
     def _is_time_to_add_worms(cycle_count: int) -> bool:
