@@ -17,6 +17,7 @@ class Game(EventHandler):
         self._settings = SimulationSettings()
         self._settings.pond_width = 15
         self._settings.pond_height = 15
+        self._settings.animation_speed = 100
 
         self._engine = Engine(self._settings)
         self._engine._interactor.preparations()

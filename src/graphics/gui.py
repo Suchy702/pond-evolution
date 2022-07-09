@@ -93,6 +93,10 @@ class GUI(EventHandler):
                         self._zoom(-5)
                     case "c":
                         self._center_view()
+                    case ",":
+                        self._settings.animation_speed = min(100, self._settings.animation_speed + 1)
+                    case ".":
+                        self._settings.animation_speed = max(1, self._settings.animation_speed - 1)
 
     def handle_animation_events(self, events: list[Event]) -> None:
         self.draw_empty_frame()
