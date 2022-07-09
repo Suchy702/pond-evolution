@@ -108,13 +108,13 @@ class GUI(EventHandler):
         self._screen.blit(pygame.transform.scale(image, (self._cell_size, self._cell_size)), rect)
 
     def _handle_animation_event(self, event: Event):
+        if 'total_steps' not in event.args:
+            event.args['step'] = 1
+            event.args['total_steps'] = self._settings.animation_speed
+
         x, y = None, None
 
         if event.event_type == EventType.ANIM_MOVE:
-            if 'total_steps' not in event.args:
-                event.args['step'] = 1
-                event.args['total_steps'] = self._settings.animation_speed
-
             x1 = event.args['from_x'] * self._cell_size + self._x_offset
             y1 = event.args['from_y'] * self._cell_size + self._y_offset
             x2 = event.args['to_x'] * self._cell_size + self._x_offset
@@ -132,16 +132,13 @@ class GUI(EventHandler):
                 x = x1 + dist * event.args['step'] / event.args['total_steps']
                 y = a * x + b
 
-                if event.args['step'] < event.args['total_steps']:
-                    n_event = event.copy()
-                    n_event.args['step'] += 1
-                    self._event_handler.emit_event(n_event)
-
         elif event.event_type == EventType.ANIM_STAY:
             x = event.args['x'] * self._cell_size + self._x_offset
             y = event.args['y'] * self._cell_size + self._y_offset
 
+        if event.args['step'] < event.args['total_steps']:
             n_event = event.copy()
+            n_event.args['step'] += 1
             self._event_handler.emit_event(n_event)
 
         self.draw_object(event.args['object'], x, y)

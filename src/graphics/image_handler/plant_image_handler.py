@@ -24,6 +24,7 @@ class PlantImageHandler(ImageHandler):
             PlantImageHandler._alga_cache = pygame.image.load(os.path.join(IMG_DIR_PATH, 'alga.svg')).convert_alpha()
 
         if isinstance(obj, AlgaMaker):
+            print("hello")
             return PlantImageHandler._alga_maker_cache
         elif isinstance(obj, Alga):
             return PlantImageHandler._alga_cache
