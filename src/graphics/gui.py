@@ -119,12 +119,13 @@ class GUI(EventHandler):
             y1 = event.args['from_y'] * self._cell_size + self._y_offset
             x2 = event.args['to_x'] * self._cell_size + self._x_offset
             y2 = event.args['to_y'] * self._cell_size + self._y_offset
-            dist = y2 - y1
 
             if x1 == x2:
+                dist = y2 - y1
                 y = y1 + dist * event.args['step'] / event.args['total_steps']
                 x = x1
             else:
+                dist = x2 - x1
                 a = (y2 - y1) / (x2 - x1)
                 b = y1 - a * x1
 
