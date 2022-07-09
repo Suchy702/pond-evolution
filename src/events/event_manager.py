@@ -1,7 +1,6 @@
 import pygame
 
-from src.constants import LOGIC_DELAY
-from src.events.event import Event, PygameEventType
+from src.events.event import Event
 from src.events.event_handler import EventHandler
 from src.singleton import Singleton
 
@@ -10,8 +9,6 @@ class EventManager(metaclass=Singleton):
     def __init__(self):
         self._events: list[Event] = []
         self._handlers: list[EventHandler] = []
-
-        pygame.time.set_timer(PygameEventType.RUN_LOGIC, LOGIC_DELAY)
 
     def add_handlers(self, handlers: list[EventHandler]):
         self._handlers.extend(handlers)

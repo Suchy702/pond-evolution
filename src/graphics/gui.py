@@ -178,9 +178,9 @@ class GUI(EventHandler):
                         self._x_offset -= 50
                     case "right":
                         self._x_offset += 50
-                    case "equals":
+                    case "=":
                         self._zoom(5)
-                    case "minus":
+                    case "-":
                         self._zoom(-5)
                     case "c":
                         self._center_view()

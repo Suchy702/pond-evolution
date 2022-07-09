@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from src.constants import POND_WIDTH, POND_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT
+from src.constants import POND_WIDTH, POND_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT, LOGIC_DELAY
 
 
 @dataclass
@@ -10,3 +10,5 @@ class SimulationSettings:
 
     screen_width: int = SCREEN_WIDTH
     screen_height: int = SCREEN_HEIGHT
+
+    logic_delay: int = LOGIC_DELAY
