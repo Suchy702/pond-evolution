@@ -15,9 +15,8 @@ class Game(EventHandler):
         pygame.init()
 
         self._settings = SimulationSettings()
-        self._settings.pond_width = 15
-        self._settings.pond_height = 15
-        self._settings.animation_speed = 100
+        self._settings.pond_width = 50
+        self._settings.pond_height = 35
 
         self._engine = Engine(self._settings)
         self._engine._interactor.preparations()
