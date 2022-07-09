@@ -25,10 +25,9 @@ class GUI(EventHandler):
 
         self._event_handler = EventManager()
 
-    def draw_frame(self) -> None:
+    def draw_empty_frame(self) -> None:
         self._screen.fill((0, 0, 0))
         self.draw_boundary()
-        pygame.display.update()
 
     # Get indices of cells that are fully visible
     def get_visible_grid_coordinates(self) -> tuple[int, int, int, int]:
@@ -96,6 +95,7 @@ class GUI(EventHandler):
                         self._center_view()
 
     def handle_animation_events(self, events: list[Event]) -> None:
+        self.draw_empty_frame()
         for event in events:
             self._handle_animation_event(event)
         pygame.display.update()

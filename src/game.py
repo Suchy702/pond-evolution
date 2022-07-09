@@ -29,6 +29,8 @@ class Game(EventHandler):
 
     def run(self) -> None:
         clock = pygame.time.Clock()
+        self._gui.draw_empty_frame()
+        pygame.display.update()
 
         while self._running:
             clock.tick(FPS)
@@ -36,7 +38,6 @@ class Game(EventHandler):
             if self._gui.is_animation_finished():
                 self._engine.cycle()
 
-            self._gui.draw_frame()
             self._event_handler.handle_events()
 
     @overrides
@@ -44,5 +45,3 @@ class Game(EventHandler):
         for event in events:
             if event.event_type == EventType.QUIT:
                 self._running = False
-            elif event.event_type == EventType.RUN_LOGIC:
-                self._engine.cycle()
