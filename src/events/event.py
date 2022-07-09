@@ -30,9 +30,14 @@ class PygameEventType(IntEnum):
 
 @unique
 class EventType(Enum):
+    # LOGICAL
     KEY_PRESSED = auto()
     QUIT = auto()
     RUN_LOGIC = auto()
+
+    # ANIMATION
+    ANIM_MOVE = auto()
+    ANIM_STAY = auto()
 
     def __str__(self):
         return self.name
@@ -47,12 +52,13 @@ class Event:
         self.event_type = event_type
         self.args = args
 
+    def copy(self) -> Event:
+        return Event(self.event_type, **self.args)
+
     @staticmethod
     def from_pygame_event(event) -> Event | None:
         if event.type == QUIT:
             return Event(EventType.QUIT)
-        elif event.type == PygameEventType.RUN_LOGIC:
-            return Event(EventType.RUN_LOGIC)
         return None
 
     @staticmethod

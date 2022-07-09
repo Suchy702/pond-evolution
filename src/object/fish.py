@@ -3,9 +3,13 @@ from __future__ import annotations
 from random import randint
 
 import src.constants as const
+from src.events.event import Event, EventType
+from src.events.event_manager import EventManager
 from src.object.pond_object import PondObject
 from src.object_kind import ObjectKind
 from src.position import Position
+
+event_manager = EventManager()
 
 
 class Fish(PondObject):
@@ -28,7 +32,10 @@ class Fish(PondObject):
         self._vitality -= const.FISH_VITALITY_SPOIL_RATE
 
     def find_pos_to_move(self) -> Position:
-        return self.pos.changed(randint(-self._speed, self._speed), randint(-self._speed, self._speed))
+        n_pos = self.pos.changed(randint(-self._speed, self._speed), randint(-self._speed, self._speed))
+        event_manager.emit_event(
+            Event(EventType.ANIM_MOVE, object=self, from_x=self.pos.x, from_y=self.pos.y, to_x=n_pos.x, to_y=n_pos.y))
+        return n_pos
 
     def is_dead(self) -> bool:
         return self.vitality <= 0

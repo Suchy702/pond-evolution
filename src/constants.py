@@ -1,6 +1,6 @@
 # Game
 FPS: int = 30
-LOGIC_DELAY: int = 500
+ANIMATION_SPEED: int = 30  # how many frames per action
 
 # Screen
 SCREEN_WIDTH = 1080
