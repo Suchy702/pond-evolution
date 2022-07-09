@@ -32,7 +32,6 @@ class FishHandler(PondObjectHandlerHomogeneous):
     def move_fish(self) -> None:
         for fish in self.fishes:
             n_pos = self._pond.trim_position(fish.find_pos_to_move())
-            print(n_pos)
             event_manager.emit_event(
                 Event(EventType.ANIM_MOVE, object=fish, from_x=fish.pos.x, from_y=fish.pos.y, to_x=n_pos.x,
                       to_y=n_pos.y))
