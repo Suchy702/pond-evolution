@@ -11,6 +11,7 @@ from pygame.locals import (
     K_RIGHT,
     K_MINUS,
     K_EQUALS,
+    K_c,
     QUIT
 )
 
@@ -67,5 +68,7 @@ class Event:
             events.append(Event(EventType.KEY_PRESSED, key="equals"))
         if keys[K_MINUS]:
             events.append(Event(EventType.KEY_PRESSED, key="minus"))
+        if keys[K_c]:
+            events.append(Event(EventType.KEY_PRESSED, key="c"))
 
         return events

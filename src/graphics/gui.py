@@ -32,7 +32,8 @@ class GUI(EventHandler):
     def draw_frame(self) -> None:
         self._screen.fill((255, 255, 255))
         self.draw_squares()
-        pygame.display.flip()
+        self.draw_boundary()
+        pygame.display.update()
 
     def draw_squares(self, show_grid=False) -> None:
         visible_coordinates = self.get_visible_grid_coordinates()
@@ -110,6 +111,13 @@ class GUI(EventHandler):
                 is_bottom_row_cut or is_right_column_cut):
             self._draw_images(coor[1] + 1, coor[3] + 1, show_grid)
 
+    def draw_boundary(self):
+        rect = pygame.Rect(
+            self._x_offset, self._y_offset,
+            self._settings.pond_width * self._cell_size, self._settings.pond_height * self._cell_size
+        )
+        pygame.draw.rect(self._screen, (0, 0, 0), rect, 5)
+
     def clip_x(self, min_x, max_x) -> tuple[int, int]:
         return max(min_x, 0), min(max_x, self._settings.pond_width - 1)
 
@@ -174,3 +182,5 @@ class GUI(EventHandler):
                         self._zoom(5)
                     case "minus":
                         self._zoom(-5)
+                    case "c":
+                        self._center_view()
