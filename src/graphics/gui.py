@@ -31,7 +31,7 @@ class GUI(EventHandler):
 
     def draw_frame(self) -> None:
         self._screen.fill((255, 255, 255))
-        self.draw_squares(True)
+        self.draw_squares()
         pygame.display.flip()
 
     def draw_squares(self, show_grid=False) -> None:
@@ -155,7 +155,6 @@ class GUI(EventHandler):
         left_half = (max(middle, 0) - max(coor[0], 0)) / 2
         middle = (coor[3] + coor[2]) / 2
         top_half = (max(middle, 0) - max(coor[2], 0)) / 2
-        print(left_half, top_half)
         self._x_offset = int(self._x_offset - left_half * change)
         self._y_offset = int(self._y_offset - top_half * change)
 

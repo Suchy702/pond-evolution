@@ -1,5 +1,6 @@
 # Game
 FPS: int = 30
+LOGIC_DELAY: int = 500
 
 # Screen
 SCREEN_WIDTH = 1080

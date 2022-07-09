@@ -12,9 +12,11 @@ from src.simulation_settings import SimulationSettings
 
 class Game(EventHandler):
     def __init__(self):
+        pygame.init()
+
         self._settings = SimulationSettings()
-        self._settings.pond_width = 50
-        self._settings.pond_height = 50
+        self._settings.pond_width = 200
+        self._settings.pond_height = 200
 
         self._engine = Engine(self._settings)
         self._engine._interactor.preparations()
@@ -31,7 +33,6 @@ class Game(EventHandler):
         while self._running:
             clock.tick(FPS)
 
-            self._engine.cycle()
             self._gui.draw_frame()
             self._event_handler.handle_events()
 
@@ -40,3 +41,5 @@ class Game(EventHandler):
         for event in events:
             if event.event_type == EventType.QUIT:
                 self._running = False
+            elif event.event_type == EventType.RUN_LOGIC:
+                self._engine.cycle()
