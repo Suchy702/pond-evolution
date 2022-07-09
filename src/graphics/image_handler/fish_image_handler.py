@@ -17,5 +17,5 @@ class FishImageHandler(ImageHandler):
     @overrides
     def _get_object_image(self, obj: PondObject) -> Surface:
         if self._cache is None:
-            self._cache = pygame.image.load(os.path.join(IMG_DIR_PATH, 'fish.svg'))
+            self._cache = pygame.image.load(os.path.join(IMG_DIR_PATH, 'fish.svg')).convert_alpha()
         return self._cache

@@ -20,9 +20,9 @@ class PlantImageHandler(ImageHandler):
     @overrides
     def _get_object_image(self, obj: PondObject) -> Surface:
         if self._alga_maker_cache is None:
-            self._alga_maker_cache = pygame.image.load(os.path.join(IMG_DIR_PATH, 'seaweed.svg'))
+            self._alga_maker_cache = pygame.image.load(os.path.join(IMG_DIR_PATH, 'seaweed.svg')).convert_alpha()
         if self.alga_cache is None:
-            self._alga_cache = pygame.image.load(os.path.join(IMG_DIR_PATH, 'alga.svg'))
+            self._alga_cache = pygame.image.load(os.path.join(IMG_DIR_PATH, 'alga.svg')).convert_alpha()
 
         if isinstance(obj, AlgaMaker):
             return self._alga_maker_cache
