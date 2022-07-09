@@ -47,5 +47,5 @@ class Fish(PondObject):
         child_size = self._size + randint(-size_dev, size_dev)
         return Fish(child_speed, child_size, self.pos)
 
-    def brith_fishes(self) -> list[Fish]:
+    def birth_fish(self) -> list[Fish]:
         return [self._birth_fish() for _ in range(randint(const.MIN_FISH_TO_BIRTH, const.MAX_FISH_TO_BIRTH))]

@@ -37,5 +37,5 @@ class FishHandler(PondObjectHandlerHomogeneous):
             fish.spoil_vitality()
 
     def breed_fish(self) -> None:
-        self.add_all(chain.from_iterable([fish.brith_fishes() for fish in self.fishes if fish.is_breeding()]))
+        self.add_all(chain.from_iterable([fish.birth_fish() for fish in self.fishes if fish.is_breeding()]))
         self.remove_all([fish for fish in self.fishes if fish.is_breeding()])
