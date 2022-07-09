@@ -7,5 +7,8 @@ class EventHandler(ABC):
     # Interface of class that can handle events
 
     @abstractmethod
-    def handle_events(self, events: list[Event]):
+    def handle_events(self, events: list[Event]) -> None:
+        pass
+
+    def handle_animation_events(self, events: list[Event]) -> None:
         pass

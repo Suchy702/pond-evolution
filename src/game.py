@@ -3,7 +3,7 @@ from overrides import overrides
 
 from src.constants import FPS
 from src.engine import Engine
-from src.events.event import Event, EventType, PygameEventType
+from src.events.event import Event, EventType
 from src.events.event_handler import EventHandler
 from src.events.event_manager import EventManager
 from src.graphics.gui import GUI
@@ -15,8 +15,8 @@ class Game(EventHandler):
         pygame.init()
 
         self._settings = SimulationSettings()
-        self._settings.pond_width = 25
-        self._settings.pond_height = 25
+        self._settings.pond_width = 15
+        self._settings.pond_height = 15
 
         self._engine = Engine(self._settings)
         self._engine._interactor.preparations()
@@ -29,12 +29,15 @@ class Game(EventHandler):
 
     def run(self) -> None:
         clock = pygame.time.Clock()
-        pygame.time.set_timer(PygameEventType.RUN_LOGIC, self._settings.logic_delay)
+        self._gui.draw_empty_frame()
+        pygame.display.update()
 
         while self._running:
             clock.tick(FPS)
 
-            self._gui.draw_frame()
+            if self._gui.is_animation_finished():
+                self._engine.cycle()
+
             self._event_handler.handle_events()
 
     @overrides
@@ -42,17 +45,3 @@ class Game(EventHandler):
         for event in events:
             if event.event_type == EventType.QUIT:
                 self._running = False
-            elif event.event_type == EventType.RUN_LOGIC:
-                self._engine.cycle()
-            elif event.event_type == EventType.KEY_PRESSED:
-                match event.args['key']:
-                    case '.':
-                        self._settings.logic_delay = max(100, self._settings.logic_delay - 10)
-                        self._update_timer()
-                    case ',':
-                        self._settings.logic_delay = min(2000, self._settings.logic_delay + 10)
-                        self._update_timer()
-
-    def _update_timer(self):
-        pygame.time.set_timer(PygameEventType.RUN_LOGIC, 0)
-        pygame.time.set_timer(PygameEventType.RUN_LOGIC, self._settings.logic_delay)

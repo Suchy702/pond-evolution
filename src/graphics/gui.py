@@ -1,4 +1,3 @@
-import random
 from math import ceil
 
 import pygame
@@ -7,10 +6,8 @@ from pygame.surface import Surface
 from src.events.event import Event, EventType
 from src.events.event_handler import EventHandler
 from src.events.event_manager import EventManager
-from src.graphics.image_handler.image_handler import ImageHandler
-from src.graphics.image_handler.utility import get_image_handlers
+from src.graphics.image_handler.utility import get_object_image
 from src.object_handler.pond_object_handler import PondObjectHandler
-from src.position import Position
 from src.simulation_settings import SimulationSettings
 
 VERBOSE = True
@@ -19,7 +16,6 @@ VERBOSE = True
 class GUI(EventHandler):
     def __init__(self, settings: SimulationSettings, handlers: list[PondObjectHandler]):
         self._settings: SimulationSettings = settings
-        self._image_handlers: list[ImageHandler] = get_image_handlers(handlers)
 
         self._screen: Surface = pygame.display.set_mode([self._settings.screen_width, self._settings.screen_height])
         self._cell_size: int = 20  # length of square cell in px
@@ -29,16 +25,9 @@ class GUI(EventHandler):
 
         self._event_handler = EventManager()
 
-    def draw_frame(self) -> None:
+    def draw_empty_frame(self) -> None:
         self._screen.fill((0, 0, 0))
         self.draw_boundary()
-        self.draw_squares()
-        pygame.display.update()
-
-    def draw_squares(self, show_grid=False) -> None:
-        visible_coordinates = self.get_visible_grid_coordinates()
-        self.draw_full_squares(visible_coordinates, show_grid)
-        self.draw_cut_squares(visible_coordinates, show_grid)
 
     # Get indices of cells that are fully visible
     def get_visible_grid_coordinates(self) -> tuple[int, int, int, int]:
@@ -49,67 +38,6 @@ class GUI(EventHandler):
         y_max = (self._settings.screen_height - self._cell_size - self._y_offset) // self._cell_size
 
         return x_min, x_max, y_min, y_max
-
-    def draw_full_squares(self, coor, show_grid=False) -> None:
-        clipped_x = self.clip_x(coor[0], coor[1])
-        clipped_y = self.clip_y(coor[2], coor[3])
-
-        for i in range(clipped_x[0], clipped_x[1] + 1):
-            for j in range(clipped_y[0], clipped_y[1] + 1):
-                self._draw_images(i, j, show_grid)
-
-    def draw_cut_squares(self, coor, show_grid=False) -> None:
-        clipped_x = self.clip_x(coor[0], coor[1])
-        clipped_y = self.clip_y(coor[2], coor[3])
-
-        is_left_column_cut = (self._x_offset % self._cell_size != 0)
-        is_right_column_cut = (
-                self._settings.screen_width - ((clipped_x[1] + 1) * self._cell_size + self._x_offset) != 0)
-        is_top_row_cut = (self._y_offset % self._cell_size != 0)
-        is_bottom_row_cut = (
-                    self._settings.screen_height - ((clipped_y[1] + 1) * self._cell_size + self._y_offset) != 0)
-
-        is_left_column_in_pond = (0 <= coor[0] - 1 < self._settings.pond_width)
-        is_right_column_in_pond = (0 <= coor[1] + 1 < self._settings.pond_width)
-        is_top_row_in_pond = (0 <= coor[2] - 1 < self._settings.pond_height)
-        is_bottom_row_in_pond = (0 <= coor[3] + 1 < self._settings.pond_height)
-
-        # left column
-        if is_left_column_in_pond and is_left_column_cut:
-            for j in range(clipped_y[0], clipped_y[1] + 1):
-                self._draw_images((coor[0] - 1), j, show_grid)
-
-        # right column
-        if is_right_column_in_pond and is_right_column_cut:
-            for j in range(clipped_y[0], clipped_y[1] + 1):
-                self._draw_images(coor[1] + 1, j, show_grid)
-
-        # top row
-        if is_top_row_in_pond and is_top_row_cut:
-            for i in range(clipped_x[0], clipped_x[1] + 1):
-                self._draw_images(i, coor[2] - 1, show_grid)
-
-        # bottom row
-        if is_bottom_row_in_pond and is_bottom_row_cut:
-            for i in range(clipped_x[0], clipped_x[1] + 1):
-                self._draw_images(i, coor[3] + 1, show_grid)
-
-        # top-left cell
-        if is_top_row_in_pond and is_left_column_in_pond and (is_top_row_cut or is_left_column_cut):
-            self._draw_images(coor[0] - 1, coor[2] - 1, show_grid)
-
-        # top-right cell
-        if is_top_row_in_pond and is_right_column_in_pond and (is_top_row_cut or is_right_column_cut):
-            self._draw_images(coor[1] + 1, coor[2] - 1)
-
-        # bottom-left cell
-        if is_bottom_row_in_pond and is_left_column_in_pond and (is_bottom_row_cut or is_left_column_cut):
-            self._draw_images(coor[0] - 1, coor[3] + 1, show_grid)
-
-        # bottom-right cell
-        if is_bottom_row_in_pond and is_right_column_in_pond and coor[3] + 1 < self._settings.pond_height and (
-                is_bottom_row_cut or is_right_column_cut):
-            self._draw_images(coor[1] + 1, coor[3] + 1, show_grid)
 
     def draw_boundary(self):
         rect = pygame.Rect(
@@ -123,28 +51,6 @@ class GUI(EventHandler):
 
     def clip_y(self, min_y, max_y) -> tuple[int, int]:
         return max(min_y, 0), min(max_y, self._settings.pond_height - 1)
-
-    def _get_images(self, x, y) -> list[Surface]:
-        images = []
-        for img_handler in self._image_handlers:
-            pos = Position(y, x)
-            for img in img_handler.get_images_at_spot(pos):
-                images.append(pygame.transform.scale(img, (self._cell_size, self._cell_size)))
-
-        random.shuffle(images)
-        return images
-
-    def _draw_images(self, x, y, show_grid=False) -> None:
-        rect = pygame.Rect(
-            x * self._cell_size + self._x_offset, y * self._cell_size + self._y_offset,
-            self._cell_size, self._cell_size
-        )
-
-        if show_grid:
-            pygame.draw.rect(self._screen, (0, 0, 0), rect, 1)
-
-        for image in self._get_images(x, y):
-            self._screen.blit(image, rect)
 
     def _center_view(self) -> None:
         self._x_offset = self._settings.screen_width // 2 - self._settings.pond_width * self._cell_size // 2
@@ -166,6 +72,9 @@ class GUI(EventHandler):
         self._x_offset = int(self._x_offset - left_half * change)
         self._y_offset = int(self._y_offset - top_half * change)
 
+    def is_animation_finished(self):
+        return not self._event_handler.is_animation_event()
+
     def handle_events(self, events: list[Event]) -> None:
         for event in events:
             if event.event_type == EventType.KEY_PRESSED:
@@ -184,3 +93,55 @@ class GUI(EventHandler):
                         self._zoom(-5)
                     case "c":
                         self._center_view()
+
+    def handle_animation_events(self, events: list[Event]) -> None:
+        self.draw_empty_frame()
+        for event in events:
+            self._handle_animation_event(event)
+        pygame.display.update()
+
+    def draw_object(self, obj, x, y):
+        # TODO: teraz mozemy rysowac obrazki o dowolnym ration, wiec mozna zmienic self._cell_size na co innego
+        rect = pygame.Rect(x, y, self._cell_size, self._cell_size)
+
+        image = get_object_image(obj)
+        self._screen.blit(pygame.transform.scale(image, (self._cell_size, self._cell_size)), rect)
+
+    def _handle_animation_event(self, event: Event):
+        x, y = None, None
+
+        if event.event_type == EventType.ANIM_MOVE:
+            if 'total_steps' not in event.args:
+                event.args['step'] = 1
+                event.args['total_steps'] = self._settings.animation_speed
+
+            x1 = event.args['from_x'] * self._cell_size + self._x_offset
+            y1 = event.args['from_y'] * self._cell_size + self._y_offset
+            x2 = event.args['to_x'] * self._cell_size + self._x_offset
+            y2 = event.args['to_y'] * self._cell_size + self._y_offset
+
+            if x1 == x2:
+                dist = y2 - y1
+                y = y1 + dist * event.args['step'] / event.args['total_steps']
+                x = x1
+            else:
+                dist = x2 - x1
+                a = (y2 - y1) / (x2 - x1)
+                b = y1 - a * x1
+
+                x = x1 + dist * event.args['step'] / event.args['total_steps']
+                y = a * x + b
+
+                if event.args['step'] < event.args['total_steps']:
+                    n_event = event.copy()
+                    n_event.args['step'] += 1
+                    self._event_handler.emit_event(n_event)
+
+        elif event.event_type == EventType.ANIM_STAY:
+            x = event.args['x'] * self._cell_size + self._x_offset
+            y = event.args['y'] * self._cell_size + self._y_offset
+
+            n_event = event.copy()
+            self._event_handler.emit_event(n_event)
+
+        self.draw_object(event.args['object'], x, y)

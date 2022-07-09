@@ -1,9 +1,12 @@
 from random import randint
 
 from src.constants import WORM_FALLING_STEPS, WORM_BOUNCE_STEPS
+from src.events.event_manager import EventManager
 from src.object.pond_object import PondObject
 from src.object_kind import ObjectKind
 from src.position import Position
+
+event_manager = EventManager()
 
 
 class Worm(PondObject):

@@ -6,16 +6,14 @@ from pygame.surface import Surface
 
 from src.graphics.image_handler.image_handler import ImageHandler, IMG_DIR_PATH
 from src.object.pond_object import PondObject
-from src.object_handler.pond_object_handler import PondObjectHandler
 
 
 class FishImageHandler(ImageHandler):
-    def __init__(self, handler: PondObjectHandler):
-        super().__init__(handler)
-        self._cache = None
+    _cache: Surface = None
 
+    @staticmethod
     @overrides
-    def _get_object_image(self, obj: PondObject) -> Surface:
-        if self._cache is None:
-            self._cache = pygame.image.load(os.path.join(IMG_DIR_PATH, 'fish.svg')).convert_alpha()
-        return self._cache
+    def get_object_image(obj: PondObject) -> Surface:
+        if FishImageHandler._cache is None:
+            FishImageHandler._cache = pygame.image.load(os.path.join(IMG_DIR_PATH, 'fish.svg')).convert_alpha()
+        return FishImageHandler._cache
