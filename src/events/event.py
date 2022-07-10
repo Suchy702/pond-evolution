@@ -39,6 +39,9 @@ class Event:
     def copy(self) -> Event:
         return Event(self.type, **self.args)
 
+    def __getitem__(self, item):
+        return self.args[item]
+
     @staticmethod
     def from_pygame_event(event) -> Event | None:
         if event.type == QUIT:
