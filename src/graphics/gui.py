@@ -20,7 +20,7 @@ class GUI:
         self.cell_size: int = CELL_MIN_PX_SIZE  # length of square cell in px
         self.x_offset: int = 0
         self.y_offset: int = 0
-        self._center_view()
+        self.center_view()
 
         self._event_emitter = EventEmitter()
 
@@ -45,7 +45,7 @@ class GUI:
         )
         pygame.draw.rect(self._screen, (255, 255, 255), rect, 0)
 
-    def _center_view(self) -> None:
+    def center_view(self) -> None:
         self.x_offset = self.settings.screen_width // 2 - self.settings.pond_width * self.cell_size // 2
         self.y_offset = self.settings.screen_height // 2 - self.settings.pond_height * self.cell_size // 2
 
