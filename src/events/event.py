@@ -52,7 +52,14 @@ class GraphicEvent(Event):
                             from_x=self.from_x, from_y=self.from_y, to_x=self.to_x, to_y=self.to_y, step=self.step,
                             total_steps=self.total_steps)
 
+    def __str__(self):
+        return self.event_type.name
+
 
 class GameEvent(Event):
     def __init__(self, event_type: LogicEventType):
         self.event_type = event_type
+
+    @overrides
+    def copy(self) -> GameEvent:
+        return self

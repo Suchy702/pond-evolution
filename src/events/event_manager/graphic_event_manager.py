@@ -28,11 +28,11 @@ class GraphicEventManager(EventManager):
         cp_events = self._events.copy()
         cp_anim_events = self._animation_events.copy()
 
-        for event in self._events:
+        for event in cp_events:
             self._handle_static_event(event)
 
         self._gui.draw_empty_frame()
-        for event in self._animation_events:
+        for event in cp_anim_events:
             self._handle_animation_event(event)
         pygame.display.update()
 

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, cast
+from typing import TYPE_CHECKING
 
 from overrides import overrides
 
@@ -19,7 +19,6 @@ class GameEventManager(EventManager):
 
     @overrides
     def add_event(self, event: Event) -> None:
-        event = cast(event, GameEvent)
         self._events.append(event)
 
     def handle_events(self) -> None:
@@ -39,5 +38,6 @@ class GameEventManager(EventManager):
         self._events = n_events
 
     def _handle_event(self, event: GameEvent):
+        print("Hello")
         if event.event_type.name == GameEventType.QUIT:
             self._game.running = False
