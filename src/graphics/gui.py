@@ -2,10 +2,10 @@ from math import ceil
 
 import pygame
 from pygame.surface import Surface
+from src.events.event_handler import EventHandler
 
 from src.events.event import Event, EventType
-from src.events.event_handler import EventHandler
-from src.events.event_manager import EventManager
+from src.events.event_manager.event_manager import EventManager
 from src.graphics.image_handler.utility import get_object_image
 from src.simulation_settings import SimulationSettings
 

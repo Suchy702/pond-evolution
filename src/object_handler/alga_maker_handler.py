@@ -4,7 +4,7 @@ from typing import cast
 from overrides import overrides
 
 from src.events.event import Event, EventType
-from src.events.event_manager import EventManager
+from src.events.event_manager.event_manager import EventManager
 from src.object.alga import Alga
 from src.object.alga_maker import AlgaMaker
 from src.object.pond_object import PondObject

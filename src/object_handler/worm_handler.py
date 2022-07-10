@@ -4,7 +4,7 @@ from overrides import overrides
 
 from src.constants import WORM_ENERGY_VALUE, NUM_OF_NEW_WORMS_AT_CYCLE
 from src.events.event import Event, EventType
-from src.events.event_manager import EventManager
+from src.events.event_manager.event_manager import EventManager
 from src.object.pond_object import PondObject
 from src.object.worm import Worm
 from src.object_handler.pond_object_handler import PondObjectHandlerHomogeneous

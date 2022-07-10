@@ -1,5 +1,5 @@
 from src.constants import ALGA_SURFACING_STEPS
-from src.events.event_manager import EventManager
+from src.events.event_manager.event_manager import EventManager
 from src.object.pond_object import PondObject
 from src.object_kind import ObjectKind
 from src.position import Position
