@@ -8,6 +8,7 @@ from src.events.event_handler import EventHandler
 from src.events.event_manager import EventManager
 from src.graphics.image_handler.utility import get_object_image
 from src.simulation_settings import SimulationSettings
+from src.constants import CELL_MIN_PX_SIZE, CELL_MAX_PX_SIZE, MOVE_SCREEN_BY_CLICK, ZOOM_SCREEN_BY_CLICK
 
 VERBOSE = True
 
@@ -17,7 +18,8 @@ class GUI(EventHandler):
         self._settings: SimulationSettings = settings
 
         self._screen: Surface = pygame.display.set_mode([self._settings.screen_width, self._settings.screen_height])
-        self._cell_size: int = 20  # length of square cell in px
+        #self._screen: Surface = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+        self._cell_size: int = CELL_MIN_PX_SIZE  # length of square cell in px
         self._x_offset: int = 0
         self._y_offset: int = 0
         self._center_view()
@@ -45,51 +47,59 @@ class GUI(EventHandler):
         )
         pygame.draw.rect(self._screen, (255, 255, 255), rect, 0)
 
-    def clip_x(self, min_x, max_x) -> tuple[int, int]:
-        return max(min_x, 0), min(max_x, self._settings.pond_width - 1)
-
-    def clip_y(self, min_y, max_y) -> tuple[int, int]:
-        return max(min_y, 0), min(max_y, self._settings.pond_height - 1)
-
     def _center_view(self) -> None:
         self._x_offset = self._settings.screen_width // 2 - self._settings.pond_width * self._cell_size // 2
         self._y_offset = self._settings.screen_height // 2 - self._settings.pond_height * self._cell_size // 2
 
+    @staticmethod
+    def _calc_left_half(x1, x2) -> float:
+        middle = (x1 + x2) / 2
+        return (middle - x1) / 2
+
+    @staticmethod
+    def _calc_top_half(y1, y2) -> float:
+        middle = (y1 + y2) / 2
+        return (middle - y1) / 2
+
     def _zoom(self, change: int) -> None:
         old = self._cell_size
-        self._cell_size = min(max(10, self._cell_size + change), 100)
+        self._cell_size = min(max(CELL_MIN_PX_SIZE, self._cell_size + change), CELL_MAX_PX_SIZE)
 
         if self._cell_size == old:
             return
 
         # try to zoom at point in the middle
         coor = self.get_visible_grid_coordinates()
-        middle = (coor[1] + coor[0]) / 2
-        left_half = (max(middle, 0) - max(coor[0], 0)) / 2
-        middle = (coor[3] + coor[2]) / 2
-        top_half = (max(middle, 0) - max(coor[2], 0)) / 2
-        self._x_offset = int(self._x_offset - left_half * change)
-        self._y_offset = int(self._y_offset - top_half * change)
+        self._change_x_offset(int(-self._calc_left_half(coor[0], coor[1]) * change))
+        self._change_y_offset(int(-self._calc_top_half(coor[2], coor[3]) * change))
 
     def is_animation_finished(self):
         return not self._event_handler.is_animation_event()
+
+    def _change_y_offset(self, val) -> None:
+        y_offset_limit = -(self._settings.pond_height * self._cell_size - self._settings.screen_height)
+        self._y_offset = max(min(self._y_offset + val, 0), y_offset_limit)
+
+    def _change_x_offset(self, val) -> None:
+        x_offset_limit = -(self._settings.pond_width * self._cell_size - self._settings.screen_width)
+        self._x_offset = max(min(self._x_offset + val, 0), x_offset_limit)
 
     def handle_events(self, events: list[Event]) -> None:
         for event in events:
             if event.type == EventType.KEY_PRESSED:
                 match event.args["key"]:
-                    case "up":
-                        self._y_offset -= 50
                     case "down":
-                        self._y_offset += 50
-                    case "left":
-                        self._x_offset -= 50
+                        self._change_y_offset(-MOVE_SCREEN_BY_CLICK)
+                    case "up":
+                        self._change_y_offset(MOVE_SCREEN_BY_CLICK)
                     case "right":
-                        self._x_offset += 50
+                        self._change_x_offset(-MOVE_SCREEN_BY_CLICK)
+                    case "left":
+                        self._change_x_offset(MOVE_SCREEN_BY_CLICK)
                     case "=":
-                        self._zoom(5)
+                        self._zoom(ZOOM_SCREEN_BY_CLICK)
                     case "-":
-                        self._zoom(-5)
+                        self._zoom(-ZOOM_SCREEN_BY_CLICK)
                     case "c":
                         self._center_view()
                     case ",":
@@ -104,7 +114,6 @@ class GUI(EventHandler):
         pygame.display.update()
 
     def draw_object(self, obj, x, y):
-        # TODO: teraz mozemy rysowac obrazki o dowolnym ration, wiec mozna zmienic self._cell_size na co innego
         rect = pygame.Rect(x, y, self._cell_size, self._cell_size)
 
         image = get_object_image(obj)

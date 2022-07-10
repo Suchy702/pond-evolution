@@ -1,10 +1,8 @@
-from src.events.event import Event
-from src.events.event_handler import EventHandler
 from src.interactor import Interactor
 from src.simulation_settings import SimulationSettings
 
 
-class Engine(EventHandler):
+class Engine:
     def __init__(self, settings: SimulationSettings):
         self._settings: SimulationSettings = settings
         self._interactor: Interactor = Interactor(self._settings)
@@ -41,6 +39,3 @@ class Engine(EventHandler):
         self._interactor.feed_fish()
         self._interactor.add_new_objects(self._cycle_count)
         self._cycle_count += 1
-
-    def handle_events(self, events: list[Event]) -> None:
-        pass

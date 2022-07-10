@@ -15,15 +15,13 @@ class Game(EventHandler):
         pygame.init()
 
         self._settings = SimulationSettings()
-        self._settings.pond_width = 50
-        self._settings.pond_height = 35
 
         self._engine = Engine(self._settings)
         self._engine.demo()
         self._gui = GUI(self._settings)
 
         self._event_handler = EventManager()
-        self._event_handler.add_handlers([self, self._engine, self._gui])
+        self._event_handler.add_handlers([self, self._gui])
 
         self._running = True
 
@@ -39,6 +37,7 @@ class Game(EventHandler):
                 self._engine.cycle()
 
             self._event_handler.handle_events()
+            print(self._gui._x_offset, self._gui._y_offset, self._gui.get_visible_grid_coordinates())
 
     @overrides
     def handle_events(self, events: list[Event]):
