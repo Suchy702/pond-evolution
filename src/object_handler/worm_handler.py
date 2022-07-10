@@ -3,14 +3,15 @@ from typing import cast
 from overrides import overrides
 
 from src.constants import WORM_ENERGY_VALUE, NUM_OF_NEW_WORMS_AT_CYCLE
-from src.events.event import Event, EventType
-from src.events.event_manager import EventManager
+from src.events.event import GraphicEvent
+from src.events.event_emitter import EventEmitter
+from src.events.event_type import GraphicEventType
 from src.object.pond_object import PondObject
 from src.object.worm import Worm
 from src.object_handler.pond_object_handler import PondObjectHandlerHomogeneous
 from src.simulation_settings import SimulationSettings
 
-event_manager = EventManager()
+event_emitter = EventEmitter()
 
 
 class WormHandler(PondObjectHandlerHomogeneous):
@@ -33,9 +34,10 @@ class WormHandler(PondObjectHandlerHomogeneous):
     def move_worms(self) -> None:
         for worm in self.worms:
             n_pos = self._pond.trim_position(worm.find_pos_to_move())
-            event_manager.emit_event(
-                Event(EventType.ANIM_MOVE, object=worm, from_x=worm.pos.x, from_y=worm.pos.y, to_x=n_pos.x,
-                      to_y=n_pos.y))
+            event_emitter.emit_event(
+                GraphicEvent(GraphicEventType.ANIM_MOVE, pond_object=worm, from_x=worm.pos.x, from_y=worm.pos.y,
+                             to_x=n_pos.x,
+                             to_y=n_pos.y))
             self._pond.change_position(worm, n_pos)
 
     def remove_worms_on_the_ground(self) -> None:

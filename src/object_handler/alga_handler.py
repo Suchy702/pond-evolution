@@ -3,14 +3,15 @@ from typing import cast
 from overrides import overrides
 
 from src.constants import ALGA_ENERGY_VALUE
-from src.events.event import Event, EventType
-from src.events.event_manager import EventManager
+from src.events.event import GraphicEvent
+from src.events.event_emitter import EventEmitter
+from src.events.event_type import GraphicEventType
 from src.object.alga import Alga
 from src.object.pond_object import PondObject
 from src.object_handler.pond_object_handler import PondObjectHandlerHomogeneous
 from src.simulation_settings import SimulationSettings
 
-event_manager = EventManager()
+event_emitter = EventEmitter()
 
 
 class AlgaHandler(PondObjectHandlerHomogeneous):
@@ -29,9 +30,10 @@ class AlgaHandler(PondObjectHandlerHomogeneous):
     def move_algae(self) -> None:
         for algae in self.algae:
             n_pos = self._pond.trim_position(algae.find_pos_to_move())
-            event_manager.emit_event(
-                Event(EventType.ANIM_MOVE, object=algae, from_x=algae.pos.x, from_y=algae.pos.y, to_x=n_pos.x,
-                      to_y=n_pos.y))
+            event_emitter.emit_event(
+                GraphicEvent(GraphicEventType.ANIM_MOVE, pond_object=algae, from_x=algae.pos.x, from_y=algae.pos.y,
+                             to_x=n_pos.x,
+                             to_y=n_pos.y))
             self._pond.change_position(algae, n_pos)
 
     def remove_algae_on_surface(self) -> None:
