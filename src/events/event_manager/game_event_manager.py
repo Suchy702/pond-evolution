@@ -38,6 +38,5 @@ class GameEventManager(EventManager):
         self._events = n_events
 
     def _handle_event(self, event: GameEvent):
-        print("Hello")
-        if event.event_type.name == GameEventType.QUIT:
+        if event.event_type == GameEventType.QUIT:
             self._game.running = False
