@@ -15,7 +15,7 @@ class EventManager(metaclass=Singleton):
         self._handlers.extend(handlers)
 
     def emit_event(self, event: Event) -> None:
-        if event.event_type.name.startswith("ANIM_"):
+        if event.type.name.startswith("ANIM_"):
             self._animation_events.append(event)
         else:
             self._events.append(event)
@@ -40,7 +40,9 @@ class EventManager(metaclass=Singleton):
             handler.handle_events(cp_events)
             handler.handle_animation_events(cp_anim_events)
 
-        # During previous loop some events might have been emitted
+        # Delete old events. During previous loop some events might have been emitted. We need to make sure not to
+        # delete them.
+        # TODO: teraz działa w O(n^2), zamienić na O(n)
         n_events = []
         for event in self._events:
             if event not in cp_events:

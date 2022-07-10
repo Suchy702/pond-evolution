@@ -1,9 +1,8 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from enum import Enum, auto, unique, IntEnum
+from enum import Enum, auto, unique
 
-import pygame
 from pygame.locals import (
     K_UP,
     K_DOWN,
@@ -18,22 +17,12 @@ from pygame.locals import (
 )
 
 
-class PygameEventType(IntEnum):
-    def _generate_next_value_(name, start, count, last_values):
-        return pygame.USEREVENT + count + 1
-
-    RUN_LOGIC = auto()
-
-    def __str__(self):
-        return self.name
-
-
 @unique
 class EventType(Enum):
     # LOGICAL
     KEY_PRESSED = auto()
-    QUIT = auto()
     RUN_LOGIC = auto()
+    QUIT = auto()
 
     # ANIMATION
     ANIM_MOVE = auto()
@@ -45,15 +34,15 @@ class EventType(Enum):
 
 @dataclass
 class Event:
-    event_type: EventType
+    type: EventType
     args: dict[str, any]
 
     def __init__(self, event_type: EventType, **args):
-        self.event_type = event_type
+        self.type = event_type
         self.args = args
 
     def copy(self) -> Event:
-        return Event(self.event_type, **self.args)
+        return Event(self.type, **self.args)
 
     @staticmethod
     def from_pygame_event(event) -> Event | None:

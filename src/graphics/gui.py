@@ -7,14 +7,13 @@ from src.events.event import Event, EventType
 from src.events.event_handler import EventHandler
 from src.events.event_manager import EventManager
 from src.graphics.image_handler.utility import get_object_image
-from src.object_handler.pond_object_handler import PondObjectHandler
 from src.simulation_settings import SimulationSettings
 
 VERBOSE = True
 
 
 class GUI(EventHandler):
-    def __init__(self, settings: SimulationSettings, handlers: list[PondObjectHandler]):
+    def __init__(self, settings: SimulationSettings):
         self._settings: SimulationSettings = settings
 
         self._screen: Surface = pygame.display.set_mode([self._settings.screen_width, self._settings.screen_height])
@@ -77,7 +76,7 @@ class GUI(EventHandler):
 
     def handle_events(self, events: list[Event]) -> None:
         for event in events:
-            if event.event_type == EventType.KEY_PRESSED:
+            if event.type == EventType.KEY_PRESSED:
                 match event.args["key"]:
                     case "up":
                         self._y_offset -= 50
@@ -118,7 +117,7 @@ class GUI(EventHandler):
 
         x, y = None, None
 
-        if event.event_type == EventType.ANIM_MOVE:
+        if event.type == EventType.ANIM_MOVE:
             x1 = event.args['from_x'] * self._cell_size + self._x_offset
             y1 = event.args['from_y'] * self._cell_size + self._y_offset
             x2 = event.args['to_x'] * self._cell_size + self._x_offset
@@ -136,7 +135,7 @@ class GUI(EventHandler):
                 x = x1 + dist * event.args['step'] / event.args['total_steps']
                 y = a * x + b
 
-        elif event.event_type == EventType.ANIM_STAY:
+        elif event.type == EventType.ANIM_STAY:
             x = event.args['x'] * self._cell_size + self._x_offset
             y = event.args['y'] * self._cell_size + self._y_offset
 

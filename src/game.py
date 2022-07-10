@@ -19,8 +19,8 @@ class Game(EventHandler):
         self._settings.pond_height = 35
 
         self._engine = Engine(self._settings)
-        self._engine._interactor.preparations()
-        self._gui = GUI(self._settings, self._engine.all_handlers)
+        self._engine.demo()
+        self._gui = GUI(self._settings)
 
         self._event_handler = EventManager()
         self._event_handler.add_handlers([self, self._engine, self._gui])
@@ -43,5 +43,5 @@ class Game(EventHandler):
     @overrides
     def handle_events(self, events: list[Event]):
         for event in events:
-            if event.event_type == EventType.QUIT:
+            if event.type == EventType.QUIT:
                 self._running = False
