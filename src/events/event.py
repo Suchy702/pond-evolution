@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
 from enum import Enum, auto, unique
 
 from pygame.locals import (
@@ -32,14 +31,10 @@ class EventType(Enum):
         return self.name
 
 
-@dataclass
 class Event:
-    type: EventType
-    args: dict[str, any]
-
     def __init__(self, event_type: EventType, **args):
-        self.type = event_type
-        self.args = args
+        self.type: EventType = event_type
+        self.args: dict[str, any] = args
 
     def copy(self) -> Event:
         return Event(self.type, **self.args)

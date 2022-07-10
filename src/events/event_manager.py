@@ -42,15 +42,16 @@ class EventManager(metaclass=Singleton):
 
         # Delete old events. During previous loop some events might have been emitted. We need to make sure not to
         # delete them.
-        # TODO: teraz działa w O(n^2), zamienić na O(n)
         n_events = []
+        cp_events_set = set(cp_events)
         for event in self._events:
-            if event not in cp_events:
+            if event not in cp_events_set:
                 n_events.append(event)
 
         n_anim_events = []
+        cp_anim_events_set = set(cp_anim_events)
         for event in self._animation_events:
-            if event not in cp_anim_events:
+            if event not in cp_anim_events_set:
                 n_anim_events.append(event)
 
         self._events = n_events

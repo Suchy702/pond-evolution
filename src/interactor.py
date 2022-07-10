@@ -26,7 +26,7 @@ class Interactor:
     # beta function for testing
     def preparations(self) -> None:
         for handler in self.handlers:
-            handler.add_random(5)
+            handler.add_random(10)
 
     def _find_pos_where_eat(self) -> list[Position]:
         pos_where_eat = []
