@@ -43,7 +43,7 @@ class GUI:
             self.x_offset, self.y_offset,
             self.settings.pond_width * self.cell_size, self.settings.pond_height * self.cell_size
         )
-        pygame.draw.rect(self._screen, (255, 255, 255), rect, 0)
+        pygame.draw.rect(self._screen, (138, 219, 239), rect, 0)
 
     def center_view(self) -> None:
         self.x_offset = self.settings.screen_width // 2 - self.settings.pond_width * self.cell_size // 2
