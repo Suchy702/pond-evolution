@@ -6,6 +6,7 @@ from src.events.event_emitter import EventEmitter
 from src.events.event_manager.event_manager import EventManager
 from src.events.event_type import GraphicEventType
 from src.graphics.gui import GUI
+from src.constants import MOVE_SCREEN_BY_CLICK, ZOOM_SCREEN_BY_CLICK
 
 event_emitter = EventEmitter()
 
@@ -57,17 +58,17 @@ class GraphicEventManager(EventManager):
         if event.event_type == GraphicEventType.KEY_PRESSED:
             match event.key:
                 case "up":
-                    self._gui.y_offset -= 50
+                    self._gui.change_y_offset(MOVE_SCREEN_BY_CLICK)
                 case "down":
-                    self._gui.y_offset += 50
+                    self._gui.change_y_offset(-MOVE_SCREEN_BY_CLICK)
                 case "left":
-                    self._gui.x_offset -= 50
+                    self._gui.change_x_offset(MOVE_SCREEN_BY_CLICK)
                 case "right":
-                    self._gui.x_offset += 50
+                    self._gui.change_x_offset(-MOVE_SCREEN_BY_CLICK)
                 case "=":
-                    self._gui.zoom(5)
+                    self._gui.zoom(ZOOM_SCREEN_BY_CLICK)
                 case "-":
-                    self._gui.zoom(-5)
+                    self._gui.zoom(-ZOOM_SCREEN_BY_CLICK)
                 case "c":
                     self._gui.center_view()
                 case ",":

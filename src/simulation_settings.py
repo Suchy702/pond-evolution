@@ -1,14 +1,15 @@
 from dataclasses import dataclass
 
-from src.constants import POND_WIDTH, POND_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT, ANIMATION_SPEED
+from src.constants import SCREEN_WIDTH, SCREEN_HEIGHT, ANIMATION_SPEED, CELL_MIN_PX_SIZE
 
 
 @dataclass
 class SimulationSettings:
-    pond_width: int = POND_WIDTH
-    pond_height: int = POND_HEIGHT
-
     screen_width: int = SCREEN_WIDTH
     screen_height: int = SCREEN_HEIGHT
 
+    pond_width: int = SCREEN_WIDTH // CELL_MIN_PX_SIZE
+    pond_height: int = SCREEN_HEIGHT // CELL_MIN_PX_SIZE
+
     animation_speed: int = ANIMATION_SPEED
+

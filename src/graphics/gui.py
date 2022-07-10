@@ -6,6 +6,7 @@ from pygame.surface import Surface
 from src.events.event_emitter import EventEmitter
 from src.graphics.image_handler.utility import get_object_image
 from src.simulation_settings import SimulationSettings
+from src.constants import CELL_MIN_PX_SIZE, CELL_MAX_PX_SIZE, MOVE_SCREEN_BY_CLICK, ZOOM_SCREEN_BY_CLICK
 
 VERBOSE = True
 
@@ -15,10 +16,11 @@ class GUI:
         self.settings: SimulationSettings = settings
 
         self._screen: Surface = pygame.display.set_mode([self.settings.screen_width, self.settings.screen_height])
-        self.cell_size: int = 20  # length of square cell in px
+        #self._screen: Surface = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+        self.cell_size: int = CELL_MIN_PX_SIZE  # length of square cell in px
         self.x_offset: int = 0
         self.y_offset: int = 0
-        self.center_view()
+        self._center_view()
 
         self._event_emitter = EventEmitter()
 
@@ -43,38 +45,46 @@ class GUI:
         )
         pygame.draw.rect(self._screen, (255, 255, 255), rect, 0)
 
-    def clip_x(self, min_x, max_x) -> tuple[int, int]:
-        return max(min_x, 0), min(max_x, self.settings.pond_width - 1)
-
-    def clip_y(self, min_y, max_y) -> tuple[int, int]:
-        return max(min_y, 0), min(max_y, self.settings.pond_height - 1)
-
-    def center_view(self) -> None:
+    def _center_view(self) -> None:
         self.x_offset = self.settings.screen_width // 2 - self.settings.pond_width * self.cell_size // 2
         self.y_offset = self.settings.screen_height // 2 - self.settings.pond_height * self.cell_size // 2
 
+    @staticmethod
+    def _calc_left_half(x1, x2) -> float:
+        middle = (x1 + x2) / 2
+        return (middle - x1) / 2
+
+    @staticmethod
+    def _calc_top_half(y1, y2) -> float:
+        middle = (y1 + y2) / 2
+        return (middle - y1) / 2
+
     def zoom(self, change: int) -> None:
         old = self.cell_size
-        self.cell_size = min(max(10, self.cell_size + change), 100)
+        self.cell_size = min(max(CELL_MIN_PX_SIZE, self.cell_size + change), CELL_MAX_PX_SIZE)
 
         if self.cell_size == old:
             return
 
         # try to zoom at point in the middle
         coor = self.get_visible_grid_coordinates()
-        middle = (coor[1] + coor[0]) / 2
-        left_half = (max(middle, 0) - max(coor[0], 0)) / 2
-        middle = (coor[3] + coor[2]) / 2
-        top_half = (max(middle, 0) - max(coor[2], 0)) / 2
-        self.x_offset = int(self.x_offset - left_half * change)
-        self.y_offset = int(self.y_offset - top_half * change)
+        self.change_x_offset(int(-self._calc_left_half(coor[0], coor[1]) * change))
+        self.change_y_offset(int(-self._calc_top_half(coor[2], coor[3]) * change))
 
     def is_animation_finished(self):
         return not self._event_emitter.is_animation_event()
 
+    def change_y_offset(self, val) -> None:
+        y_offset_limit = -(self.settings.pond_height * self.cell_size - self.settings.screen_height)
+        self.y_offset = max(min(self.y_offset + val, 0), y_offset_limit)
+
+    def change_x_offset(self, val) -> None:
+        x_offset_limit = -(self.settings.pond_width * self.cell_size - self.settings.screen_width)
+        self.x_offset = max(min(self.x_offset + val, 0), x_offset_limit)
+
     def draw_object(self, obj, x, y):
-        # TODO: teraz mozemy rysowac obrazki o dowolnym ration, wiec mozna zmienic self._cell_size na co innego
         rect = pygame.Rect(x, y, self.cell_size, self.cell_size)
 
         image = get_object_image(obj)
         self._screen.blit(pygame.transform.scale(image, (self.cell_size, self.cell_size)), rect)
+

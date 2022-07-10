@@ -1,14 +1,16 @@
 # Game
 FPS: int = 30
-ANIMATION_SPEED: int = 30  # how many frames per action
+ANIMATION_SPEED: int = 40  # how many frames per action
 
 # Screen
 SCREEN_WIDTH = 1080
 SCREEN_HEIGHT = 720
+CELL_MIN_PX_SIZE = 20
+CELL_MAX_PX_SIZE = 80
 
-# Pond
-POND_WIDTH: int = 100
-POND_HEIGHT: int = 100
+#Events
+MOVE_SCREEN_BY_CLICK = 50
+ZOOM_SCREEN_BY_CLICK = 5
 
 # Algae
 ALGA_SURFACING_STEPS: int = 15
