@@ -1,7 +1,9 @@
+from typing import cast
+
 from overrides import overrides
 
 from src.engine import Engine
-from src.events.event import LogicEvent
+from src.events.event import LogicEvent, Event
 from src.events.event_manager.event_manager import EventManager
 
 
@@ -11,7 +13,8 @@ class LogicEventManager(EventManager):
         self._handler: Engine = engine
 
     @overrides
-    def add_event(self, event: LogicEvent) -> None:
+    def add_event(self, event: Event) -> None:
+        event = cast(event, LogicEvent)
         self._events.append(event)
 
     @overrides

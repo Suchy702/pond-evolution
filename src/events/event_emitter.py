@@ -1,4 +1,6 @@
-from typing import Optional
+from __future__ import annotations
+
+from typing import Optional, TYPE_CHECKING
 
 import pygame
 from pygame.locals import (
@@ -15,21 +17,22 @@ from pygame.locals import (
 )
 
 from src.events.event import Event, GameEvent, LogicEvent, GraphicEvent
-from src.events.event_manager.event_manager import EventManager
-from src.events.event_manager.game_event_manager import GameEventManager
-from src.events.event_manager.graphic_event_manager import GraphicEventManager
-from src.events.event_manager.logic_event_manager import LogicEventManager
+
+if TYPE_CHECKING:
+    from src.events.event_manager.game_event_manager import GameEventManager
+    from src.events.event_manager.graphic_event_manager import GraphicEventManager
+    from src.events.event_manager.logic_event_manager import LogicEventManager
 from src.events.event_type import GameEventType, GraphicEventType
 from src.singleton import Singleton
 
 
 class EventEmitter(metaclass=Singleton):
     def __init__(self):
-        self._game_event_manager: Optional[GameEventManager] = None
-        self._graphic_event_manager: Optional[GraphicEventManager] = None
-        self._logic_event_manager: Optional[LogicEventManager] = None
+        self.game_event_manager: Optional[GameEventManager] = None
+        self.graphic_event_manager: Optional[GraphicEventManager] = None
+        self.logic_event_manager: Optional[LogicEventManager] = None
 
-    def add_manager(self, manager: EventManager) -> None:
+    """def add_manager(self, manager: EventManager) -> None:
         if isinstance(manager, GameEventManager):
             self._game_event_manager = manager
         elif isinstance(manager, GraphicEventManager):
@@ -38,14 +41,15 @@ class EventEmitter(metaclass=Singleton):
             self._logic_event_manager = manager
         else:
             raise Exception('Unknown type')
+    """
 
     def emit_event(self, event: Event) -> None:
         if isinstance(event, GameEvent):
-            self._game_event_manager.add_event(event)
+            self.game_event_manager.add_event(event)
         elif isinstance(event, GraphicEvent):
-            self._graphic_event_manager.add_event(event)
+            self.graphic_event_manager.add_event(event)
         elif isinstance(event, LogicEvent):
-            self._logic_event_manager.add_event(event)
+            self.logic_event_manager.add_event(event)
         else:
             raise Exception('Unknown type')
 
@@ -76,6 +80,9 @@ class EventEmitter(metaclass=Singleton):
 
     def handle_events(self) -> None:
         self._emit_pygame_events()
-        self._game_event_manager.handle_events()
-        self._graphic_event_manager.handle_events()
-        self._logic_event_manager.handle_events()
+        self.game_event_manager.handle_events()
+        self.graphic_event_manager.handle_events()
+        self.logic_event_manager.handle_events()
+
+    def is_animation_event(self) -> bool:
+        return self.graphic_event_manager.is_animation_event()
