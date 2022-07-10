@@ -48,23 +48,11 @@ class Event:
     @staticmethod
     def from_pygame_pressed_keys_dict(keys) -> list[Event]:
         events = []
-        if keys[K_UP]:
-            events.append(Event(EventType.KEY_PRESSED, key="up"))
-        if keys[K_DOWN]:
-            events.append(Event(EventType.KEY_PRESSED, key="down"))
-        if keys[K_LEFT]:
-            events.append(Event(EventType.KEY_PRESSED, key="left"))
-        if keys[K_RIGHT]:
-            events.append(Event(EventType.KEY_PRESSED, key="right"))
-        if keys[K_EQUALS]:
-            events.append(Event(EventType.KEY_PRESSED, key="="))
-        if keys[K_MINUS]:
-            events.append(Event(EventType.KEY_PRESSED, key="-"))
-        if keys[K_c]:
-            events.append(Event(EventType.KEY_PRESSED, key="c"))
-        if keys[K_COMMA]:
-            events.append(Event(EventType.KEY_PRESSED, key=","))
-        if keys[K_PERIOD]:
-            events.append(Event(EventType.KEY_PRESSED, key="."))
+        supported_keys = [K_UP, K_DOWN, K_LEFT, K_RIGHT, K_EQUALS, K_MINUS, K_c, K_COMMA, K_PERIOD]
+        transformed_keys = ['up', 'down', 'left', 'right', '=', '-', 'c', ',', '.']
+
+        for idx, supported_key in enumerate(supported_keys):
+            if keys[supported_key]:
+                events.append(Event(EventType.KEY_PRESSED, key=transformed_keys[idx]))
 
         return events
