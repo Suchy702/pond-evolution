@@ -3,10 +3,10 @@ from math import ceil
 import pygame
 from pygame.surface import Surface
 
+from src.constants import CELL_MIN_PX_SIZE, CELL_MAX_PX_SIZE
 from src.events.event_emitter import EventEmitter
 from src.graphics.image_handler.utility import get_object_image
 from src.simulation_settings import SimulationSettings
-from src.constants import CELL_MIN_PX_SIZE, CELL_MAX_PX_SIZE, MOVE_SCREEN_BY_CLICK, ZOOM_SCREEN_BY_CLICK
 
 VERBOSE = True
 
@@ -76,11 +76,19 @@ class GUI:
 
     def change_y_offset(self, val) -> None:
         y_offset_limit = -(self.settings.pond_height * self.cell_size - self.settings.screen_height)
-        self.y_offset = max(min(self.y_offset + val, 0), y_offset_limit)
+
+        if y_offset_limit < 0:
+            self.y_offset = max(min(self.y_offset + val, 0), y_offset_limit)
+        else:
+            self.y_offset = max(min(self.y_offset + val, y_offset_limit), 0)
 
     def change_x_offset(self, val) -> None:
         x_offset_limit = -(self.settings.pond_width * self.cell_size - self.settings.screen_width)
-        self.x_offset = max(min(self.x_offset + val, 0), x_offset_limit)
+
+        if x_offset_limit < 0:
+            self.x_offset = max(min(self.x_offset + val, 0), x_offset_limit)
+        else:
+            self.x_offset = max(min(self.x_offset + val, x_offset_limit), 0)
 
     def draw_object(self, obj, x, y):
         rect = pygame.Rect(x, y, self.cell_size, self.cell_size)
