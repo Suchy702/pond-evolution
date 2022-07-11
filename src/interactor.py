@@ -21,7 +21,7 @@ class Interactor:
 
     @property
     def all_objects(self) -> list[PondObject]:
-        return reduce(lambda list_, handler: list_ + handler.objects, self.handlers, [])
+        return reduce(lambda list_, handler: list_ + handler.objects, self.handlers, [])  # type: ignore
 
     # beta function for testing
     def preparations(self) -> None:

@@ -32,17 +32,6 @@ class EventEmitter(metaclass=Singleton):
         self.graphic_event_manager: Optional[GraphicEventManager] = None
         self.logic_event_manager: Optional[LogicEventManager] = None
 
-    """def add_manager(self, manager: EventManager) -> None:
-        if isinstance(manager, GameEventManager):
-            self._game_event_manager = manager
-        elif isinstance(manager, GraphicEventManager):
-            self._graphic_event_manager = manager
-        elif isinstance(manager, LogicEventManager):
-            self._logic_event_manager = manager
-        else:
-            raise Exception('Unknown type')
-    """
-
     def emit_event(self, event: Event) -> None:
         if isinstance(event, GameEvent):
             self.game_event_manager.add_event(event)

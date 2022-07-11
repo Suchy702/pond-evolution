@@ -1,4 +1,4 @@
-from pygame import Surface
+from pygame.surface import Surface
 
 from src.graphics.image_handler.fish_image_handler import FishImageHandler
 from src.graphics.image_handler.plant_image_handler import PlantImageHandler
