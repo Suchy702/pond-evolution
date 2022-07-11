@@ -1,27 +1,41 @@
 from __future__ import annotations
 
-from abc import abstractmethod, ABC
-from typing import Optional
+import inspect
+from abc import ABC
+from typing import Optional, TypeVar, Generic, cast
 
 from overrides import overrides
 
-from src.events.event_type import LogicEventType, GraphicEventType
+from src.events.event_type import LogicEventType, GraphicEventType, EventType, GameEventType
 from src.object.pond_object import PondObject
 
+T = TypeVar('T', bound=EventType)
 
-class Event(ABC):
-    # TODO: jakoś zaimplementować łatwiej
-    @abstractmethod
+
+class Event(ABC, Generic[T]):
+    def __init__(self, event_type: T, **kwargs):
+        self.event_type: T = event_type
+
     def copy(self) -> Event:
-        pass
+        attributes = inspect.getmembers(self, lambda a: not (inspect.isroutine(a)))
+        attributes = [a for a in attributes if not (a[0].startswith('_') or a[0].endswith('_'))]
+        attr_set = {attr[0]: getattr(self, attr[0]) for attr in attributes}
+        event_type = attr_set['event_type']
+        attr_set.pop('event_type')
+        return self.__class__(event_type, **attr_set)
 
 
-class LogicEvent(Event):
+class LogicEvent(Event[LogicEventType]):
     def __init__(self, event_type: LogicEventType):
-        self.event_type: LogicEventType = event_type
+        super().__init__(event_type)
+
+    @overrides
+    def copy(self) -> LogicEvent:
+        cp = cast(LogicEvent, super().copy())
+        return cp
 
 
-class GraphicEvent(Event):
+class GraphicEvent(Event[GraphicEventType]):
     def __init__(self,
                  event_type: GraphicEventType, *,
                  key: Optional[str] = None,
@@ -34,7 +48,7 @@ class GraphicEvent(Event):
                  to_y: Optional[int] = None,
                  step: Optional[int] = 1,
                  total_steps: Optional[int] = None):
-        self.event_type = event_type
+        super().__init__(event_type)
         self.key = key
         self.pond_object = pond_object
         self.x = x
@@ -48,18 +62,18 @@ class GraphicEvent(Event):
 
     @overrides
     def copy(self) -> GraphicEvent:
-        return GraphicEvent(self.event_type, key=self.key, pond_object=self.pond_object, x=self.x, y=self.y,
-                            from_x=self.from_x, from_y=self.from_y, to_x=self.to_x, to_y=self.to_y, step=self.step,
-                            total_steps=self.total_steps)
+        cp = cast(GraphicEvent, super().copy())
+        return cp
 
     def __str__(self):
         return self.event_type.name
 
 
-class GameEvent(Event):
-    def __init__(self, event_type: LogicEventType):
-        self.event_type = event_type
+class GameEvent(Event[GameEventType]):
+    def __init__(self, event_type: GameEventType):
+        super().__init__(event_type)
 
     @overrides
     def copy(self) -> GameEvent:
-        return self
+        cp = cast(GameEvent, super().copy())
+        return cp
