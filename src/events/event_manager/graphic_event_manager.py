@@ -1,12 +1,12 @@
 import pygame
 from overrides import overrides
 
+from src.constants import MOVE_SCREEN_BY_CLICK, ZOOM_SCREEN_BY_CLICK
 from src.events.event import GraphicEvent, Event
 from src.events.event_emitter import EventEmitter
 from src.events.event_manager.event_manager import EventManager
 from src.events.event_type import GraphicEventType
 from src.graphics.gui import GUI
-from src.constants import MOVE_SCREEN_BY_CLICK, ZOOM_SCREEN_BY_CLICK
 
 event_emitter = EventEmitter()
 
@@ -28,6 +28,8 @@ class GraphicEventManager(EventManager):
     def handle_events(self) -> None:
         cp_events = self._events.copy()
         cp_anim_events = self._animation_events.copy()
+        self._events.clear()
+        self._animation_events.clear()
 
         for event in cp_events:
             self._handle_static_event(event)
@@ -36,23 +38,6 @@ class GraphicEventManager(EventManager):
         for event in cp_anim_events:
             self._handle_animation_event(event)
         pygame.display.update()
-
-        # Delete old events. During previous loop some events might have been emitted. We need to make sure not to
-        # delete them.
-        n_events = []
-        cp_events_set = set(cp_events)
-        for event in self._events:
-            if event not in cp_events_set:
-                n_events.append(event)
-
-        n_anim_events = []
-        cp_anim_events_set = set(cp_anim_events)
-        for event in self._animation_events:
-            if event not in cp_anim_events_set:
-                n_anim_events.append(event)
-
-        self._events = n_events
-        self._animation_events = n_anim_events
 
     def _handle_static_event(self, event: GraphicEvent):
         if event.event_type == GraphicEventType.KEY_PRESSED:
