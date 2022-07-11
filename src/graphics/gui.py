@@ -58,22 +58,17 @@ class GUI:
         self.x_offset = self.settings.screen_width // 2 - self.settings.pond_width * self.cell_size // 2
         self.y_offset = self.settings.screen_height // 2 - self.settings.pond_height * self.cell_size // 2
 
-    @staticmethod
-    def _calc_left_half(x1, x2) -> float:
-        middle = (x1 + x2) / 2
-        return (middle - x1) / 2
-
-    @staticmethod
-    def _calc_top_half(y1, y2) -> float:
-        middle = (y1 + y2) / 2
-        return (middle - y1) / 2
-
     def zoom(self, change: int) -> None:
         old_cell_size = self.cell_size
         self.cell_size = min(max(CELL_MIN_PX_SIZE, self.cell_size + change), CELL_MAX_PX_SIZE)
 
         if self.cell_size == old_cell_size:
             return
+
+        """
+        The idea is to find distance between point in the middle of the screen and point in the middle of the pond and
+        then inspect how this distance changes upon cell_size change
+        """
 
         pond_center_x: float = self.x_offset + old_cell_size * self.settings.pond_width // 2
         pond_center_y: float = self.y_offset + old_cell_size * self.settings.pond_height // 2
