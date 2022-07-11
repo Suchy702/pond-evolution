@@ -2,69 +2,53 @@ import pytest
 
 from src.pond import Pond
 from src.position import Position
-from src.simulation_settings import SimulationSettings
-
-from tests.unit.helper import get_object
-
-INF = 1_000_000_000
+# noinspection PyUnresolvedReferences
+from tests.helper import pond_object, INF, settings
 
 
 @pytest.fixture
-def settings():
-    s = SimulationSettings()
-    s.pond_width = 10
-    s.pond_height = 5
-    return s
-
-
-@pytest.fixture
-def sample_pond(settings):
+def pond(settings):
     return Pond(settings)
 
 
-@pytest.fixture
-def obj():
-    return get_object()
+def test_add(pond, pond_object):
+    pond.add(pond_object)
+    assert pond_object in pond.get_spot(pond_object.pos)
 
 
-def test_add(sample_pond, obj):
-    sample_pond.add(obj)
-    assert obj in sample_pond.get_spot(obj.pos)
-
-
-def test_adding_same_obj_twice(sample_pond, obj):
-    sample_pond.add(obj)
+def test_adding_same_obj_twice(pond, pond_object):
+    pond.add(pond_object)
     with pytest.raises(Exception):
-        sample_pond.add(obj)
+        pond.add(pond_object)
 
 
-def test_remove(sample_pond, obj):
-    sample_pond.add(obj)
-    sample_pond.remove(obj)
-    assert len(sample_pond.get_spot(obj.pos)) == 0
+def test_remove(pond, pond_object):
+    pond.add(pond_object)
+    pond.remove(pond_object)
+    assert len(pond.get_spot(pond_object.pos)) == 0
 
 
-def test_removing_object_which_not_in_spot(sample_pond, obj):
+def test_removing_object_not_in_spot(pond, pond_object):
     with pytest.raises(Exception):
-        sample_pond.remove(obj)
+        pond.remove(pond_object)
 
 
 @pytest.mark.parametrize("pos", (Position(-1, -1), Position(INF, INF), Position(0, 0), Position(1, 1)))
-def test_correct_pos(sample_pond, pos):
-    corr_pos = sample_pond.trim_position(pos)
-    assert 0 <= corr_pos.y < sample_pond.height and 0 <= corr_pos.x < sample_pond.width
+def test_trim_position(pond, pos):
+    corr_pos = pond.trim_position(pos)
+    assert 0 <= corr_pos.y < pond.height and 0 <= corr_pos.x < pond.width
 
 
 @pytest.mark.parametrize("pos", (Position(4, 1), Position(4, 0), Position(4, 3)))
-def test_is_on_ground_when_is_on_ground(sample_pond, pos):
-    assert sample_pond.is_on_ground(pos) is True
+def test_is_on_ground_when_is_on_ground(pond, pos):
+    assert pond.is_on_ground(pos) is True
 
 
 @pytest.mark.parametrize("pos", (Position(0, 0), Position(1, 1), Position(2, 0)))
-def test_is_on_ground_when_not_on_the_ground(sample_pond, pos):
-    assert sample_pond.is_on_ground(pos) is False
+def test_is_on_ground_when_not_on_ground(pond, pos):
+    assert pond.is_on_ground(pos) is False
 
 
 @pytest.mark.parametrize("pos", (Position(0, 0), Position(1, 1), Position(0, 4)))
-def test_is_on_surface(sample_pond, pos):
-    assert sample_pond.is_on_surface(pos) == (pos.y == 0)
+def test_is_on_surface(pond, pos):
+    assert pond.is_on_surface(pos) == (pos.y == 0)
