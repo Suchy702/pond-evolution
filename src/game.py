@@ -15,6 +15,7 @@ class Game:
         pygame.init()
 
         self._settings = SimulationSettings()
+        self._settings.pond_width = 100
 
         self._engine = Engine(self._settings)
         self._engine.demo()
