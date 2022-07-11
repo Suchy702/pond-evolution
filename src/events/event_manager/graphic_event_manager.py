@@ -1,7 +1,7 @@
 import pygame
 from overrides import overrides
 
-from src.events.event import GraphicEvent, Event
+from src.events.event import GraphicEvent
 from src.events.event_emitter import EventEmitter
 from src.events.event_manager.event_manager import EventManager
 from src.events.event_type import GraphicEventType

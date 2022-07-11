@@ -8,11 +8,15 @@ SCREEN_HEIGHT: int = 720
 CELL_MIN_PX_SIZE: int = 20
 CELL_MAX_PX_SIZE: int = 80
 
-#colors
+# Animation
+MIN_ANIMATION_SPEED = 10
+MAX_ANIMATION_SPEED = 60
+
+# Colors
 BLACK: tuple[int, int, int] = (0, 0, 0)
 LIGHT_BLUE: tuple[int, int, int] = (138, 219, 239)
 
-#Events
+# Events
 MOVE_SCREEN_BY_CLICK = 50
 ZOOM_SCREEN_BY_CLICK = 5
 
