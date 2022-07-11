@@ -10,6 +10,12 @@ from src.simulation_settings import SimulationSettings
 
 VERBOSE = True
 
+def signum(x):
+    if x > 0:
+        return 1
+    elif x < 0:
+        return -1
+    return 0
 
 class GUI:
     def __init__(self, settings: SimulationSettings):
@@ -63,16 +69,43 @@ class GUI:
         return (middle - y1) / 2
 
     def zoom(self, change: int) -> None:
-        old = self.cell_size
+        old_cell_size = self.cell_size
         self.cell_size = min(max(CELL_MIN_PX_SIZE, self.cell_size + change), CELL_MAX_PX_SIZE)
 
-        if self.cell_size == old:
+        if self.cell_size == old_cell_size:
             return
 
-        # try to zoom at point in the middle
-        coor = self.get_visible_grid_coordinates()
-        self.change_x_offset(int(-self._calc_left_half(coor[0], coor[1]) * change))
-        self.change_y_offset(int(-self._calc_top_half(coor[2], coor[3]) * change))
+        pond_center_x: float = self.x_offset + old_cell_size * self.settings.pond_width // 2
+        pond_center_y: float = self.y_offset + old_cell_size * self.settings.pond_height // 2
+
+        if self.settings.pond_width % 2 == 1:
+            pond_center_x += old_cell_size / 2
+
+        if self.settings.pond_height % 2 == 1:
+            pond_center_y += old_cell_size / 2
+
+        screen_center_x = self.settings.screen_width / 2
+        screen_center_y = self.settings.screen_height / 2
+
+        vertical_cells = min(abs(screen_center_x - pond_center_x) / old_cell_size,
+                             self.settings.pond_width / 2) * signum(screen_center_x - pond_center_x)
+        horizontal_cells = min(abs(screen_center_y - pond_center_y) / old_cell_size,
+                               self.settings.screen_height / 2) * signum(screen_center_y - pond_center_y)
+
+        diff_x = self.settings.screen_width / 2 - pond_center_x
+        diff_y = self.settings.screen_height / 2 - pond_center_y
+
+        diff_x_after_zoom = diff_x + vertical_cells * change
+        diff_y_after_zoom = diff_y + horizontal_cells * change
+
+        pond_center_x = self.x_offset + self.cell_size * self.settings.pond_width // 2
+        pond_center_y = self.y_offset + self.cell_size * self.settings.pond_height // 2
+
+        old_screen_center_x = pond_center_x + diff_x_after_zoom
+        old_screen_center_y = pond_center_y + diff_y_after_zoom
+
+        self.change_x_offset(int(screen_center_x - old_screen_center_x))
+        self.change_y_offset(int(screen_center_y - old_screen_center_y))
 
     def is_animation_finished(self):
         return not self._event_emitter.is_animation_event()
