@@ -3,7 +3,9 @@ from math import ceil
 import pygame
 from pygame.surface import Surface
 
-from src.constants import CELL_MIN_PX_SIZE, CELL_MAX_PX_SIZE
+from itertools import chain
+
+from src.constants import CELL_MIN_PX_SIZE, CELL_MAX_PX_SIZE, BLACK, LIGHT_BLUE
 from src.events.event_emitter import EventEmitter
 from src.graphics.image_handler.utility import get_object_image
 from src.simulation_settings import SimulationSettings
@@ -16,7 +18,7 @@ class GUI:
         self.settings: SimulationSettings = settings
 
         self._screen: Surface = pygame.display.set_mode([self.settings.screen_width, self.settings.screen_height])
-        #self._screen: Surface = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+        # self._screen: Surface = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
         self.cell_size: int = CELL_MIN_PX_SIZE  # length of square cell in px
         self.x_offset: int = 0
         self.y_offset: int = 0
@@ -25,25 +27,30 @@ class GUI:
         self._event_emitter = EventEmitter()
 
     def draw_empty_frame(self) -> None:
-        self._screen.fill((0, 0, 0))
+        self._screen.fill(BLACK)
         self.draw_boundary()
 
-    # Get indices of cells that are fully visible
-    def get_visible_grid_coordinates(self) -> tuple[int, int, int, int]:
+    def get_visible_gird_x_coordinates(self) -> tuple[int, int]:
         x_min = int(ceil(-self.x_offset / self.cell_size))
         x_max = (self.settings.screen_width - self.cell_size - self.x_offset) // self.cell_size
+        return x_min, x_max
 
+    def get_visible_grid_y_coordinates(self) -> tuple[int, int]:
         y_min = int(ceil(-self.y_offset / self.cell_size))
         y_max = (self.settings.screen_height - self.cell_size - self.y_offset) // self.cell_size
+        return y_min, y_max
 
-        return x_min, x_max, y_min, y_max
+    def get_visible_grid_coordinates(self) -> tuple[int, int, int, int]:
+        x_min, x_max = self.get_visible_gird_x_coordinates()
+        y_min, y_max = self.get_visible_grid_y_coordinates()
+        return self.get_visible_gird_x_coordinates(), self.get_visible_grid_y_coordinates()
 
     def draw_boundary(self):
         rect = pygame.Rect(
             self.x_offset, self.y_offset,
             self.settings.pond_width * self.cell_size, self.settings.pond_height * self.cell_size
         )
-        pygame.draw.rect(self._screen, (138, 219, 239), rect, 0)
+        pygame.draw.rect(self._screen, LIGHT_BLUE, rect, 0)
 
     def center_view(self) -> None:
         self.x_offset = self.settings.screen_width // 2 - self.settings.pond_width * self.cell_size // 2
@@ -95,4 +102,3 @@ class GUI:
 
         image = get_object_image(obj)
         self._screen.blit(pygame.transform.scale(image, (self.cell_size, self.cell_size)), rect)
-

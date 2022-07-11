@@ -8,6 +8,11 @@ SCREEN_HEIGHT = 720
 CELL_MIN_PX_SIZE = 20
 CELL_MAX_PX_SIZE = 80
 
+#colors
+BLACK: tuple[int, int, int] = (0, 0, 0)
+LIGHT_BLUE: tuple[int, int, int] = (138, 219, 239)
+
+
 #Events
 MOVE_SCREEN_BY_CLICK = 50
 ZOOM_SCREEN_BY_CLICK = 5
