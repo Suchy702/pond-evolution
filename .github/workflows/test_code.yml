@@ -28,6 +28,9 @@ jobs:
         python -m pip install --upgrade pip
         pip install pytest pytest-custom_exit_code
         if [ -f requirements_dev.txt ]; then pip install -r requirements_dev.txt; fi
-    - name: Test with pytest
+    - name: Unit tests
       run: |
-        pytest --suppress-no-test-exit-code tests
+        pytest --suppress-no-test-exit-code tests/unit
+    - name: Integration tests
+      run: |
+        pytest --suppress-no-test-exit-code tests/integration
