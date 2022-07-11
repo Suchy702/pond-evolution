@@ -3,7 +3,15 @@ from math import ceil
 import pygame
 from pygame.surface import Surface
 
-from src.constants import CELL_MIN_PX_SIZE, CELL_MAX_PX_SIZE, BLACK, LIGHT_BLUE
+from src.constants import (
+    CELL_MIN_PX_SIZE,
+    CELL_MAX_PX_SIZE,
+    BLACK,
+    LIGHT_BLUE,
+    MIN_ANIMATION_SPEED,
+    MAX_ANIMATION_SPEED,
+)
+
 from src.events.event_emitter import EventEmitter
 from src.graphics.image_handler.utility import get_object_image
 from src.simulation_settings import SimulationSettings
@@ -20,6 +28,7 @@ class GUI:
         self.cell_size: int = CELL_MIN_PX_SIZE  # length of square cell in px
         self.x_offset: int = 0
         self.y_offset: int = 0
+        self.animation_speed: int = settings.animation_speed
         self.center_view()
 
         self._event_emitter = EventEmitter()
@@ -27,6 +36,9 @@ class GUI:
     def draw_empty_frame(self) -> None:
         self._screen.fill(BLACK)
         self.draw_boundary()
+
+    def change_animation_speed(self, val) -> None:
+        self.animation_speed = min(max(MIN_ANIMATION_SPEED, self.animation_speed+val), MAX_ANIMATION_SPEED)
 
     def get_visible_gird_x_coordinates(self) -> tuple[int, int]:
         x_min = int(ceil(-self.x_offset / self.cell_size))

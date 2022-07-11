@@ -3,7 +3,7 @@ from typing import cast
 import pygame
 from overrides import overrides
 
-from src.constants import MOVE_SCREEN_BY_CLICK, ZOOM_SCREEN_BY_CLICK
+from src.constants import MOVE_SCREEN_BY_CLICK, ZOOM_SCREEN_BY_CLICK, ANIMATION_SPEED_CHANGE
 from src.events.event import GraphicEvent, Event
 from src.events.event_emitter import EventEmitter
 from src.events.event_manager.event_manager import EventManager
@@ -65,9 +65,9 @@ class GraphicEventManager(EventManager):
             case "c":
                 self._gui.center_view()
             case ",":
-                self._gui.settings.animation_speed = min(100, self._gui.settings.animation_speed + 1)
+                self._gui.change_animation_speed(ANIMATION_SPEED_CHANGE)
             case ".":
-                self._gui.settings.animation_speed = max(1, self._gui.settings.animation_speed - 1)
+                self._gui.change_animation_speed(-ANIMATION_SPEED_CHANGE)
 
     def _find_pos_to_draw_when_move(self, event: GraphicEvent) -> tuple[float, float]:
         x1 = event.from_x * self._gui.cell_size + self._gui.x_offset

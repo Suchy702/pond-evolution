@@ -11,6 +11,7 @@ CELL_MAX_PX_SIZE: int = 80
 # Animation
 MIN_ANIMATION_SPEED = 10
 MAX_ANIMATION_SPEED = 60
+ANIMATION_SPEED_CHANGE = 2
 
 # Colors
 BLACK: tuple[int, int, int] = (0, 0, 0)
