@@ -18,8 +18,7 @@ class GraphicEventManager(EventManager):
         self._gui: GUI = gui
 
     @overrides
-    def add_event(self, event: Event) -> None:
-        # event = cast(event, GraphicEvent)
+    def add_event(self, event: GraphicEvent) -> None:
         if event.event_type.name.startswith("ANIM_"):
             self._animation_events.append(event)
         else:

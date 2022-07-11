@@ -3,8 +3,6 @@ from math import ceil
 import pygame
 from pygame.surface import Surface
 
-from itertools import chain
-
 from src.constants import CELL_MIN_PX_SIZE, CELL_MAX_PX_SIZE, BLACK, LIGHT_BLUE
 from src.events.event_emitter import EventEmitter
 from src.graphics.image_handler.utility import get_object_image
@@ -43,13 +41,11 @@ class GUI:
     def get_visible_grid_coordinates(self) -> tuple[int, int, int, int]:
         x_min, x_max = self.get_visible_gird_x_coordinates()
         y_min, y_max = self.get_visible_grid_y_coordinates()
-        return self.get_visible_gird_x_coordinates(), self.get_visible_grid_y_coordinates()
+        return x_min, x_max, y_min, y_max
 
     def draw_boundary(self):
-        rect = pygame.Rect(
-            self.x_offset, self.y_offset,
-            self.settings.pond_width * self.cell_size, self.settings.pond_height * self.cell_size
-        )
+        rect_width, rect_height = self.settings.pond_width * self.cell_size, self.settings.pond_height * self.cell_size
+        rect = pygame.Rect(self.x_offset, self.y_offset, rect_width, rect_height)
         pygame.draw.rect(self._screen, LIGHT_BLUE, rect, 0)
 
     def center_view(self) -> None:
