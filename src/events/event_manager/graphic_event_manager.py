@@ -69,7 +69,7 @@ class GraphicEventManager(EventManager):
             case ".":
                 self._gui.settings.animation_speed = max(1, self._gui.settings.animation_speed - 1)
 
-    def _find_pos_to_draw_when_move(self, event: GraphicEvent) -> tuple[float, float]:
+    def _find_pos_to_draw_when_move(self, event: GraphicEvent) -> tuple[int, int]:
         x1 = event.from_x * self._gui.cell_size + self._gui.x_offset
         y1 = event.from_y * self._gui.cell_size + self._gui.y_offset
         x2 = event.to_x * self._gui.cell_size + self._gui.x_offset
@@ -77,23 +77,23 @@ class GraphicEventManager(EventManager):
 
         if x1 == x2:
             dist = y2 - y1
-            y = y1 + dist * event.step / event.total_steps
+            y = int(y1 + dist * event.step / event.total_steps)
             x = x1
         else:
             dist = x2 - x1
             a = (y2 - y1) / (x2 - x1)
             b = y1 - a * x1
 
-            x = x1 + dist * event.step / event.total_steps
-            y = a * x + b
+            x = int(x1 + dist * event.step / event.total_steps)
+            y = int(a * x + b)
         return x, y
 
-    def _find_pos_to_draw_when_stay(self, event: GraphicEvent) -> tuple[float, float]:
-        x = event.x * self._gui.cell_size + self._gui.x_offset
-        y = event.y * self._gui.cell_size + self._gui.y_offset
+    def _find_pos_to_draw_when_stay(self, event: GraphicEvent) -> tuple[int, int]:
+        x = int(event.x * self._gui.cell_size + self._gui.x_offset)
+        y = int(event.y * self._gui.cell_size + self._gui.y_offset)
         return x, y
 
-    def _find_pos_to_draw(self, event: GraphicEvent) -> tuple[float, float]:
+    def _find_pos_to_draw(self, event: GraphicEvent) -> tuple[int, int]:
         if event.event_type == GraphicEventType.ANIM_MOVE:
             return self._find_pos_to_draw_when_move(event)
         else:

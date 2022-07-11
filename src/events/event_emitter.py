@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Optional, TYPE_CHECKING
 
 import pygame
-from pygame.locals import (
+from pygame.locals import (  # type: ignore
     K_UP,
     K_DOWN,
     K_LEFT,

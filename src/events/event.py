@@ -57,8 +57,8 @@ class GraphicEvent(Event[GraphicEventType]):
         self.from_y = from_y
         self.to_x = to_x
         self.to_y = to_y
-        self.step: int = step
-        self.total_steps: Optional[int] = total_steps
+        self.step = step
+        self.total_steps = total_steps
 
     @overrides
     def copy(self) -> GraphicEvent:
