@@ -27,19 +27,26 @@ class GraphicEventManager(EventManager):
         else:
             self._events.append(event)
 
-    def handle_events(self) -> None:
+    def _handle_static_events(self) -> None:
         cp_events = self._events.copy()
-        cp_anim_events = self._animation_events.copy()
         self._events.clear()
-        self._animation_events.clear()
 
         for event in cp_events:
             self._handle_static_event(event)
 
+    def _handle_animation_events(self) -> None:
+        cp_anim_events = self._animation_events.copy()
+        self._animation_events.clear()
+
         self._gui.draw_empty_frame()
         for event in cp_anim_events:
             self._handle_animation_event(event)
+
         pygame.display.update()
+
+    def handle_events(self) -> None:
+        self._handle_static_events()
+        self._handle_animation_events()
 
     def _handle_static_event(self, event: GraphicEvent):
         if event.event_type == GraphicEventType.KEY_PRESSED:
