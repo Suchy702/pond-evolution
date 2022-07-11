@@ -1,3 +1,5 @@
+from typing import cast
+
 import pygame
 from overrides import overrides
 
@@ -18,7 +20,8 @@ class GraphicEventManager(EventManager):
         self._gui: GUI = gui
 
     @overrides
-    def add_event(self, event: GraphicEvent) -> None:
+    def add_event(self, event: Event) -> None:
+        event = cast(GraphicEvent, event)
         if event.event_type.name.startswith("ANIM_"):
             self._animation_events.append(event)
         else:
