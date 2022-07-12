@@ -19,6 +19,9 @@ class GraphicEventManager(EventManager):
         self._animation_events: list[GraphicEvent] = []
         self._gui: GUI = gui
 
+        # Needed for fluent speed changing
+        self._animation_speed_changed = False
+
     @overrides
     def add_event(self, event: Event) -> None:
         event = cast(GraphicEvent, event)
@@ -45,7 +48,9 @@ class GraphicEventManager(EventManager):
         pygame.display.update()
 
     def handle_events(self) -> None:
+        old_speed = self._gui.settings.animation_speed
         self._handle_static_events()
+        self._animation_speed_changed = old_speed != self._gui.settings.animation_speed
         self._handle_animation_events()
 
     def _handle_static_event(self, event: GraphicEvent):
@@ -67,7 +72,7 @@ class GraphicEventManager(EventManager):
             case ",":
                 self._gui.settings.animation_speed = min(100, self._gui.settings.animation_speed + 1)
             case ".":
-                self._gui.settings.animation_speed = max(1, self._gui.settings.animation_speed - 1)
+                self._gui.settings.animation_speed = max(2, self._gui.settings.animation_speed - 1)
 
     def _find_pos_to_draw_when_move(self, event: GraphicEvent) -> tuple[int, int]:
         x1 = event.from_x * self._gui.cell_size + self._gui.x_offset
@@ -112,6 +117,12 @@ class GraphicEventManager(EventManager):
 
     def _handle_animation_event(self, event: GraphicEvent):
         self._set_event_total_step(event)
+
+        if self._animation_speed_changed:
+            percentage = event.step / event.total_steps
+            event.total_steps = self._gui.settings.animation_speed
+            event.step = min(int(event.total_steps * percentage), event.total_steps - 1)
+
         x, y = self._find_pos_to_draw(event)
         self._add_event_with_next_step(event)
         self._gui.draw_object(event.pond_object, x, y)
