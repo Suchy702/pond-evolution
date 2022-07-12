@@ -1,3 +1,4 @@
+import time
 from typing import cast
 
 import pygame
@@ -21,6 +22,7 @@ class GraphicEventManager(EventManager):
 
         # Needed for fluent speed changing
         self._animation_speed_changed = False
+        self._last_animation_speed_change_time = time.time()
 
     @overrides
     def add_event(self, event: Event) -> None:
@@ -54,6 +56,11 @@ class GraphicEventManager(EventManager):
         self._handle_animation_events()
 
     def _handle_static_event(self, event: GraphicEvent):
+        if event.key in ",." and time.time() - self._last_animation_speed_change_time < 0.1:
+            return
+        else:
+            self._last_animation_speed_change_time = time.time()
+
         match event.key:
             case "up":
                 self._gui.change_y_offset(MOVE_SCREEN_BY_CLICK)
@@ -70,9 +77,9 @@ class GraphicEventManager(EventManager):
             case "c":
                 self._gui.center_view()
             case ",":
-                self._gui.settings.animation_speed = min(100, self._gui.settings.animation_speed + 1)
+                self._gui.settings.animation_speed = min(100, self._gui.settings.animation_speed + 3)
             case ".":
-                self._gui.settings.animation_speed = max(2, self._gui.settings.animation_speed - 1)
+                self._gui.settings.animation_speed = max(2, self._gui.settings.animation_speed - 3)
 
     def _find_pos_to_draw_when_move(self, event: GraphicEvent) -> tuple[int, int]:
         x1 = event.from_x * self._gui.cell_size + self._gui.x_offset
