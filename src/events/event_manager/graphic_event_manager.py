@@ -47,6 +47,7 @@ class GraphicEventManager(EventManager):
         for event in cp_anim_events:
             self._handle_animation_event(event)
 
+        # TODO: draw_ui nie powinno być tutaj
         self._gui.draw_ui()
         pygame.display.update()
 
