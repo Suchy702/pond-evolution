@@ -49,7 +49,12 @@ class SimulationSettings:
         self.screen_width: int = int(res[0])
         self.screen_height: int = int(res[1])
 
-        self.pond_width: int = self.screen_width // CELL_MIN_PX_SIZE
-        self.pond_height: int = self.screen_height // CELL_MIN_PX_SIZE
+        self.screen_pond_width: int = self.screen_width
+        # TODO: trzeba dobrac lepsza wartość
+        self.screen_pond_height: int = int(self.screen_height * 0.9)
+        self.screen_pond_height -= self.screen_pond_height % CELL_MIN_PX_SIZE
+
+        self.pond_width: int = self.screen_pond_width // CELL_MIN_PX_SIZE
+        self.pond_height: int = self.screen_pond_height // CELL_MIN_PX_SIZE
 
         self._root.destroy()

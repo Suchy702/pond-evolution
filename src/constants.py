@@ -15,6 +15,7 @@ MAX_ANIMATION_SPEED = 60
 # Colors
 BLACK: tuple[int, int, int] = (0, 0, 0)
 LIGHT_BLUE: tuple[int, int, int] = (138, 219, 239)
+GRAY: tuple[int, int, int] = (220, 220, 220)
 
 # Events
 MOVE_SCREEN_BY_CLICK = 50

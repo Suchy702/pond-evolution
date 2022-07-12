@@ -3,7 +3,7 @@ from math import ceil
 import pygame
 from pygame.surface import Surface
 
-from src.constants import CELL_MIN_PX_SIZE, CELL_MAX_PX_SIZE, BLACK, LIGHT_BLUE
+from src.constants import CELL_MIN_PX_SIZE, CELL_MAX_PX_SIZE, BLACK, LIGHT_BLUE, GRAY
 from src.events.event_emitter import EventEmitter
 from src.graphics.image_handler.utility import get_object_image
 from src.simulation_settings import SimulationSettings
@@ -36,12 +36,12 @@ class GUI:
 
     def get_visible_gird_x_coordinates(self) -> tuple[int, int]:
         x_min = int(ceil(-self.x_offset / self.cell_size))
-        x_max = (self.settings.screen_width - self.cell_size - self.x_offset) // self.cell_size
+        x_max = (self.settings.screen_pond_width - self.cell_size - self.x_offset) // self.cell_size
         return x_min, x_max
 
     def get_visible_grid_y_coordinates(self) -> tuple[int, int]:
         y_min = int(ceil(-self.y_offset / self.cell_size))
-        y_max = (self.settings.screen_height - self.cell_size - self.y_offset) // self.cell_size
+        y_max = (self.settings.screen_pond_height - self.cell_size - self.y_offset) // self.cell_size
         return y_min, y_max
 
     def get_visible_grid_coordinates(self) -> tuple[int, int, int, int]:
@@ -54,9 +54,14 @@ class GUI:
         rect = pygame.Rect(self.x_offset, self.y_offset, rect_width, rect_height)
         pygame.draw.rect(self._screen, LIGHT_BLUE, rect, 0)
 
+    def draw_ui(self):
+        rect = pygame.Rect(0, self.settings.screen_pond_height, self.settings.screen_width,
+                           self.settings.screen_height - self.settings.screen_pond_height)
+        pygame.draw.rect(self._screen, GRAY, rect, 0)
+
     def center_view(self) -> None:
-        self.x_offset = self.settings.screen_width // 2 - self.settings.pond_width * self.cell_size // 2
-        self.y_offset = self.settings.screen_height // 2 - self.settings.pond_height * self.cell_size // 2
+        self.x_offset = self.settings.screen_pond_width // 2 - self.settings.pond_width * self.cell_size // 2
+        self.y_offset = self.settings.screen_pond_height // 2 - self.settings.pond_height * self.cell_size // 2
 
     def zoom(self, change: int) -> None:
         old_cell_size = self.cell_size
@@ -79,16 +84,16 @@ class GUI:
         if self.settings.pond_height % 2 == 1:
             pond_center_y += old_cell_size / 2
 
-        screen_center_x = self.settings.screen_width / 2
-        screen_center_y = self.settings.screen_height / 2
+        screen_center_x = self.settings.screen_pond_width / 2
+        screen_center_y = self.settings.screen_pond_height / 2
 
         vertical_cells = min(abs(screen_center_x - pond_center_x) / old_cell_size,
                              self.settings.pond_width / 2) * signum(screen_center_x - pond_center_x)
         horizontal_cells = min(abs(screen_center_y - pond_center_y) / old_cell_size,
-                               self.settings.screen_height / 2) * signum(screen_center_y - pond_center_y)
+                               self.settings.screen_pond_height / 2) * signum(screen_center_y - pond_center_y)
 
-        diff_x = self.settings.screen_width / 2 - pond_center_x
-        diff_y = self.settings.screen_height / 2 - pond_center_y
+        diff_x = self.settings.screen_pond_width / 2 - pond_center_x
+        diff_y = self.settings.screen_pond_height / 2 - pond_center_y
 
         diff_x_after_zoom = diff_x + vertical_cells * change
         diff_y_after_zoom = diff_y + horizontal_cells * change
@@ -106,7 +111,7 @@ class GUI:
         return not self._event_emitter.is_animation_event()
 
     def change_y_offset(self, val) -> None:
-        y_offset_limit = -(self.settings.pond_height * self.cell_size - self.settings.screen_height)
+        y_offset_limit = -(self.settings.pond_height * self.cell_size - self.settings.screen_pond_height)
 
         if y_offset_limit < 0:
             self.y_offset = max(min(self.y_offset + val, 0), y_offset_limit)
@@ -114,7 +119,7 @@ class GUI:
             self.y_offset = max(min(self.y_offset + val, y_offset_limit), 0)
 
     def change_x_offset(self, val) -> None:
-        x_offset_limit = -(self.settings.pond_width * self.cell_size - self.settings.screen_width)
+        x_offset_limit = -(self.settings.pond_width * self.cell_size - self.settings.screen_pond_width)
 
         if x_offset_limit < 0:
             self.x_offset = max(min(self.x_offset + val, 0), x_offset_limit)
