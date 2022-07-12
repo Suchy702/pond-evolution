@@ -3,13 +3,13 @@ import pytest
 from src.object_handler.alga_handler import AlgaHandler
 from src.object_kind import ObjectKind
 from src.position import Position
-from src.simulation_settings import SimulationSettings
-from tests.helper import get_object
+# noinspection PyUnresolvedReferences
+from tests.helper import get_object, settings
 
 
 @pytest.fixture
-def alga_handler():
-    return AlgaHandler(SimulationSettings())
+def alga_handler(settings):
+    return AlgaHandler(settings)
 
 
 def test_kill_algae_on_surface(alga_handler):
