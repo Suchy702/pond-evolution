@@ -56,6 +56,7 @@ class GraphicEventManager(EventManager):
         self._handle_animation_events()
 
     def _handle_static_event(self, event: GraphicEvent):
+        # TODO: trzeba to jakoś ładniej zapisać
         if event.key in ",." and time.time() - self._last_animation_speed_change_time < 0.1:
             return
         else:
