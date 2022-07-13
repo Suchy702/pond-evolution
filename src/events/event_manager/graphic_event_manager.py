@@ -1,9 +1,10 @@
+import time
 from typing import cast
 
 import pygame
 from overrides import overrides
 
-from src.constants import MOVE_SCREEN_BY_CLICK, ZOOM_SCREEN_BY_CLICK, ANIMATION_SPEED_CHANGE
+from src.constants import MOVE_SCREEN_BY_CLICK, ZOOM_SCREEN_BY_CLICK
 from src.events.event import GraphicEvent, Event
 from src.events.event_emitter import EventEmitter
 from src.events.event_manager.event_manager import EventManager
@@ -18,6 +19,10 @@ class GraphicEventManager(EventManager):
         self._events: list[GraphicEvent] = []
         self._animation_events: list[GraphicEvent] = []
         self._gui: GUI = gui
+
+        # Needed for fluent speed changing
+        self._animation_speed_changed = False
+        self._last_animation_speed_change_time = time.time()
 
     @overrides
     def add_event(self, event: Event) -> None:
@@ -42,13 +47,23 @@ class GraphicEventManager(EventManager):
         for event in cp_anim_events:
             self._handle_animation_event(event)
 
+        # TODO: draw_ui nie powinno być tutaj
+        self._gui.draw_ui()
         pygame.display.update()
 
     def handle_events(self) -> None:
+        old_speed = self._gui.settings.animation_speed
         self._handle_static_events()
+        self._animation_speed_changed = old_speed != self._gui.settings.animation_speed
         self._handle_animation_events()
 
     def _handle_static_event(self, event: GraphicEvent):
+        # TODO: trzeba to jakoś ładniej zapisać
+        if event.key in ",." and time.time() - self._last_animation_speed_change_time < 0.1:
+            return
+        else:
+            self._last_animation_speed_change_time = time.time()
+
         match event.key:
             case "up":
                 self._gui.change_y_offset(MOVE_SCREEN_BY_CLICK)
@@ -65,11 +80,11 @@ class GraphicEventManager(EventManager):
             case "c":
                 self._gui.center_view()
             case ",":
-                self._gui.change_animation_speed(ANIMATION_SPEED_CHANGE)
+                self._gui.settings.animation_speed = min(100, self._gui.settings.animation_speed + 3)
             case ".":
-                self._gui.change_animation_speed(-ANIMATION_SPEED_CHANGE)
+                self._gui.settings.animation_speed = max(2, self._gui.settings.animation_speed - 3)
 
-    def _find_pos_to_draw_when_move(self, event: GraphicEvent) -> tuple[float, float]:
+    def _find_pos_to_draw_when_move(self, event: GraphicEvent) -> tuple[int, int]:
         x1 = event.from_x * self._gui.cell_size + self._gui.x_offset
         y1 = event.from_y * self._gui.cell_size + self._gui.y_offset
         x2 = event.to_x * self._gui.cell_size + self._gui.x_offset
@@ -77,23 +92,23 @@ class GraphicEventManager(EventManager):
 
         if x1 == x2:
             dist = y2 - y1
-            y = y1 + dist * event.step / event.total_steps
+            y = int(y1 + dist * event.step / event.total_steps)
             x = x1
         else:
             dist = x2 - x1
             a = (y2 - y1) / (x2 - x1)
             b = y1 - a * x1
 
-            x = x1 + dist * event.step / event.total_steps
-            y = a * x + b
+            x = int(x1 + dist * event.step / event.total_steps)
+            y = int(a * x + b)
         return x, y
 
-    def _find_pos_to_draw_when_stay(self, event: GraphicEvent) -> tuple[float, float]:
-        x = event.x * self._gui.cell_size + self._gui.x_offset
-        y = event.y * self._gui.cell_size + self._gui.y_offset
+    def _find_pos_to_draw_when_stay(self, event: GraphicEvent) -> tuple[int, int]:
+        x = int(event.x * self._gui.cell_size + self._gui.x_offset)
+        y = int(event.y * self._gui.cell_size + self._gui.y_offset)
         return x, y
 
-    def _find_pos_to_draw(self, event: GraphicEvent) -> tuple[float, float]:
+    def _find_pos_to_draw(self, event: GraphicEvent) -> tuple[int, int]:
         if event.event_type == GraphicEventType.ANIM_MOVE:
             return self._find_pos_to_draw_when_move(event)
         else:
@@ -112,6 +127,12 @@ class GraphicEventManager(EventManager):
 
     def _handle_animation_event(self, event: GraphicEvent):
         self._set_event_total_step(event)
+
+        if self._animation_speed_changed:
+            percentage = event.step / event.total_steps
+            event.total_steps = self._gui.settings.animation_speed
+            event.step = min(int(event.total_steps * percentage), event.total_steps - 1)
+
         x, y = self._find_pos_to_draw(event)
         self._add_event_with_next_step(event)
         self._gui.draw_object(event.pond_object, x, y)

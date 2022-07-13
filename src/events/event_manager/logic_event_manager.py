@@ -14,7 +14,7 @@ class LogicEventManager(EventManager):
 
     @overrides
     def add_event(self, event: Event) -> None:
-        event = cast(event, LogicEvent)
+        event = cast(LogicEvent, event)
         self._events.append(event)
 
     @overrides

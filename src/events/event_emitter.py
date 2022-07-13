@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Optional, TYPE_CHECKING
 
 import pygame
-from pygame.locals import (
+from pygame.locals import (  # type: ignore
     K_UP,
     K_DOWN,
     K_LEFT,
@@ -31,17 +31,6 @@ class EventEmitter(metaclass=Singleton):
         self.game_event_manager: Optional[GameEventManager] = None
         self.graphic_event_manager: Optional[GraphicEventManager] = None
         self.logic_event_manager: Optional[LogicEventManager] = None
-
-    """def add_manager(self, manager: EventManager) -> None:
-        if isinstance(manager, GameEventManager):
-            self._game_event_manager = manager
-        elif isinstance(manager, GraphicEventManager):
-            self._graphic_event_manager = manager
-        elif isinstance(manager, LogicEventManager):
-            self._logic_event_manager = manager
-        else:
-            raise Exception('Unknown type')
-    """
 
     def emit_event(self, event: Event) -> None:
         if isinstance(event, GameEvent):

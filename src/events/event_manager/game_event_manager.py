@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, cast
 
 from overrides import overrides
 
@@ -19,6 +19,7 @@ class GameEventManager(EventManager):
 
     @overrides
     def add_event(self, event: Event) -> None:
+        event = cast(GameEvent, event)
         self._events.append(event)
 
     def handle_events(self) -> None:

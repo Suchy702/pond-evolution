@@ -3,7 +3,7 @@ import pytest
 from src.constants import ALGA_SURFACING_STEPS
 from src.object_kind import ObjectKind
 from src.position import Position
-from tests.unit.helper import get_object
+from tests.helper import get_object
 
 
 @pytest.fixture

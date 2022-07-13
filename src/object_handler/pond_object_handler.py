@@ -19,10 +19,12 @@ class PondObjectHandler(ABC):
     def add_random(self, amount: int) -> None:
         pass
 
+    @property
     @abstractmethod
     def size(self) -> int:
         pass
 
+    @property
     @abstractmethod
     def objects(self) -> list[PondObject]:
         pass
@@ -38,12 +40,12 @@ class PondObjectHandlerHomogeneous(PondObjectHandler):
         self._pond: Pond = Pond(settings)
         self._object_database: PondObjectDatabase = PondObjectDatabase()
 
-    @property
+    @property  # type: ignore
     @overrides
     def size(self) -> int:
         return self._object_database.size
 
-    @property
+    @property  # type: ignore
     @overrides
     def objects(self) -> list[PondObject]:
         return self._object_database.objects
@@ -96,12 +98,12 @@ class PondObjectHandlerBundler(PondObjectHandler):
         super().__init__(settings)
         self._handlers: list[PondObjectHandlerHomogeneous] = []
 
-    @property
+    @property  # type: ignore
     @overrides
     def size(self) -> int:
         return reduce(lambda acc, h: acc + h.size, self._handlers, 0)
 
-    @property
+    @property  # type: ignore
     @overrides
     def objects(self) -> list[PondObject]:
         return reduce(lambda list_, handler: list_ + handler.objects, self._handlers, [])
