@@ -20,7 +20,7 @@ class Decision:
         self.to_y = to_y
         self.how_many = how_many
 
-    def add_to_dict(self, decisions: dict[DecisionType, dict[ObjectKind, list[Decision]]]) -> None:
+    def add_to_dict(self, decisions: decisionSetType) -> None:
         if self.decision_type not in decisions:
             decisions[self.decision_type] = {}
 
@@ -28,3 +28,6 @@ class Decision:
             decisions[self.decision_type][self.pond_object.kind] = []
 
         decisions[self.decision_type][self.pond_object.kind].append(self)
+
+
+decisionSetType = dict[DecisionType, dict[ObjectKind, list[Decision]]]
