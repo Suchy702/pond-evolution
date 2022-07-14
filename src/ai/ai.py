@@ -36,15 +36,18 @@ class FishAI(AI["Fish"]):
         pos_to_move = self._find_pos_to_move()
         Decision(DecisionType.MOVE, self.pond_object, to_x=pos_to_move.x, to_y=pos_to_move.y).add_to_dict(decisions)
 
-    def _reproduce_decision(self, decisions: decisionSetType):
+    def _reproduce_decision(self, decisions: decisionSetType) -> bool:
         if self.pond_object.vitality > self.pond_object.vitality_need_to_breed:
             Decision(DecisionType.REPRODUCE, self.pond_object).add_to_dict(decisions)
+            return True
+        return False
 
     @overrides
     def get_decisions(self) -> decisionSetType:
         decisions = {}
-        self._movement_decision(decisions)
-        self._reproduce_decision(decisions)
+        is_dead = self._reproduce_decision(decisions)
+        if not is_dead:
+            self._movement_decision(decisions)
         return decisions
 
 

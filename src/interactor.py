@@ -4,7 +4,6 @@ from functools import reduce
 from typing import cast
 
 from src.ai.ai import FishAI, WormAI, AlgaAI, AlgaMakerAI
-from src.constants import HOW_OFTEN_CYCLES_MAKING_WORMS, HOW_OFTEN_CYCLES_MAKING_ALGAE
 from src.decision.decision import decisionSetType, Decision
 from src.events.event_emitter import EventEmitter
 from src.object.fish import Fish
@@ -83,14 +82,3 @@ class Interactor:
         self._fish_handler.remove_dead_fishes()
         self._worm_handler.remove_worms_on_the_ground()
         self._plant_handler.alga_handler.remove_algae_on_surface()
-
-    @staticmethod
-    def _is_time_to_add_worms(cycle_count: int) -> bool:
-        return cycle_count % HOW_OFTEN_CYCLES_MAKING_WORMS == 0
-
-    @staticmethod
-    def _is_time_to_detach_algae(cycle_count: int) -> bool:
-        return cycle_count % HOW_OFTEN_CYCLES_MAKING_ALGAE == 0
-
-    def add_new_objects(self, cycle_count: int) -> None:
-        self._fish_handler.breed_fish()

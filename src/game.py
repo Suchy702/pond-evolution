@@ -16,6 +16,7 @@ class Game:
 
         self._settings = SimulationSettings()
         self._settings.get_user_settings()
+        self._settings.pond_width = 100
 
         self._engine = Engine(self._settings)
         self._engine.demo()

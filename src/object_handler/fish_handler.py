@@ -1,4 +1,3 @@
-from itertools import chain
 from random import randint
 from typing import cast
 
@@ -37,6 +36,9 @@ class FishHandler(PondObjectHandlerHomogeneous):
     def handle_decisions(self, decisions: decisionSetType):
         for decision in decisions[DecisionType.MOVE][ObjectKind.FISH]:
             self.move_fish(decision)
+        if DecisionType.REPRODUCE in decisions and ObjectKind.FISH in decisions[DecisionType.REPRODUCE]:
+            for decision in decisions[DecisionType.REPRODUCE][ObjectKind.FISH]:
+                self.breed_fish(decision.pond_object)
 
     def move_fish(self, decision: Decision) -> None:
         n_pos = self._pond.trim_position(Position(decision.to_y, decision.to_x))
@@ -55,6 +57,6 @@ class FishHandler(PondObjectHandlerHomogeneous):
         for fish in self.fishes:
             fish.spoil_vitality()
 
-    def breed_fish(self) -> None:
-        self.add_all(chain.from_iterable([fish.birth_fish() for fish in self.fishes if fish.is_breeding()]))
-        self.remove_all([fish for fish in self.fishes if fish.is_breeding()])
+    def breed_fish(self, fish: Fish) -> None:
+        self.add_all(fish.birth_fish())
+        self.remove(fish)
