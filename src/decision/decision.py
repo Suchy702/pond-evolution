@@ -29,5 +29,12 @@ class Decision:
 
         decisions[self.decision_type][self.pond_object.kind].append(self)
 
+    @staticmethod
+    def combine_decision_dicts(a: decisionSetType, b: decisionSetType) -> None:
+        for by_type in a:
+            for by_kind in a[by_type]:
+                for decision in a[by_type][by_kind]:
+                    decision.add_to_dict(b)
+
 
 decisionSetType = dict[DecisionType, dict[ObjectKind, list[Decision]]]

@@ -3,6 +3,7 @@ from __future__ import annotations
 from random import randint
 
 import src.constants as const
+from src.ai.ai import FishAI
 from src.object.pond_object import PondObject
 from src.object_kind import ObjectKind
 from src.position import Position
@@ -10,7 +11,7 @@ from src.position import Position
 
 class Fish(PondObject):
     def __init__(self, speed: int, size: int, pos: Position):
-        super().__init__(ObjectKind.FISH, pos)
+        super().__init__(ObjectKind.FISH, pos, FishAI(self))
         self._speed: int = speed
         self._size: int = size
         self._vitality: int = self._speed + self._size

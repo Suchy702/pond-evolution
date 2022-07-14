@@ -14,30 +14,33 @@ T = TypeVar('T', bound=PondObject)
 
 
 class AI(ABC, Generic[T]):
+    def __init__(self, pond_object: T):
+        self.pond_object = pond_object
+
     @abstractmethod
-    def get_decisions(self, objects: list[T]) -> decisionSetType:
+    def get_decisions(self) -> decisionSetType:
         pass
 
 
 class FishAI(AI[Fish]):
     @overrides
-    def get_decisions(self, objects: list[Fish]) -> decisionSetType:
+    def get_decisions(self) -> decisionSetType:
         pass
 
 
 class WormAI(AI[Worm]):
     @overrides
-    def get_decisions(self, objects: list[Worm]) -> decisionSetType:
+    def get_decisions(self) -> decisionSetType:
         pass
 
 
 class AlgaAI(AI[Alga]):
     @overrides
-    def get_decisions(self, objects: list[Fish]) -> decisionSetType:
+    def get_decisions(self) -> decisionSetType:
         pass
 
 
 class AlgaMakerAI(AI[AlgaMaker]):
     @overrides
-    def get_decisions(self, objects: list[Fish]) -> decisionSetType:
+    def get_decisions(self) -> decisionSetType:
         pass
