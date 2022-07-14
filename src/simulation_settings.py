@@ -1,16 +1,31 @@
 import tkinter as tk
 from tkinter import ttk
 
-from src.constants import ANIMATION_SPEED, CELL_MIN_PX_SIZE
+from src.constants import ANIMATION_SPEED, CELL_MIN_PX_SIZE, MIN_ANIMATION_SPEED, MAX_ANIMATION_SPEED
+
+
+def clip(val: int, a: int, b: int) -> int:
+    # Clips `val` to range [min(a, b), max(a, b)]
+    if a > b:
+        a, b = b, a
+    return min(max(val, a), b)
 
 
 class SimulationSettings:
     def __init__(self):
         # Set default values
-        self.animation_speed: int = ANIMATION_SPEED
+        self._animation_speed: int = ANIMATION_SPEED
 
         self._root = None
         self._resolution_val = None
+
+    @property
+    def animation_speed(self) -> int:
+        return self._animation_speed
+
+    @animation_speed.setter
+    def animation_speed(self, val: int) -> None:
+        self._animation_speed = clip(val, MIN_ANIMATION_SPEED, MAX_ANIMATION_SPEED)
 
     def get_user_settings(self) -> None:
         self._root = tk.Tk()

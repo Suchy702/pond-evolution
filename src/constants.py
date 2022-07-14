@@ -1,17 +1,15 @@
 # Game
 FPS: int = 30
-ANIMATION_SPEED: int = 40  # how many frames per action
 
 # Screen
-SCREEN_WIDTH: int = 1080
-SCREEN_HEIGHT: int = 720
 CELL_MIN_PX_SIZE: int = 20
 CELL_MAX_PX_SIZE: int = 80
 
 # Animation
-MIN_ANIMATION_SPEED = 10
+ANIMATION_SPEED: int = 40  # how many frames per action
+MIN_ANIMATION_SPEED = 5  # TODO: to jest troche mylące, bo im MIN_ANIMATION_SPEED jest mniejsze tym animacja może być szybsza
 MAX_ANIMATION_SPEED = 60
-ANIMATION_SPEED_CHANGE = 2
+ANIMATION_SPEED_CHANGE = 3
 
 # Colors
 BLACK: tuple[int, int, int] = (0, 0, 0)
@@ -19,8 +17,8 @@ LIGHT_BLUE: tuple[int, int, int] = (138, 219, 239)
 GRAY: tuple[int, int, int] = (220, 220, 220)
 
 # Events
-MOVE_SCREEN_BY_CLICK = 50
-ZOOM_SCREEN_BY_CLICK = 5
+SCREEN_MOVE_CHANGE = 50
+SCREEN_ZOOM_CHANGE = 5
 
 # Algae
 ALGA_SURFACING_STEPS: int = 15

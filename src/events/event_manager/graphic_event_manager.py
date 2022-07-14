@@ -4,7 +4,7 @@ from typing import cast
 import pygame
 from overrides import overrides
 
-from src.constants import MOVE_SCREEN_BY_CLICK, ZOOM_SCREEN_BY_CLICK
+from src.constants import SCREEN_MOVE_CHANGE, SCREEN_ZOOM_CHANGE, ANIMATION_SPEED_CHANGE
 from src.events.event import GraphicEvent, Event
 from src.events.event_emitter import EventEmitter
 from src.events.event_manager.event_manager import EventManager
@@ -20,6 +20,7 @@ class GraphicEventManager(EventManager):
         self._animation_events: list[GraphicEvent] = []
         self._gui: GUI = gui
 
+        # TODO: trzeba zrobić jakiś uniwersalny interfejs jakby było więcej eventów które trzeba wykonywać co x sekund
         # Needed for fluent speed changing
         self._animation_speed_changed = False
         self._last_animation_speed_change_time = time.time()
@@ -47,11 +48,12 @@ class GraphicEventManager(EventManager):
         for event in cp_anim_events:
             self._handle_animation_event(event)
 
-        # TODO: draw_ui nie powinno być tutaj
+        # TODO: draw_ui chyba nie powinno być tutaj
         self._gui.draw_ui()
         pygame.display.update()
 
     def handle_events(self) -> None:
+        # TODO: To też trzeba ładniej zapisać
         old_speed = self._gui.settings.animation_speed
         self._handle_static_events()
         self._animation_speed_changed = old_speed != self._gui.settings.animation_speed
@@ -66,29 +68,29 @@ class GraphicEventManager(EventManager):
 
         match event.key:
             case "up":
-                self._gui.y_offset += MOVE_SCREEN_BY_CLICK
+                self._gui.y_offset += SCREEN_MOVE_CHANGE
             case "down":
-                self._gui.y_offset -= MOVE_SCREEN_BY_CLICK
+                self._gui.y_offset -= SCREEN_MOVE_CHANGE
             case "left":
-                self._gui.x_offset += MOVE_SCREEN_BY_CLICK
+                self._gui.x_offset += SCREEN_MOVE_CHANGE
             case "right":
-                self._gui.x_offset -= MOVE_SCREEN_BY_CLICK
+                self._gui.x_offset -= SCREEN_MOVE_CHANGE
             case "=":
-                self._gui.zoom(ZOOM_SCREEN_BY_CLICK)
+                self._gui.zoom(SCREEN_ZOOM_CHANGE)
             case "-":
-                self._gui.zoom(-ZOOM_SCREEN_BY_CLICK)
+                self._gui.zoom(-SCREEN_ZOOM_CHANGE)
             case "c":
                 self._gui.center_view()
             case ",":
-                self._gui.settings.animation_speed = min(100, self._gui.settings.animation_speed + 3)
+                self._gui.settings.animation_speed += ANIMATION_SPEED_CHANGE
             case ".":
-                self._gui.settings.animation_speed = max(2, self._gui.settings.animation_speed - 3)
+                self._gui.settings.animation_speed -= ANIMATION_SPEED_CHANGE
 
     def _find_pos_to_draw_when_move(self, event: GraphicEvent) -> tuple[int, int]:
-        x1 = event.from_x * self._gui._cell_size + self._gui.x_offset
-        y1 = event.from_y * self._gui._cell_size + self._gui.y_offset
-        x2 = event.to_x * self._gui._cell_size + self._gui.x_offset
-        y2 = event.to_y * self._gui._cell_size + self._gui.y_offset
+        x1 = event.from_x * self._gui.cell_size + self._gui.x_offset
+        y1 = event.from_y * self._gui.cell_size + self._gui.y_offset
+        x2 = event.to_x * self._gui.cell_size + self._gui.x_offset
+        y2 = event.to_y * self._gui.cell_size + self._gui.y_offset
 
         if x1 == x2:
             dist = y2 - y1
@@ -104,8 +106,8 @@ class GraphicEventManager(EventManager):
         return x, y
 
     def _find_pos_to_draw_when_stay(self, event: GraphicEvent) -> tuple[int, int]:
-        x = int(event.x * self._gui._cell_size + self._gui.x_offset)
-        y = int(event.y * self._gui._cell_size + self._gui.y_offset)
+        x = int(event.x * self._gui.cell_size + self._gui.x_offset)
+        y = int(event.y * self._gui.cell_size + self._gui.y_offset)
         return x, y
 
     def _find_pos_to_draw(self, event: GraphicEvent) -> tuple[int, int]:
