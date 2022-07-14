@@ -1,7 +1,7 @@
 import pygame
 from pygame.surface import Surface
 
-from src.constants import CELL_MIN_PX_SIZE, CELL_MAX_PX_SIZE, BLACK, LIGHT_BLUE, GRAY
+from src.constants import BLACK, LIGHT_BLUE, GRAY
 from src.events.event_emitter import EventEmitter
 from src.graphics.image_handler.utility import get_object_image
 from src.simulation_settings import SimulationSettings

@@ -65,6 +65,14 @@ class GraphicEvent(Event[GraphicEventType]):
         cp = cast(GraphicEvent, super().copy())
         return cp
 
+    def have_to_make_next_step(self) -> bool:
+        return self.step < self.total_steps
+
+    def get_event_with_next_step(self) -> GraphicEvent:
+        cp = self.copy()
+        cp.step += 1
+        return cp
+
     def __str__(self):
         return self.event_type.name
 
