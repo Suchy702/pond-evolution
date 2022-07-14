@@ -23,8 +23,8 @@ class AI(ABC, Generic[T]):
 
 class FishAI(AI["Fish"]):
     def _find_pos_to_move(self) -> Position:
-        return self.pond_object.changed(randint(-self.pond_object.speed, self.pond_object.speed),
-                                        randint(-self.pond_object.speed, self.pond_object.speed))
+        return self.pond_object.pos.changed(randint(-self.pond_object.speed, self.pond_object.speed),
+                                            randint(-self.pond_object.speed, self.pond_object.speed))
 
     def _movement_decision(self, decisions: decisionSetType):
         pos_to_move = self._find_pos_to_move()
@@ -32,7 +32,7 @@ class FishAI(AI["Fish"]):
 
     def _breed_decision(self, decisions: decisionSetType):
         if self.pond_object.vitality > self.pond_object.vitality_need_to_breed:
-            Decision(DecisionType.BREED).add_to_dict(decisions)
+            Decision(DecisionType.BREED, self.pond_object).add_to_dict(decisions)
 
     @overrides
     def get_decisions(self) -> decisionSetType:
@@ -45,16 +45,16 @@ class FishAI(AI["Fish"]):
 class WormAI(AI["Worm"]):
     @overrides
     def get_decisions(self) -> decisionSetType:
-        pass
+        return {}
 
 
 class AlgaAI(AI["Alga"]):
     @overrides
     def get_decisions(self) -> decisionSetType:
-        pass
+        return {}
 
 
 class AlgaMakerAI(AI["AlgaMaker"]):
     @overrides
     def get_decisions(self) -> decisionSetType:
-        pass
+        return {}

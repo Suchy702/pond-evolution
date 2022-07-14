@@ -5,6 +5,8 @@ from typing import cast
 
 from src.constants import HOW_OFTEN_CYCLES_MAKING_WORMS, HOW_OFTEN_CYCLES_MAKING_ALGAE
 from src.decision.decision import decisionSetType, Decision
+from src.decision.decision_type import DecisionType
+from src.events.event_emitter import EventEmitter
 from src.object.fish import Fish
 from src.object.pond_object import PondObject
 from src.object_handler.fish_handler import FishHandler
@@ -13,6 +15,8 @@ from src.object_handler.pond_object_handler import PondObjectHandler
 from src.object_handler.worm_handler import WormHandler
 from src.position import Position
 from src.simulation_settings import SimulationSettings
+
+event_emitter = EventEmitter()
 
 
 class Interactor:
@@ -34,12 +38,19 @@ class Interactor:
 
         return decisions
 
-    def handle_decisions(self):
+    def handle_decisions(self) -> None:
         decisions = self._get_decisions()
         for handler in self.handlers:
             handler.handle_decisions(decisions)
+        self._handle_decisions(decisions)
 
-    def _handle_decision(self):
+    def _handle_decisions(self, decisions: decisionSetType) -> None:
+        for obj_kind in decisions[DecisionType.MOVE]:
+            for decision in decisions[DecisionType.MOVE][obj_kind]:
+                self._handle_decision(decision)
+
+    @staticmethod
+    def _handle_decision(decision: Decision) -> None:
         pass
 
     # beta function for testing
@@ -91,7 +102,7 @@ class Interactor:
     # Rybki
     def move_objects(self) -> None:
         self._move_food()
-        self._fish_handler.move_fish()
+        # self._fish_handler.move_fish()
 
     def add_new_objects(self, cycle_count: int) -> None:
         if self._is_time_to_add_worms(cycle_count):
