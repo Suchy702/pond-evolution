@@ -35,6 +35,8 @@ class WormHandler(PondObjectHandlerHomogeneous):
     def handle_decisions(self, decisions: decisionSetType):
         for decision in decisions[DecisionType.MOVE][ObjectKind.WORM]:
             self.move_worm(decision)
+        if DecisionType.REPRODUCE in decisions and ObjectKind.WORM in decisions[DecisionType.REPRODUCE]:
+            self.add_worms()
 
     def move_worm(self, decision: Decision) -> None:
         n_pos = self._pond.trim_position(Position(decision.to_y, decision.to_x))

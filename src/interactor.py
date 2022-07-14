@@ -3,6 +3,7 @@ from __future__ import annotations
 from functools import reduce
 from typing import cast
 
+from src.ai.ai import FishAI, WormAI, AlgaAI, AlgaMakerAI
 from src.constants import HOW_OFTEN_CYCLES_MAKING_WORMS, HOW_OFTEN_CYCLES_MAKING_ALGAE
 from src.decision.decision import decisionSetType, Decision
 from src.events.event_emitter import EventEmitter
@@ -24,6 +25,7 @@ class Interactor:
         self._worm_handler: WormHandler = WormHandler(settings)
         self._plant_handler: PlantHandler = PlantHandler(settings)
         self.handlers: list[PondObjectHandler] = [self._fish_handler, self._worm_handler, self._plant_handler]
+        self.ai_classes: list[type] = [FishAI, WormAI, AlgaAI, AlgaMakerAI]
 
     @property
     def all_objects(self) -> list[PondObject]:
@@ -34,6 +36,10 @@ class Interactor:
         for handler in self.handlers:
             obj_decisions = handler.get_decisions()
             Decision.combine_decision_dicts(obj_decisions, decisions)
+
+        for ai_class in self.ai_classes:
+            class_decisions = ai_class.get_general_decisions()
+            Decision.combine_decision_dicts(class_decisions, decisions)
 
         return decisions
 
@@ -87,6 +93,4 @@ class Interactor:
         return cycle_count % HOW_OFTEN_CYCLES_MAKING_ALGAE == 0
 
     def add_new_objects(self, cycle_count: int) -> None:
-        if self._is_time_to_add_worms(cycle_count):
-            self._worm_handler.add_worms()
         self._fish_handler.breed_fish()
