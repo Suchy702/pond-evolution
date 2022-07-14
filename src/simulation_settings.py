@@ -36,9 +36,7 @@ class SimulationSettings:
         self._root.columnconfigure(1, weight=2)
 
         # Resolution
-        tk.Label(
-            self._root, text='Resolution: '
-        ).grid(row=0, column=0, sticky='w')
+        tk.Label(self._root, text='Resolution: ').grid(row=0, column=0, sticky='w')
         self._resolution_val = tk.StringVar()
         resolution = ttk.Combobox(self._root, textvariable=self._resolution_val)
         resolution['values'] = ('1920x1080', '1080x720', '720x480')
