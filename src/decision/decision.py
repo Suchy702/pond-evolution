@@ -1,9 +1,11 @@
 from __future__ import annotations
 
-from typing import Optional
+from typing import Optional, TYPE_CHECKING
 
 from src.decision.decision_type import DecisionType
-from src.object.pond_object import PondObject
+
+if TYPE_CHECKING:
+    from src.object.pond_object import PondObject
 from src.object_kind import ObjectKind
 
 

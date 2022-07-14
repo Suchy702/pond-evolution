@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from functools import reduce
 from typing import cast
 
@@ -33,7 +35,9 @@ class Interactor:
         return decisions
 
     def handle_decisions(self):
-        pass
+        decisions = self._get_decisions()
+        for handler in self.handlers:
+            handler.handle_decisions(decisions)
 
     def _handle_decision(self):
         pass

@@ -1,9 +1,14 @@
-from abc import ABC
+from __future__ import annotations
 
-from src.ai.ai import AI
+from abc import ABC
+from typing import TYPE_CHECKING
+
 from src.decision.decision import decisionSetType
 from src.object_kind import ObjectKind
 from src.position import Position
+
+if TYPE_CHECKING:
+    from src.ai.ai import AI
 
 
 class PondObject(ABC):

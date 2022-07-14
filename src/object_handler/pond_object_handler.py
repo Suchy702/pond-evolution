@@ -42,6 +42,9 @@ class PondObjectHandler(ABC):
 
         return decisions
 
+    def handle_decisions(self, decisions: decisionSetType):
+        pass
+
 
 class PondObjectHandlerHomogeneous(PondObjectHandler):
     def __init__(self, settings: SimulationSettings):
