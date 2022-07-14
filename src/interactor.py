@@ -1,7 +1,12 @@
+from __future__ import annotations
+
 from functools import reduce
 from typing import cast
 
+from src.ai.ai import FishAI, WormAI, AlgaAI, AlgaMakerAI
 from src.constants import HOW_OFTEN_CYCLES_MAKING_WORMS, HOW_OFTEN_CYCLES_MAKING_ALGAE
+from src.decision.decision import decisionSetType, Decision
+from src.events.event_emitter import EventEmitter
 from src.object.fish import Fish
 from src.object.pond_object import PondObject
 from src.object_handler.fish_handler import FishHandler
@@ -11,6 +16,8 @@ from src.object_handler.worm_handler import WormHandler
 from src.position import Position
 from src.simulation_settings import SimulationSettings
 
+event_emitter = EventEmitter()
+
 
 class Interactor:
     def __init__(self, settings: SimulationSettings):
@@ -18,10 +25,32 @@ class Interactor:
         self._worm_handler: WormHandler = WormHandler(settings)
         self._plant_handler: PlantHandler = PlantHandler(settings)
         self.handlers: list[PondObjectHandler] = [self._fish_handler, self._worm_handler, self._plant_handler]
+        self.ai_classes: list[type] = [FishAI, WormAI, AlgaAI, AlgaMakerAI]
 
     @property
     def all_objects(self) -> list[PondObject]:
         return reduce(lambda list_, handler: list_ + handler.objects, self.handlers, [])  # type: ignore
+
+    def _get_decisions(self) -> decisionSetType:
+        decisions = {}
+        for handler in self.handlers:
+            obj_decisions = handler.get_decisions()
+            Decision.combine_decision_dicts(obj_decisions, decisions)
+
+        for ai_class in self.ai_classes:
+            class_decisions = ai_class.get_general_decisions()
+            Decision.combine_decision_dicts(class_decisions, decisions)
+
+        return decisions
+
+    def handle_decisions(self) -> None:
+        decisions = self._get_decisions()
+        for handler in self.handlers:
+            handler.handle_decisions(decisions)
+        self._handle_decisions(decisions)
+
+    def _handle_decisions(self, decisions: decisionSetType) -> None:
+        pass
 
     # beta function for testing
     def preparations(self) -> None:
@@ -55,10 +84,6 @@ class Interactor:
         self._worm_handler.remove_worms_on_the_ground()
         self._plant_handler.alga_handler.remove_algae_on_surface()
 
-    def _move_food(self) -> None:
-        self._worm_handler.move_worms()
-        self._plant_handler.move()
-
     @staticmethod
     def _is_time_to_add_worms(cycle_count: int) -> bool:
         return cycle_count % HOW_OFTEN_CYCLES_MAKING_WORMS == 0
@@ -67,16 +92,5 @@ class Interactor:
     def _is_time_to_detach_algae(cycle_count: int) -> bool:
         return cycle_count % HOW_OFTEN_CYCLES_MAKING_ALGAE == 0
 
-    # Kolejnosc:
-    # Jedzenie
-    # Rybki
-    def move_objects(self) -> None:
-        self._move_food()
-        self._fish_handler.move_fish()
-
     def add_new_objects(self, cycle_count: int) -> None:
-        if self._is_time_to_add_worms(cycle_count):
-            self._worm_handler.add_worms()
-        if self._is_time_to_detach_algae(cycle_count):
-            self._plant_handler.detach_algae_from_makers()
         self._fish_handler.breed_fish()

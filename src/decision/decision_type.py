@@ -6,8 +6,7 @@ class DecisionType(Enum):
     MOVE = auto()
     STAY = auto()
     DIE = auto()
-    BREED = auto()
-    EAT = auto()
+    REPRODUCE = auto()
 
     def __str__(self):
         return self.name

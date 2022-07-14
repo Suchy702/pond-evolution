@@ -5,12 +5,16 @@ from typing import cast
 from overrides import overrides
 
 from src.constants import FISH_MIN_SPEED, FISH_MAX_SPEED, FISH_MIN_SIZE, FISH_MAX_SIZE
+from src.decision.decision import decisionSetType, Decision
+from src.decision.decision_type import DecisionType
 from src.events.event import GraphicEvent
 from src.events.event_emitter import EventEmitter
 from src.events.event_type import GraphicEventType
 from src.object.fish import Fish
 from src.object.pond_object import PondObject
 from src.object_handler.pond_object_handler import PondObjectHandlerHomogeneous
+from src.object_kind import ObjectKind
+from src.position import Position
 from src.simulation_settings import SimulationSettings
 
 event_emitter = EventEmitter()
@@ -30,14 +34,19 @@ class FishHandler(PondObjectHandlerHomogeneous):
         size = randint(FISH_MIN_SIZE, FISH_MAX_SIZE)
         return Fish(speed, size, self._pond.random_position())
 
-    def move_fish(self) -> None:
-        for fish in self.fishes:
-            n_pos = self._pond.trim_position(fish.find_pos_to_move())
-            event_emitter.emit_event(
-                GraphicEvent(GraphicEventType.ANIM_MOVE, pond_object=fish, from_x=fish.pos.x, from_y=fish.pos.y,
-                             to_x=n_pos.x,
-                             to_y=n_pos.y))
-            self._pond.change_position(fish, n_pos)
+    def handle_decisions(self, decisions: decisionSetType):
+        for decision in decisions[DecisionType.MOVE][ObjectKind.FISH]:
+            self.move_fish(decision)
+
+    def move_fish(self, decision: Decision) -> None:
+        n_pos = self._pond.trim_position(Position(decision.to_y, decision.to_x))
+        event_emitter.emit_event(
+            GraphicEvent(GraphicEventType.ANIM_MOVE, pond_object=decision.pond_object,
+                         from_x=decision.pond_object.pos.x, from_y=decision.pond_object.pos.y,
+                         to_x=n_pos.x, to_y=n_pos.y
+                         )
+        )
+        self._pond.change_position(decision.pond_object, n_pos)
 
     def remove_dead_fishes(self) -> None:
         self.remove_all([fish for fish in self.fishes if fish.is_dead()])
