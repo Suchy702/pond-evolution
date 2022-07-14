@@ -14,6 +14,3 @@ class Alga(PondObject):
     @property
     def energy_val(self) -> int:
         return self._energy_val
-
-    def find_pos_to_move(self) -> Position:
-        return self.pos.changed(-self.surfacing_speed, 0)

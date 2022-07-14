@@ -38,6 +38,7 @@ HOW_OFTEN_CYCLES_MAKING_WORMS: int = 5
 # Algae maker
 MIN_ALGAE_TO_CREATE: int = 1
 MAX_ALGAE_TO_CREATE: int = 3
+CHANCE_TO_PRODUCE_ALGAE: int = 10  # in %
 
 # Fish
 FISH_MIN_SPEED: int = 5

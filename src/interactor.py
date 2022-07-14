@@ -86,10 +86,7 @@ class Interactor:
     def _is_time_to_detach_algae(cycle_count: int) -> bool:
         return cycle_count % HOW_OFTEN_CYCLES_MAKING_ALGAE == 0
 
-
     def add_new_objects(self, cycle_count: int) -> None:
         if self._is_time_to_add_worms(cycle_count):
             self._worm_handler.add_worms()
-        if self._is_time_to_detach_algae(cycle_count):
-            self._plant_handler.detach_algae_from_makers()
         self._fish_handler.breed_fish()

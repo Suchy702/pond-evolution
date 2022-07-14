@@ -1,4 +1,3 @@
-from itertools import chain
 from typing import cast
 
 from overrides import overrides
@@ -42,5 +41,5 @@ class AlgaMakerHandler(PondObjectHandlerHomogeneous):
         pos.y = self._pond.height - 1
         return AlgaMaker(pos, self._pond.height)
 
-    def create_algae(self) -> list[Alga]:
-        return list(chain.from_iterable([alga_maker.create_algae(self._pond) for alga_maker in self.alga_makers]))
+    def create_algae(self, algae_maker: AlgaMaker) -> list[Alga]:
+        return algae_maker.create_algae(self._pond)

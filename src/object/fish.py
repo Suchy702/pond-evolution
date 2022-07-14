@@ -20,9 +20,6 @@ class Fish(PondObject):
     def spoil_vitality(self) -> None:
         self.vitality -= const.FISH_VITALITY_SPOIL_RATE
 
-    def find_pos_to_move(self) -> Position:
-        return self.pos.changed(randint(-self.speed, self.speed), randint(-self.speed, self.speed))
-
     def is_dead(self) -> bool:
         return self.vitality <= 0
 

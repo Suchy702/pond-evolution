@@ -1,5 +1,3 @@
-from random import randint
-
 from src.ai.ai import WormAI
 from src.constants import WORM_FALLING_STEPS, WORM_BOUNCE_STEPS
 from src.object.pond_object import PondObject
@@ -17,6 +15,3 @@ class Worm(PondObject):
     @property
     def energy_val(self) -> int:
         return self._energy_val
-
-    def find_pos_to_move(self) -> Position:
-        return self.pos.changed(self.falling_speed, randint(-self.bounce_ratio, self.bounce_ratio))
