@@ -42,6 +42,7 @@ class PondObjectHandler(ABC):
 
         return decisions
 
+    @abstractmethod
     def handle_decisions(self, decisions: decisionSetType):
         pass
 

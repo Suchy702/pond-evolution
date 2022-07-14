@@ -5,7 +5,6 @@ from typing import cast
 
 from src.constants import HOW_OFTEN_CYCLES_MAKING_WORMS, HOW_OFTEN_CYCLES_MAKING_ALGAE
 from src.decision.decision import decisionSetType, Decision
-from src.decision.decision_type import DecisionType
 from src.events.event_emitter import EventEmitter
 from src.object.fish import Fish
 from src.object.pond_object import PondObject
@@ -45,12 +44,6 @@ class Interactor:
         self._handle_decisions(decisions)
 
     def _handle_decisions(self, decisions: decisionSetType) -> None:
-        for obj_kind in decisions[DecisionType.MOVE]:
-            for decision in decisions[DecisionType.MOVE][obj_kind]:
-                self._handle_decision(decision)
-
-    @staticmethod
-    def _handle_decision(decision: Decision) -> None:
         pass
 
     # beta function for testing
@@ -85,10 +78,6 @@ class Interactor:
         self._worm_handler.remove_worms_on_the_ground()
         self._plant_handler.alga_handler.remove_algae_on_surface()
 
-    def _move_food(self) -> None:
-        self._worm_handler.move_worms()
-        self._plant_handler.move()
-
     @staticmethod
     def _is_time_to_add_worms(cycle_count: int) -> bool:
         return cycle_count % HOW_OFTEN_CYCLES_MAKING_WORMS == 0
@@ -97,12 +86,6 @@ class Interactor:
     def _is_time_to_detach_algae(cycle_count: int) -> bool:
         return cycle_count % HOW_OFTEN_CYCLES_MAKING_ALGAE == 0
 
-    # Kolejnosc:
-    # Jedzenie
-    # Rybki
-    def move_objects(self) -> None:
-        self._move_food()
-        # self._fish_handler.move_fish()
 
     def add_new_objects(self, cycle_count: int) -> None:
         if self._is_time_to_add_worms(cycle_count):

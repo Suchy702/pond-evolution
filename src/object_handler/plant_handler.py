@@ -1,5 +1,6 @@
 from overrides import overrides
 
+from src.decision.decision import decisionSetType
 from src.object.pond_object import PondObject
 from src.object_handler.alga_handler import AlgaHandler
 from src.object_handler.alga_maker_handler import AlgaMakerHandler
@@ -16,9 +17,9 @@ class PlantHandler(PondObjectHandlerBundler):
 
         self._handlers.extend([self.alga_handler, self.alga_maker_handler])
 
-    def move(self):
-        self.alga_handler.move_algae()
-        self.alga_maker_handler.move_alga_maker()
+    def handle_decisions(self, decisions: decisionSetType):
+        self.alga_handler.handle_decisions(decisions)
+        self.alga_maker_handler.handle_decisions(decisions)
 
     @overrides
     def add_random(self, amount: int) -> None:

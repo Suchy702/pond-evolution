@@ -12,8 +12,8 @@ def alga():
 
 
 def test_surfacing_speed_setting(alga):
-    assert alga._surfacing_speed == max(1, 50 // ALGA_SURFACING_STEPS)
+    assert alga.surfacing_speed == max(1, 50 // ALGA_SURFACING_STEPS)
 
 
 def test_find_pos_to_move(alga):
-    assert alga.find_pos_to_move() == Position(alga.pos.y - alga._surfacing_speed, alga.pos.x)
+    assert alga.find_pos_to_move() == Position(alga.pos.y - alga.surfacing_speed, alga.pos.x)

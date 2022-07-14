@@ -36,7 +36,6 @@ class Engine:
     def cycle(self):
         self._interactor.remove_unnecessary_objects()
         self._interactor.handle_decisions()
-        self._interactor.move_objects()
         self._interactor.feed_fish()
         self._interactor.add_new_objects(self._cycle_count)
         self._cycle_count += 1

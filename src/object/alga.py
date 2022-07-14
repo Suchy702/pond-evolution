@@ -9,11 +9,11 @@ class Alga(PondObject):
     def __init__(self, energy_val: int, pos: Position, pond_height: int):
         super().__init__(ObjectKind.ALGA, pos, AlgaAI(self))
         self._energy_val: int = energy_val
-        self._surfacing_speed: int = max(1, pond_height // ALGA_SURFACING_STEPS)
+        self.surfacing_speed: int = max(1, pond_height // ALGA_SURFACING_STEPS)
 
     @property
     def energy_val(self) -> int:
         return self._energy_val
 
     def find_pos_to_move(self) -> Position:
-        return self.pos.changed(-self._surfacing_speed, 0)
+        return self.pos.changed(-self.surfacing_speed, 0)
