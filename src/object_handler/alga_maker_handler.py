@@ -26,8 +26,9 @@ class AlgaMakerHandler(PondObjectHandlerHomogeneous):
         return [cast(AlgaMaker, alga_maker) for alga_maker in self.objects]
 
     def handle_decisions(self, decisions: decisionSetType):
-        for decision in decisions[DecisionType.STAY][ObjectKind.ALGA_MAKER]:
-            self.move_alga_maker(decision)
+        if DecisionType.STAY in decisions and ObjectKind.ALGA_MAKER in decisions[DecisionType.STAY]:
+            for decision in decisions[DecisionType.STAY][ObjectKind.ALGA_MAKER]:
+                self.move_alga_maker(decision)
 
     def move_alga_maker(self, decision: Decision) -> None:
         event_emitter.emit_event(

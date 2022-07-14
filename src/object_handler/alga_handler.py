@@ -32,8 +32,9 @@ class AlgaHandler(PondObjectHandlerHomogeneous):
         return Alga(ALGA_ENERGY_VALUE, pos, self._pond.height)
 
     def handle_decisions(self, decisions: decisionSetType):
-        for decision in decisions[DecisionType.MOVE][ObjectKind.ALGA]:
-            self.move_alga(decision)
+        if DecisionType.MOVE in decisions and ObjectKind.ALGA in decisions[DecisionType.MOVE]:
+            for decision in decisions[DecisionType.MOVE][ObjectKind.ALGA]:
+                self.move_alga(decision)
 
     def move_alga(self, decision: Decision) -> None:
         n_pos = self._pond.trim_position(Position(decision.to_y, decision.to_x))

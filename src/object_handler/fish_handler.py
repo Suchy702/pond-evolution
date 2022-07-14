@@ -34,8 +34,9 @@ class FishHandler(PondObjectHandlerHomogeneous):
         return Fish(speed, size, self._pond.random_position())
 
     def handle_decisions(self, decisions: decisionSetType):
-        for decision in decisions[DecisionType.MOVE][ObjectKind.FISH]:
-            self.move_fish(decision)
+        if DecisionType.MOVE in decisions and ObjectKind.FISH in decisions[DecisionType.MOVE]:
+            for decision in decisions[DecisionType.MOVE][ObjectKind.FISH]:
+                self.move_fish(decision)
         if DecisionType.REPRODUCE in decisions and ObjectKind.FISH in decisions[DecisionType.REPRODUCE]:
             for decision in decisions[DecisionType.REPRODUCE][ObjectKind.FISH]:
                 self.breed_fish(decision.pond_object)

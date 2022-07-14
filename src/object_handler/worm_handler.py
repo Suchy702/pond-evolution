@@ -33,8 +33,9 @@ class WormHandler(PondObjectHandlerHomogeneous):
         return Worm(WORM_ENERGY_VALUE, pos, self._pond.shape)
 
     def handle_decisions(self, decisions: decisionSetType):
-        for decision in decisions[DecisionType.MOVE][ObjectKind.WORM]:
-            self.move_worm(decision)
+        if DecisionType.MOVE in decisions and ObjectKind.WORM in decisions[DecisionType.MOVE]:
+            for decision in decisions[DecisionType.MOVE][ObjectKind.WORM]:
+                self.move_worm(decision)
         if DecisionType.REPRODUCE in decisions and ObjectKind.WORM in decisions[DecisionType.REPRODUCE]:
             self.add_worms()
 
