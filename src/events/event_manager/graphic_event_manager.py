@@ -66,13 +66,13 @@ class GraphicEventManager(EventManager):
 
         match event.key:
             case "up":
-                self._gui.change_y_offset(MOVE_SCREEN_BY_CLICK)
+                self._gui.y_offset += MOVE_SCREEN_BY_CLICK
             case "down":
-                self._gui.change_y_offset(-MOVE_SCREEN_BY_CLICK)
+                self._gui.y_offset -= MOVE_SCREEN_BY_CLICK
             case "left":
-                self._gui.change_x_offset(MOVE_SCREEN_BY_CLICK)
+                self._gui.x_offset += MOVE_SCREEN_BY_CLICK
             case "right":
-                self._gui.change_x_offset(-MOVE_SCREEN_BY_CLICK)
+                self._gui.x_offset -= MOVE_SCREEN_BY_CLICK
             case "=":
                 self._gui.zoom(ZOOM_SCREEN_BY_CLICK)
             case "-":
@@ -85,10 +85,10 @@ class GraphicEventManager(EventManager):
                 self._gui.settings.animation_speed = max(2, self._gui.settings.animation_speed - 3)
 
     def _find_pos_to_draw_when_move(self, event: GraphicEvent) -> tuple[int, int]:
-        x1 = event.from_x * self._gui.cell_size + self._gui.x_offset
-        y1 = event.from_y * self._gui.cell_size + self._gui.y_offset
-        x2 = event.to_x * self._gui.cell_size + self._gui.x_offset
-        y2 = event.to_y * self._gui.cell_size + self._gui.y_offset
+        x1 = event.from_x * self._gui._cell_size + self._gui.x_offset
+        y1 = event.from_y * self._gui._cell_size + self._gui.y_offset
+        x2 = event.to_x * self._gui._cell_size + self._gui.x_offset
+        y2 = event.to_y * self._gui._cell_size + self._gui.y_offset
 
         if x1 == x2:
             dist = y2 - y1
@@ -104,8 +104,8 @@ class GraphicEventManager(EventManager):
         return x, y
 
     def _find_pos_to_draw_when_stay(self, event: GraphicEvent) -> tuple[int, int]:
-        x = int(event.x * self._gui.cell_size + self._gui.x_offset)
-        y = int(event.y * self._gui.cell_size + self._gui.y_offset)
+        x = int(event.x * self._gui._cell_size + self._gui.x_offset)
+        y = int(event.y * self._gui._cell_size + self._gui.y_offset)
         return x, y
 
     def _find_pos_to_draw(self, event: GraphicEvent) -> tuple[int, int]:
