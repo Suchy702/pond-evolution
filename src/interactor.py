@@ -2,6 +2,7 @@ from functools import reduce
 from typing import cast
 
 from src.constants import HOW_OFTEN_CYCLES_MAKING_WORMS, HOW_OFTEN_CYCLES_MAKING_ALGAE
+from src.decision.decision import decisionSetType, Decision
 from src.object.fish import Fish
 from src.object.pond_object import PondObject
 from src.object_handler.fish_handler import FishHandler
@@ -23,10 +24,24 @@ class Interactor:
     def all_objects(self) -> list[PondObject]:
         return reduce(lambda list_, handler: list_ + handler.objects, self.handlers, [])  # type: ignore
 
+    def _get_decisions(self) -> decisionSetType:
+        decisions = {}
+        for handler in self.handlers:
+            obj_decisions = handler.get_decisions()
+            Decision.combine_decision_dicts(obj_decisions, decisions)
+
+        return decisions
+
+    def handle_decisions(self):
+        pass
+
+    def _handle_decision(self):
+        pass
+
     # beta function for testing
     def preparations(self) -> None:
         for handler in self.handlers:
-            handler.add_random(50)
+            handler.add_random(1)
 
     def _find_pos_where_eat(self) -> list[Position]:
         pos_where_eat = []
