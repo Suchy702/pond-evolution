@@ -12,40 +12,32 @@ from src.position import Position
 class Fish(PondObject):
     def __init__(self, speed: int, size: int, pos: Position):
         super().__init__(ObjectKind.FISH, pos, FishAI(self))
-        self._speed: int = speed
-        self._size: int = size
-        self._vitality: int = self._speed + self._size
-        self._vitality_need_to_breed: int = self._vitality * const.FISH_NEED_MULTI_VITALITY_TO_BREED
-
-    @property
-    def vitality(self) -> int:
-        return self._vitality
-
-    @vitality.setter
-    def vitality(self, val):
-        self._vitality = val
+        self.speed: int = speed
+        self.size: int = size
+        self.vitality: int = self.speed + self.size
+        self.vitality_need_to_breed: int = self.vitality * const.FISH_NEED_MULTI_VITALITY_TO_BREED
 
     def spoil_vitality(self) -> None:
-        self._vitality -= const.FISH_VITALITY_SPOIL_RATE
+        self.vitality -= const.FISH_VITALITY_SPOIL_RATE
 
     def find_pos_to_move(self) -> Position:
-        return self.pos.changed(randint(-self._speed, self._speed), randint(-self._speed, self._speed))
+        return self.pos.changed(randint(-self.speed, self.speed), randint(-self.speed, self.speed))
 
     def is_dead(self) -> bool:
         return self.vitality <= 0
 
     def is_breeding(self) -> bool:
-        return self._vitality >= self._vitality_need_to_breed
+        return self.vitality >= self.vitality_need_to_breed
 
     @staticmethod
     def _calc_deviation(val):
         return val // const.EVOLUTION_DEVIATION_DIV
 
     def _birth_fish(self) -> Fish:
-        speed_dev = self._calc_deviation(self._speed)
-        child_speed = self._speed + randint(-speed_dev, speed_dev)
-        size_dev = self._calc_deviation(self._size)
-        child_size = self._size + randint(-size_dev, size_dev)
+        speed_dev = self._calc_deviation(self.speed)
+        child_speed = self.speed + randint(-speed_dev, speed_dev)
+        size_dev = self._calc_deviation(self.size)
+        child_size = self.size + randint(-size_dev, size_dev)
         return Fish(child_speed, child_size, self.pos)
 
     def birth_fish(self) -> list[Fish]:
