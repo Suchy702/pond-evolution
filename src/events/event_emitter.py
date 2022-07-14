@@ -73,5 +73,5 @@ class EventEmitter(metaclass=Singleton):
         self.graphic_event_manager.handle_events()
         self.logic_event_manager.handle_events()
 
-    def is_animation_event(self) -> bool:
+    def is_animation_event_present(self) -> bool:
         return self.graphic_event_manager.is_animation_event()

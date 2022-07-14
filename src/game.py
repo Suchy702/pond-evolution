@@ -34,8 +34,6 @@ class Game:
 
     def run(self) -> None:
         clock = pygame.time.Clock()
-        self._gui.draw_empty_frame()
-        pygame.display.update()
 
         while self.running:
             clock.tick(FPS)
