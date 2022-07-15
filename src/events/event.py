@@ -17,7 +17,6 @@ class Event(ABC, Generic[T]):
     def __init__(self, event_type: T, **kwargs):
         self.event_type: T = event_type
 
-    # TODO: to jest wolne według cprofile
     def copy(self) -> Event:
         kwargs = {}
         for attr in self.attributes:

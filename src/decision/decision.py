@@ -9,6 +9,8 @@ if TYPE_CHECKING:
 
 
 class Decision:
+    __slots__ = ('decision_type', 'pond_object', 'to_x', 'to_y', 'how_many', 'kind')
+
     def __init__(
             self, decision_type: DecisionType, *,
             pond_object: Optional[PondObject] = None,

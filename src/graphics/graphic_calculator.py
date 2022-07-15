@@ -85,7 +85,7 @@ class GraphicCalculator:
             return self._find_pos_to_draw_when_stay(event, vals)
 
     # Magic function
-    def change_vals_to_zoom(self, change: int, vals: GraphicValuesGuard) -> None:
+    def calc_zoom(self, change: int, vals: GraphicValuesGuard) -> None:
         old_cell_size = vals.cell_size
         vals.cell_size += change
 

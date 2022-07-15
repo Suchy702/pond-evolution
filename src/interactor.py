@@ -54,7 +54,7 @@ class Interactor:
     # beta function for testing
     def preparations(self) -> None:
         self._plant_handler.add_random(10)
-        self._fish_handler.add_random(500)
+        self._fish_handler.add_random(3000)
 
     def _find_pos_where_eat(self) -> list[Position]:
         pos_where_eat = []
@@ -78,7 +78,7 @@ class Interactor:
         for pos in self._find_pos_where_eat():
             self._eat_at_one_spot(pos)
 
-    def remove_unnecessary_objects(self):
+    def remove_unnecessary_objects(self) -> None:
         self._fish_handler.remove_dead_fish()
         self._worm_handler.remove_worms_on_the_ground()
         self._plant_handler.alga_handler.remove_algae_on_surface()

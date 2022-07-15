@@ -46,7 +46,7 @@ class EventEmitter(metaclass=Singleton):
         for event in events:
             self.emit_event(event)
 
-    def _emit_pygame_events(self):
+    def _emit_pygame_events(self) -> None:
         for event in pygame.event.get():
             converted = self._from_pygame_event(event)
             if converted is not None:
