@@ -1,9 +1,9 @@
 from __future__ import annotations
 
 from functools import reduce
-from typing import cast
+from typing import cast, Type
 
-from src.ai.ai import FishAI, WormAI, AlgaAI, AlgaMakerAI
+from src.ai.ai import FishAI, WormAI, AlgaAI, AlgaMakerAI, AI
 from src.decision.decision import decisionSetType, Decision
 from src.events.event_emitter import EventEmitter
 from src.object.fish import Fish
@@ -24,7 +24,7 @@ class Interactor:
         self._worm_handler: WormHandler = WormHandler(settings)
         self._plant_handler: PlantHandler = PlantHandler(settings)
         self.handlers: list[PondObjectHandler] = [self._fish_handler, self._worm_handler, self._plant_handler]
-        self.ai_classes: list[type] = [FishAI, WormAI, AlgaAI, AlgaMakerAI]
+        self.ai_classes: list[Type[AI]] = [FishAI, WormAI, AlgaAI, AlgaMakerAI]
 
     @property
     def all_objects(self) -> list[PondObject]:
