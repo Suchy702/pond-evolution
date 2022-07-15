@@ -70,14 +70,13 @@ class WormAI(AI["Worm"]):
 
     @staticmethod
     def _reproduce_decision(decisions: decisionSetType):
-        if random() < CHANCE_TO_PRODUCE_ALGAE / 100:
+        if random() < CHANCE_TO_PRODUCE_WORMS / 100:
             Decision(DecisionType.REPRODUCE, kind=ObjectKind.WORM).add_to_dict(decisions)
 
     @overrides
     def get_decisions(self) -> decisionSetType:
         decisions = {}
         self._movement_decision(decisions)
-        self._reproduce_decision(decisions)
         return decisions
 
     @staticmethod
@@ -111,7 +110,7 @@ class AlgaMakerAI(AI["AlgaMaker"]):
         ).add_to_dict(decisions)
 
     def _reproduce_decision(self, decisions: decisionSetType) -> None:
-        if random() < CHANCE_TO_PRODUCE_WORMS / 100:
+        if random() < CHANCE_TO_PRODUCE_ALGAE / 100:
             Decision(DecisionType.REPRODUCE, pond_object=self.pond_object).add_to_dict(decisions)
 
     @overrides
