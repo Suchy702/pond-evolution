@@ -32,13 +32,14 @@ class FishAI(AI["Fish"]):
         return self.pond_object.pos.changed(randint(-self.pond_object.speed, self.pond_object.speed),
                                             randint(-self.pond_object.speed, self.pond_object.speed))
 
-    def _movement_decision(self, decisions: decisionSetType):
+    def _movement_decision(self, decisions: decisionSetType) -> None:
         pos_to_move = self._find_pos_to_move()
-        Decision(DecisionType.MOVE, self.pond_object, to_x=pos_to_move.x, to_y=pos_to_move.y).add_to_dict(decisions)
+        Decision(DecisionType.MOVE, pond_object=self.pond_object, to_x=pos_to_move.x, to_y=pos_to_move.y) \
+            .add_to_dict(decisions)
 
     def _reproduce_decision(self, decisions: decisionSetType) -> bool:
         if self.pond_object.vitality > self.pond_object.vitality_need_to_breed:
-            Decision(DecisionType.REPRODUCE, self.pond_object).add_to_dict(decisions)
+            Decision(DecisionType.REPRODUCE, pond_object=self.pond_object).add_to_dict(decisions)
             return True
         return False
 
@@ -58,12 +59,14 @@ class WormAI(AI["Worm"]):
 
     def _movement_decision(self, decisions: decisionSetType):
         pos_to_move = self._find_pos_to_move()
-        Decision(DecisionType.MOVE, self.pond_object, to_x=pos_to_move.x, to_y=pos_to_move.y).add_to_dict(decisions)
+        Decision(
+            DecisionType.MOVE, pond_object=self.pond_object, to_x=pos_to_move.x, to_y=pos_to_move.y
+        ).add_to_dict(decisions)
 
     @staticmethod
     def _reproduce_decision(decisions: decisionSetType):
         if random() < CHANCE_TO_PRODUCE_ALGAE / 100:
-            Decision(DecisionType.REPRODUCE, None, kind=ObjectKind.WORM).add_to_dict(decisions)
+            Decision(DecisionType.REPRODUCE, kind=ObjectKind.WORM).add_to_dict(decisions)
 
     @overrides
     def get_decisions(self) -> decisionSetType:
@@ -83,9 +86,10 @@ class AlgaAI(AI["Alga"]):
     def _find_pos_to_move(self) -> Position:
         return self.pond_object.pos.changed(-self.pond_object.surfacing_speed, 0)
 
-    def _movement_decision(self, decisions: decisionSetType):
+    def _movement_decision(self, decisions: decisionSetType) -> None:
         pos_to_move = self._find_pos_to_move()
-        Decision(DecisionType.MOVE, self.pond_object, to_x=pos_to_move.x, to_y=pos_to_move.y).add_to_dict(decisions)
+        Decision(DecisionType.MOVE, pond_object=self.pond_object, to_x=pos_to_move.x,
+                 to_y=pos_to_move.y).add_to_dict(decisions)
 
     @overrides
     def get_decisions(self) -> decisionSetType:
@@ -95,13 +99,14 @@ class AlgaAI(AI["Alga"]):
 
 
 class AlgaMakerAI(AI["AlgaMaker"]):
-    def _movement_decision(self, decisions: decisionSetType):
-        Decision(DecisionType.STAY, self.pond_object, to_x=self.pond_object.pos.x,
-                 to_y=self.pond_object.pos.y).add_to_dict(decisions)
+    def _movement_decision(self, decisions: decisionSetType) -> None:
+        Decision(
+            DecisionType.STAY, pond_object=self.pond_object, to_x=self.pond_object.pos.x, to_y=self.pond_object.pos.y
+        ).add_to_dict(decisions)
 
-    def _reproduce_decision(self, decisions: decisionSetType):
+    def _reproduce_decision(self, decisions: decisionSetType) -> None:
         if random() < CHANCE_TO_PRODUCE_WORMS / 100:
-            Decision(DecisionType.REPRODUCE, self.pond_object).add_to_dict(decisions)
+            Decision(DecisionType.REPRODUCE, pond_object=self.pond_object).add_to_dict(decisions)
 
     @overrides
     def get_decisions(self) -> decisionSetType:
