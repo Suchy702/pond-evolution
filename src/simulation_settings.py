@@ -8,8 +8,6 @@ class SimulationSettings:
     def __init__(self):
         self._root = None
         self._resolution_val = None
-        self.screen_pond_height = None
-        self.screen_pond_width = None
 
     def get_user_settings(self) -> None:
         self._root = tk.Tk()

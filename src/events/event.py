@@ -16,6 +16,7 @@ class Event(ABC, Generic[T]):
     def __init__(self, event_type: T, **kwargs):
         self.event_type: T = event_type
 
+    # TODO: to jest wolne według cprofile
     def copy(self) -> Event:
         attributes = inspect.getmembers(self, lambda a: not (inspect.isroutine(a)))
         attributes = [a for a in attributes if not (a[0].startswith('_') or a[0].endswith('_'))]

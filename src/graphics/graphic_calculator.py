@@ -2,8 +2,8 @@ from math import ceil, copysign
 
 from src.events.event import GraphicEvent
 from src.events.event_type import GraphicEventType
-from src.simulation_settings import SimulationSettings
 from src.graphics.graphic_values_guard import GraphicValuesGuard
+from src.simulation_settings import SimulationSettings
 
 
 class GraphicCalculator:
@@ -35,21 +35,21 @@ class GraphicCalculator:
         return x1 == x2
 
     @staticmethod
-    def _calc_pos_for_non_linear_fun(x1: int, y1: int, y2: int, event: GraphicEvent) -> tuple[float, float]:
+    def _calc_pos_for_non_linear_fun(x1: int, y1: int, y2: int, event: GraphicEvent) -> tuple[int, int]:
         dist = y2 - y1
         y = y1 + dist * event.step / event.total_steps
         x = x1
-        return x, y
+        return int(x), int(y)
 
     @staticmethod
-    def _calc_pos_for_linear_fun(x1: int, y1: int, x2: int, y2: int, event: GraphicEvent) -> tuple[float, float]:
+    def _calc_pos_for_linear_fun(x1: int, y1: int, x2: int, y2: int, event: GraphicEvent) -> tuple[int, int]:
         dist = x2 - x1
         a = (y2 - y1) / (x2 - x1)
         b = y1 - a * x1
 
         x = x1 + dist * event.step / event.total_steps
         y = a * x + b
-        return x, y
+        return int(x), int(y)
 
     @staticmethod
     def _calc_begin_point_in_animation(event: GraphicEvent, vals: GraphicValuesGuard) -> tuple[int, int]:
@@ -63,7 +63,7 @@ class GraphicCalculator:
         y = event.to_y * vals.cell_size + vals.y_offset
         return x, y
 
-    def _find_pos_to_draw_when_move(self, event: GraphicEvent, vals: GraphicValuesGuard) -> tuple[float, float]:
+    def _find_pos_to_draw_when_move(self, event: GraphicEvent, vals: GraphicValuesGuard) -> tuple[int, int]:
         x1, y1 = self._calc_begin_point_in_animation(event, vals)
         x2, y2 = self._calc_end_point_in_animation(event, vals)
 
@@ -78,7 +78,7 @@ class GraphicCalculator:
         y = event.y * vals.cell_size + vals.y_offset
         return x, y
 
-    def find_pos_to_draw(self, event: GraphicEvent, vals: GraphicValuesGuard) -> tuple[float, float]:
+    def find_pos_to_draw(self, event: GraphicEvent, vals: GraphicValuesGuard) -> tuple[int, int]:
         if event.event_type == GraphicEventType.ANIM_MOVE:
             return self._find_pos_to_draw_when_move(event, vals)
         else:
