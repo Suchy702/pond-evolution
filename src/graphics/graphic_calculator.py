@@ -52,8 +52,8 @@ class GraphicCalculator:
 
     @staticmethod
     def _find_pos_to_draw_when_stay(event: GraphicEvent, vals: GraphicValuesGuard) -> tuple[int, int]:
-        x = int(event.x * vals.cell_size + vals.x_offset)
-        y = int(event.y * vals.cell_size + vals.y_offset)
+        x = event.x * vals.cell_size + vals.x_offset
+        y = event.y * vals.cell_size + vals.y_offset
         return x, y
 
     def find_pos_to_draw(self, event: GraphicEvent, vals: GraphicValuesGuard) -> tuple[int, int]:
