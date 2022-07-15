@@ -3,7 +3,8 @@ from typing import cast
 from overrides import overrides
 
 from src.constants import WORM_ENERGY_VALUE, NUM_OF_NEW_WORMS_AT_CYCLE
-from src.decision.decision import decisionSetType, Decision
+from src.decision.decision import Decision
+from src.decision.decision_set import DecisionSet
 from src.decision.decision_type import DecisionType
 from src.events.event import GraphicEvent
 from src.events.event_emitter import EventEmitter
@@ -32,11 +33,10 @@ class WormHandler(PondObjectHandlerHomogeneous):
         pos.y = 0
         return Worm(WORM_ENERGY_VALUE, pos, self._pond.shape)
 
-    def handle_decisions(self, decisions: decisionSetType):
-        if DecisionType.MOVE in decisions and ObjectKind.WORM in decisions[DecisionType.MOVE]:
-            for decision in decisions[DecisionType.MOVE][ObjectKind.WORM]:
-                self.move_worm(decision)
-        if DecisionType.REPRODUCE in decisions and ObjectKind.WORM in decisions[DecisionType.REPRODUCE]:
+    def handle_decisions(self, decisions: DecisionSet):
+        for decision in decisions[DecisionType.MOVE, ObjectKind.WORM]:
+            self.move_worm(decision)
+        if decisions[DecisionType.REPRODUCE, ObjectKind.WORM]:
             self.add_worms()
 
     def move_worm(self, decision: Decision) -> None:

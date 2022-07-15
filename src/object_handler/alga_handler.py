@@ -3,7 +3,8 @@ from typing import cast
 from overrides import overrides
 
 from src.constants import ALGA_ENERGY_VALUE
-from src.decision.decision import decisionSetType, Decision
+from src.decision.decision import Decision
+from src.decision.decision_set import DecisionSet
 from src.decision.decision_type import DecisionType
 from src.events.event import GraphicEvent
 from src.events.event_emitter import EventEmitter
@@ -31,18 +32,18 @@ class AlgaHandler(PondObjectHandlerHomogeneous):
         pos = self._pond.random_position()
         return Alga(ALGA_ENERGY_VALUE, pos, self._pond.height)
 
-    def handle_decisions(self, decisions: decisionSetType):
-        if DecisionType.MOVE in decisions and ObjectKind.ALGA in decisions[DecisionType.MOVE]:
-            for decision in decisions[DecisionType.MOVE][ObjectKind.ALGA]:
-                self.move_alga(decision)
+    def handle_decisions(self, decisions: DecisionSet) -> None:
+        for decision in decisions[DecisionType.MOVE, ObjectKind.ALGA]:
+            self.move_alga(decision)
 
     def move_alga(self, decision: Decision) -> None:
         n_pos = self._pond.trim_position(Position(decision.to_y, decision.to_x))
         event_emitter.emit_event(
-            GraphicEvent(GraphicEventType.ANIM_MOVE, pond_object=decision.pond_object,
-                         from_x=decision.pond_object.pos.x, from_y=decision.pond_object.pos.y,
-                         to_x=n_pos.x, to_y=n_pos.y
-                         )
+            GraphicEvent(
+                GraphicEventType.ANIM_MOVE, pond_object=decision.pond_object,
+                from_x=decision.pond_object.pos.x, from_y=decision.pond_object.pos.y,
+                to_x=n_pos.x, to_y=n_pos.y
+            )
         )
         self._pond.change_position(decision.pond_object, n_pos)
 

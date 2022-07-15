@@ -17,7 +17,7 @@ def test_remove_dead_fish(fish_handler):
     live_fish = get_object(ObjectKind.FISH)
     live_fish.vitality = 100
     fish_handler.add_all([dead_fish, live_fish])
-    fish_handler.remove_dead_fishes()
+    fish_handler.remove_dead_fish()
     assert fish_handler.size == 1
 
 

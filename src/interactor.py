@@ -4,7 +4,7 @@ from functools import reduce
 from typing import cast, Type
 
 from src.ai.ai import FishAI, WormAI, AlgaAI, AlgaMakerAI, AI
-from src.decision.decision import decisionSetType, Decision
+from src.decision.decision_set import DecisionSet
 from src.events.event_emitter import EventEmitter
 from src.object.fish import Fish
 from src.object.pond_object import PondObject
@@ -30,15 +30,15 @@ class Interactor:
     def all_objects(self) -> list[PondObject]:
         return reduce(lambda list_, handler: list_ + handler.objects, self.handlers, [])  # type: ignore
 
-    def _get_decisions(self) -> decisionSetType:
-        decisions = {}
+    def _get_decisions(self) -> DecisionSet:
+        decisions = DecisionSet()
         for handler in self.handlers:
             obj_decisions = handler.get_decisions()
-            Decision.combine_decision_dicts(obj_decisions, decisions)
+            decisions += obj_decisions
 
         for ai_class in self.ai_classes:
             class_decisions = ai_class.get_general_decisions()
-            Decision.combine_decision_dicts(class_decisions, decisions)
+            decisions += class_decisions
 
         return decisions
 
@@ -48,7 +48,7 @@ class Interactor:
             handler.handle_decisions(decisions)
         self._handle_decisions(decisions)
 
-    def _handle_decisions(self, decisions: decisionSetType) -> None:
+    def _handle_decisions(self, decisions: DecisionSet) -> None:
         pass
 
     # beta function for testing
@@ -79,6 +79,6 @@ class Interactor:
             self._eat_at_one_spot(pos)
 
     def remove_unnecessary_objects(self):
-        self._fish_handler.remove_dead_fishes()
+        self._fish_handler.remove_dead_fish()
         self._worm_handler.remove_worms_on_the_ground()
         self._plant_handler.alga_handler.remove_algae_on_surface()

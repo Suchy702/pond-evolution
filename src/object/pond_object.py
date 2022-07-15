@@ -3,7 +3,7 @@ from __future__ import annotations
 from abc import ABC
 from typing import TYPE_CHECKING
 
-from src.decision.decision import decisionSetType
+from src.decision.decision_set import DecisionSet
 from src.object_kind import ObjectKind
 from src.position import Position
 
@@ -37,8 +37,9 @@ class PondObject(ABC):
             raise Exception("ID already set!")
         self._id = id_
 
-    def get_decisions(self) -> decisionSetType:
-        return self.ai.get_decisions()
+    def get_decisions(self) -> DecisionSet:
+        dc = self.ai.get_decisions()
+        return dc
 
     def __str__(self):
         return f'{self._kind}-{self._id}'

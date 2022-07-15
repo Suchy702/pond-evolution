@@ -4,7 +4,8 @@ from typing import cast
 from overrides import overrides
 
 from src.constants import FISH_MIN_SPEED, FISH_MAX_SPEED, FISH_MIN_SIZE, FISH_MAX_SIZE
-from src.decision.decision import decisionSetType, Decision
+from src.decision.decision import Decision
+from src.decision.decision_set import DecisionSet
 from src.decision.decision_type import DecisionType
 from src.events.event import GraphicEvent
 from src.events.event_emitter import EventEmitter
@@ -33,32 +34,29 @@ class FishHandler(PondObjectHandlerHomogeneous):
         size = randint(FISH_MIN_SIZE, FISH_MAX_SIZE)
         return Fish(speed, size, self._pond.random_position())
 
-    def handle_decisions(self, decisions: decisionSetType):
-        if DecisionType.MOVE in decisions and ObjectKind.FISH in decisions[DecisionType.MOVE]:
-            for decision in decisions[DecisionType.MOVE][ObjectKind.FISH]:
-                self.move_fish(decision)
-        if DecisionType.REPRODUCE in decisions and ObjectKind.FISH in decisions[DecisionType.REPRODUCE]:
-            for decision in decisions[DecisionType.REPRODUCE][ObjectKind.FISH]:
-                self.breed_fish(decision.pond_object)
+    def handle_decisions(self, decisions: DecisionSet):
+        for decision in decisions[DecisionType.MOVE, ObjectKind.FISH]:
+            self.move_fish(decision)
+        for decision in decisions[DecisionType.REPRODUCE, ObjectKind.FISH]:
+            fish = cast(Fish, decision.pond_object)
+            self.breed_fish(fish)
 
     def move_fish(self, decision: Decision) -> None:
         n_pos = self._pond.trim_position(Position(decision.to_y, decision.to_x))
+        fish = cast(Fish, decision.pond_object)
         event_emitter.emit_event(
-            GraphicEvent(GraphicEventType.ANIM_MOVE, pond_object=decision.pond_object,
-                         from_x=decision.pond_object.pos.x, from_y=decision.pond_object.pos.y,
-                         to_x=n_pos.x, to_y=n_pos.y
-                         )
+            GraphicEvent(
+                GraphicEventType.ANIM_MOVE, pond_object=fish,
+                from_x=fish.pos.x, from_y=fish.pos.y,
+                to_x=n_pos.x, to_y=n_pos.y
+            )
         )
-        self._pond.change_position(decision.pond_object, n_pos)
-        decision.pond_object.spoil_vitality()
-
-    def remove_dead_fishes(self) -> None:
-        self.remove_all([fish for fish in self.fishes if fish.is_dead()])
-
-    def spoil_fishes_vitality(self) -> None:
-        for fish in self.fishes:
-            fish.spoil_vitality()
+        self._pond.change_position(fish, n_pos)
+        fish.spoil_vitality()
 
     def breed_fish(self, fish: Fish) -> None:
         self.add_all(fish.birth_fish())
         self.remove(fish)
+
+    def remove_dead_fish(self) -> None:
+        self.remove_all([fish for fish in self.fishes if fish.is_dead()])

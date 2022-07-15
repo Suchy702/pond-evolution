@@ -1,6 +1,6 @@
 from overrides import overrides
 
-from src.decision.decision import decisionSetType
+from src.decision.decision_set import DecisionSet
 from src.decision.decision_type import DecisionType
 from src.object.alga_maker import AlgaMaker
 from src.object.pond_object import PondObject
@@ -20,13 +20,12 @@ class PlantHandler(PondObjectHandlerBundler):
 
         self._handlers.extend([self.alga_handler, self.alga_maker_handler])
 
-    def handle_decisions(self, decisions: decisionSetType):
+    def handle_decisions(self, decisions: DecisionSet):
         self.alga_handler.handle_decisions(decisions)
         self.alga_maker_handler.handle_decisions(decisions)
 
-        if DecisionType.REPRODUCE in decisions and ObjectKind.ALGA_MAKER in decisions[DecisionType.REPRODUCE]:
-            for decision in decisions[DecisionType.REPRODUCE][ObjectKind.ALGA_MAKER]:
-                self.detach_algae_from_maker(decision.pond_object)
+        for decision in decisions[DecisionType.REPRODUCE, ObjectKind.ALGA_MAKER]:
+            self.detach_algae_from_maker(decision.pond_object)
 
     @overrides
     def add_random(self, amount: int) -> None:

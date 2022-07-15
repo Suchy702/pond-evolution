@@ -2,7 +2,8 @@ from typing import cast
 
 from overrides import overrides
 
-from src.decision.decision import decisionSetType, Decision
+from src.decision.decision import Decision
+from src.decision.decision_set import DecisionSet
 from src.decision.decision_type import DecisionType
 from src.events.event import GraphicEvent
 from src.events.event_emitter import EventEmitter
@@ -25,15 +26,16 @@ class AlgaMakerHandler(PondObjectHandlerHomogeneous):
     def alga_makers(self):
         return [cast(AlgaMaker, alga_maker) for alga_maker in self.objects]
 
-    def handle_decisions(self, decisions: decisionSetType):
-        if DecisionType.STAY in decisions and ObjectKind.ALGA_MAKER in decisions[DecisionType.STAY]:
-            for decision in decisions[DecisionType.STAY][ObjectKind.ALGA_MAKER]:
-                self.move_alga_maker(decision)
+    def handle_decisions(self, decisions: DecisionSet):
+        for decision in decisions[DecisionType.STAY, ObjectKind.ALGA_MAKER]:
+            self.move_alga_maker(decision)
 
     def move_alga_maker(self, decision: Decision) -> None:
         event_emitter.emit_event(
-            GraphicEvent(GraphicEventType.ANIM_STAY, pond_object=decision.pond_object, x=decision.pond_object.pos.x,
-                         y=decision.pond_object.pos.y)
+            GraphicEvent(
+                GraphicEventType.ANIM_STAY, pond_object=decision.pond_object,
+                x=decision.pond_object.pos.x, y=decision.pond_object.pos.y
+            )
         )
 
     @overrides

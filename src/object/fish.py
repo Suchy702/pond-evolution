@@ -2,8 +2,9 @@ from __future__ import annotations
 
 from random import randint
 
-import src.constants as const
 from src.ai.ai import FishAI
+from src.constants import FISH_VITALITY_SPOIL_RATE, EVOLUTION_DEVIATION_DIV, MIN_FISH_TO_BIRTH, MAX_FISH_TO_BIRTH, \
+    FISH_NEED_MULTI_VITALITY_TO_BREED
 from src.object.pond_object import PondObject
 from src.object_kind import ObjectKind
 from src.position import Position
@@ -15,20 +16,17 @@ class Fish(PondObject):
         self.speed: int = speed
         self.size: int = size
         self.vitality: int = self.speed + self.size
-        self.vitality_need_to_breed: int = self.vitality * const.FISH_NEED_MULTI_VITALITY_TO_BREED
+        self.vitality_need_to_breed: int = self.vitality * FISH_NEED_MULTI_VITALITY_TO_BREED
 
     def spoil_vitality(self) -> None:
-        self.vitality -= const.FISH_VITALITY_SPOIL_RATE
+        self.vitality -= FISH_VITALITY_SPOIL_RATE
 
     def is_dead(self) -> bool:
         return self.vitality <= 0
 
-    def is_breeding(self) -> bool:
-        return self.vitality >= self.vitality_need_to_breed
-
     @staticmethod
     def _calc_deviation(val):
-        return val // const.EVOLUTION_DEVIATION_DIV
+        return val // EVOLUTION_DEVIATION_DIV
 
     def _birth_fish(self) -> Fish:
         speed_dev = self._calc_deviation(self.speed)
@@ -38,4 +36,4 @@ class Fish(PondObject):
         return Fish(child_speed, child_size, self.pos)
 
     def birth_fish(self) -> list[Fish]:
-        return [self._birth_fish() for _ in range(randint(const.MIN_FISH_TO_BIRTH, const.MAX_FISH_TO_BIRTH))]
+        return [self._birth_fish() for _ in range(randint(MIN_FISH_TO_BIRTH, MAX_FISH_TO_BIRTH))]
