@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import inspect
 from abc import ABC
 from typing import Optional, TypeVar, Generic, cast, ClassVar
 
@@ -13,18 +12,20 @@ T = TypeVar('T', bound=EventType)
 
 
 class Event(ABC, Generic[T]):
+    attributes: ClassVar[tuple[str]] = ('event_type',)
+
     def __init__(self, event_type: T, **kwargs):
         self.event_type: T = event_type
 
     # TODO: to jest wolne według cprofile
     def copy(self) -> Event:
-        attributes = inspect.getmembers(self, lambda a: not (inspect.isroutine(a)))
-        attributes = [a for a in attributes if not (a[0].startswith('_') or a[0].endswith('_'))]
-        attr_set = {attr[0]: getattr(self, attr[0]) for attr in attributes}
-        event_type = attr_set['event_type']
-        attr_set.pop('event_type')
-        attr_set.pop('attributes')
-        return self.__class__(event_type, **attr_set)
+        kwargs = {}
+        for attr in self.attributes:
+            if attr == 'event_type':
+                continue
+            kwargs[attr] = getattr(self, attr)
+
+        return self.__class__(self.event_type, **kwargs)
 
 
 class LogicEvent(Event[LogicEventType]):
