@@ -19,7 +19,6 @@ class GraphicEventManager(EventManager):
         self._animation_events: list[GraphicEvent] = []
         self._gui: GUI = gui
 
-        # TODO: trzeba zrobić jakiś uniwersalny interfejs jakby było więcej eventów które trzeba wykonywać co x sekund
         # Needed for fluent speed changing
         self._animation_speed_changed = False
         self._last_animation_speed_change_time = time.time()
@@ -47,24 +46,25 @@ class GraphicEventManager(EventManager):
         for event in cp_anim_events:
             self._handle_animation_event(event)
 
-        # TODO: draw_ui chyba nie powinno być tutaj
+    def handle_events(self) -> None:
+        self._handle_static_events()
+        self._handle_animation_events()
+        self._animation_speed_changed = False
         self._gui.draw_ui()
         pygame.display.update()
 
-    def handle_events(self) -> None:
-        # TODO: To też trzeba ładniej zapisać
-        old_speed = self._gui.vals.animation_speed
-        self._handle_static_events()
-        self._animation_speed_changed = old_speed != self._gui.vals.animation_speed
-        self._handle_animation_events()
+    def is_too_small_time_diff_between_anim_changes(self) -> bool:
+        return time.time() - self._last_animation_speed_change_time < 0.1
 
-    def _handle_static_event(self, event: GraphicEvent):
-        # TODO: trzeba to jakoś ładniej zapisać
-        if event.key in ",." and time.time() - self._last_animation_speed_change_time < 0.1:
+    def change_animation_speed(self, val: int) -> None:
+        if self.is_too_small_time_diff_between_anim_changes():
             return
         else:
             self._last_animation_speed_change_time = time.time()
+        self._gui.vals.animation_speed += val
+        self._animation_speed_changed = True
 
+    def _handle_static_event(self, event: GraphicEvent):
         match event.key:
             case "up":
                 self._gui.vals.y_offset += SCREEN_MOVE_CHANGE
@@ -81,9 +81,9 @@ class GraphicEventManager(EventManager):
             case "c":
                 self._gui.center_view()
             case ",":
-                self._gui.vals.animation_speed += ANIMATION_SPEED_CHANGE
+                self.change_animation_speed(ANIMATION_SPEED_CHANGE)
             case ".":
-                self._gui.vals.animation_speed -= ANIMATION_SPEED_CHANGE
+                self.change_animation_speed(-ANIMATION_SPEED_CHANGE)
 
     @staticmethod
     def _add_event_with_next_step(event: GraphicEvent) -> None:
@@ -94,13 +94,16 @@ class GraphicEventManager(EventManager):
         if event.total_steps is None:
             event.total_steps = self._gui.vals.animation_speed
 
+    def _customize_total_steps_to_anim_speed(self, event: GraphicEvent) -> None:
+        percentage = event.step / event.total_steps
+        event.total_steps = self._gui.vals.animation_speed
+        event.step = min(int(event.total_steps * percentage), event.total_steps - 1)
+
     def _handle_animation_event(self, event: GraphicEvent):
         self._set_event_total_step(event)
 
         if self._animation_speed_changed:
-            percentage = event.step / event.total_steps
-            event.total_steps = self._gui.vals.animation_speed
-            event.step = min(int(event.total_steps * percentage), event.total_steps - 1)
+            self._customize_total_steps_to_anim_speed(event)
 
         self._gui.draw_anim_event(event)
         self._add_event_with_next_step(event)

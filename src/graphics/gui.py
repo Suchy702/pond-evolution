@@ -34,9 +34,15 @@ class GUI:
         rect = pygame.Rect(0, self.settings.screen_pond_height, self.settings.screen_width, ui_height)
         pygame.draw.rect(self._screen, GRAY, rect, 0)
 
+    def _is_visible_now(self, x: int, y: int):
+        x_in = 0 <= x <= self.settings.screen_pond_width
+        y_in = 0 <= y <= self.settings.screen_pond_height
+        return x_in and y_in
+
     def draw_anim_event(self, event: GraphicEvent):
         x, y = self.calculator.find_pos_to_draw(event, self.vals)
-        self.draw_object(event.pond_object, x, y)
+        if self._is_visible_now(x, y):
+            self.draw_object(event.pond_object, x, y)
 
     def center_view(self) -> None:
         self.vals.x_offset, self.vals.y_offset = self.calculator.calc_center_view(self.vals)

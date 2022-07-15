@@ -42,3 +42,4 @@ class Game:
                 self._engine.cycle()
 
             self._event_emitter.handle_events()
+            print(self._gui.vals.x_offset, self._gui.vals.y_offset)
