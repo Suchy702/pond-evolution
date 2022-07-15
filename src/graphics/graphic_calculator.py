@@ -31,7 +31,7 @@ class GraphicCalculator:
         return new_x_offset, new_y_offset
 
     @staticmethod
-    def _find_pos_to_draw_when_move(event: GraphicEvent, vals: GraphicValuesGuard) -> tuple[int, int]:
+    def _find_pos_to_draw_when_move(event: GraphicEvent, vals: GraphicValuesGuard) -> tuple[float, float]:
         x1 = event.from_x * vals.cell_size + vals.x_offset
         y1 = event.from_y * vals.cell_size + vals.y_offset
         x2 = event.to_x * vals.cell_size + vals.x_offset
@@ -39,15 +39,15 @@ class GraphicCalculator:
 
         if x1 == x2:
             dist = y2 - y1
-            y = int(y1 + dist * event.step / event.total_steps)
+            y = y1 + dist * event.step / event.total_steps
             x = x1
         else:
             dist = x2 - x1
             a = (y2 - y1) / (x2 - x1)
             b = y1 - a * x1
 
-            x = int(x1 + dist * event.step / event.total_steps)
-            y = int(a * x + b)
+            x = x1 + dist * event.step / event.total_steps
+            y = a * x + b
         return x, y
 
     @staticmethod
@@ -56,7 +56,7 @@ class GraphicCalculator:
         y = event.y * vals.cell_size + vals.y_offset
         return x, y
 
-    def find_pos_to_draw(self, event: GraphicEvent, vals: GraphicValuesGuard) -> tuple[int, int]:
+    def find_pos_to_draw(self, event: GraphicEvent, vals: GraphicValuesGuard) -> tuple[float, float]:
         if event.event_type == GraphicEventType.ANIM_MOVE:
             return self._find_pos_to_draw_when_move(event, vals)
         else:

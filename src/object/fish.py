@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from random import randint
+from random import randint, choice
 
 import src.constants as const
 from src.object.pond_object import PondObject
@@ -28,7 +28,8 @@ class Fish(PondObject):
         self._vitality -= const.FISH_VITALITY_SPOIL_RATE
 
     def find_pos_to_move(self) -> Position:
-        return self.pos.changed(randint(-self._speed, self._speed), randint(-self._speed, self._speed))
+        #return self.pos.changed(randint(-self._speed, self._speed), randint(-self._speed, self._speed))
+        return self.pos.changed(randint(-self._speed, self._speed), choice([1, -1]))
 
     def is_dead(self) -> bool:
         return self.vitality <= 0

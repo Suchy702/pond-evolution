@@ -34,7 +34,7 @@ class GUI:
         rect = pygame.Rect(0, self.settings.screen_pond_height, self.settings.screen_width, ui_height)
         pygame.draw.rect(self._screen, GRAY, rect, 0)
 
-    def _is_visible_now(self, x: int, y: int):
+    def _is_visible_now(self, x, y):
         x_in = 0 <= x <= self.settings.screen_pond_width
         y_in = 0 <= y <= self.settings.screen_pond_height
         return x_in and y_in
