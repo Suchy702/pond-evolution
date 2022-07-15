@@ -6,9 +6,9 @@ CELL_MIN_PX_SIZE: int = 20
 CELL_MAX_PX_SIZE: int = 80
 
 # Animation
-ANIMATION_SPEED: int = 40  # how many frames per action
-MIN_ANIMATION_SPEED = 2  # TODO: to jest troche mylące, bo im MIN_ANIMATION_SPEED jest mniejsze tym animacja może być szybsza
-MAX_ANIMATION_SPEED = 60
+START_ANIMATION_FPS: int = 40
+MIN_ANIMATION_FPS = 5
+MAX_ANIMATION_FPS = 60
 ANIMATION_SPEED_CHANGE = 3
 
 # Colors

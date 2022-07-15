@@ -13,7 +13,7 @@ from pygame.locals import (  # type: ignore
     K_c,
     K_COMMA,
     K_PERIOD,
-    QUIT
+    QUIT,
 )
 
 from src.events.event import Event, GameEvent, LogicEvent, GraphicEvent

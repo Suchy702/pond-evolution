@@ -1,31 +1,15 @@
 import tkinter as tk
 from tkinter import ttk
 
-from src.constants import ANIMATION_SPEED, CELL_MIN_PX_SIZE, MIN_ANIMATION_SPEED, MAX_ANIMATION_SPEED
-
-
-def clip(val: int, a: int, b: int) -> int:
-    # Clips `val` to range [min(a, b), max(a, b)]
-    if a > b:
-        a, b = b, a
-    return min(max(val, a), b)
+from src.constants import CELL_MIN_PX_SIZE
 
 
 class SimulationSettings:
     def __init__(self):
-        # Set default values
-        self._animation_speed: int = ANIMATION_SPEED
-
         self._root = None
         self._resolution_val = None
-
-    @property
-    def animation_speed(self) -> int:
-        return self._animation_speed
-
-    @animation_speed.setter
-    def animation_speed(self, val: int) -> None:
-        self._animation_speed = clip(val, MIN_ANIMATION_SPEED, MAX_ANIMATION_SPEED)
+        self.screen_pond_height = None
+        self.screen_pond_width = None
 
     def get_user_settings(self) -> None:
         self._root = tk.Tk()
@@ -36,9 +20,7 @@ class SimulationSettings:
         self._root.columnconfigure(1, weight=2)
 
         # Resolution
-        tk.Label(
-            self._root, text='Resolution: '
-        ).grid(row=0, column=0, sticky='w')
+        tk.Label(self._root, text='Resolution: ').grid(row=0, column=0, sticky='w')
         self._resolution_val = tk.StringVar()
         resolution = ttk.Combobox(self._root, textvariable=self._resolution_val)
         resolution['values'] = ('1920x1080', '1080x720', '720x480')
