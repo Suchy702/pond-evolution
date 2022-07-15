@@ -29,13 +29,16 @@ class AI(ABC, Generic[T]):
 
 class FishAI(AI["Fish"]):
     def _find_pos_to_move(self) -> Position:
-        return self.pond_object.pos.changed(randint(-self.pond_object.speed, self.pond_object.speed),
-                                            randint(-self.pond_object.speed, self.pond_object.speed))
+        return self.pond_object.pos.changed(
+            randint(-self.pond_object.speed, self.pond_object.speed),
+            randint(-self.pond_object.speed, self.pond_object.speed)
+        )
 
     def _movement_decision(self, decisions: decisionSetType) -> None:
         pos_to_move = self._find_pos_to_move()
-        Decision(DecisionType.MOVE, pond_object=self.pond_object, to_x=pos_to_move.x, to_y=pos_to_move.y) \
-            .add_to_dict(decisions)
+        Decision(
+            DecisionType.MOVE, pond_object=self.pond_object, to_x=pos_to_move.x, to_y=pos_to_move.y
+        ).add_to_dict(decisions)
 
     def _reproduce_decision(self, decisions: decisionSetType) -> bool:
         if self.pond_object.vitality > self.pond_object.vitality_need_to_breed:
@@ -54,8 +57,10 @@ class FishAI(AI["Fish"]):
 
 class WormAI(AI["Worm"]):
     def _find_pos_to_move(self) -> Position:
-        return self.pond_object.pos.changed(self.pond_object.falling_speed,
-                                            randint(-self.pond_object.bounce_ratio, self.pond_object.bounce_ratio))
+        return self.pond_object.pos.changed(
+            self.pond_object.falling_speed,
+            randint(-self.pond_object.bounce_ratio, self.pond_object.bounce_ratio)
+        )
 
     def _movement_decision(self, decisions: decisionSetType):
         pos_to_move = self._find_pos_to_move()
@@ -88,8 +93,9 @@ class AlgaAI(AI["Alga"]):
 
     def _movement_decision(self, decisions: decisionSetType) -> None:
         pos_to_move = self._find_pos_to_move()
-        Decision(DecisionType.MOVE, pond_object=self.pond_object, to_x=pos_to_move.x,
-                 to_y=pos_to_move.y).add_to_dict(decisions)
+        Decision(
+            DecisionType.MOVE, pond_object=self.pond_object, to_x=pos_to_move.x, to_y=pos_to_move.y
+        ).add_to_dict(decisions)
 
     @overrides
     def get_decisions(self) -> decisionSetType:
