@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import inspect
 from abc import ABC
-from typing import Optional, TypeVar, Generic, cast
+from typing import Optional, TypeVar, Generic, cast, ClassVar
 
 from overrides import overrides
 
@@ -23,6 +23,7 @@ class Event(ABC, Generic[T]):
         attr_set = {attr[0]: getattr(self, attr[0]) for attr in attributes}
         event_type = attr_set['event_type']
         attr_set.pop('event_type')
+        attr_set.pop('attributes')
         return self.__class__(event_type, **attr_set)
 
 
@@ -35,8 +36,15 @@ class LogicEvent(Event[LogicEventType]):
         cp = cast(LogicEvent, super().copy())
         return cp
 
+    def __str__(self):
+        return f'LogicEvent({self.event_type.name})'
+
 
 class GraphicEvent(Event[GraphicEventType]):
+    attributes: ClassVar[tuple[str]] = (
+        'event_type', 'key', 'pond_object', 'x', 'y', 'from_x', 'from_y', 'to_x', 'to_y', 'step', 'total_steps'
+    )
+
     def __init__(self,
                  event_type: GraphicEventType, *,
                  key: Optional[str] = None,
@@ -75,7 +83,7 @@ class GraphicEvent(Event[GraphicEventType]):
         return cp
 
     def __str__(self):
-        return self.event_type.name
+        return f'GraphicEvent({self.event_type.name})'
 
 
 class GameEvent(Event[GameEventType]):
@@ -86,3 +94,6 @@ class GameEvent(Event[GameEventType]):
     def copy(self) -> GameEvent:
         cp = cast(GameEvent, super().copy())
         return cp
+
+    def __str__(self):
+        return f'GameEvent({self.event_type.name})'
