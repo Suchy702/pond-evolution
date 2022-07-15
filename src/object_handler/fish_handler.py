@@ -50,6 +50,7 @@ class FishHandler(PondObjectHandlerHomogeneous):
                          )
         )
         self._pond.change_position(decision.pond_object, n_pos)
+        decision.pond_object.spoil_vitality()
 
     def remove_dead_fishes(self) -> None:
         self.remove_all([fish for fish in self.fishes if fish.is_dead()])

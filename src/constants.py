@@ -7,7 +7,7 @@ CELL_MAX_PX_SIZE: int = 80
 
 # Animation
 ANIMATION_SPEED: int = 40  # how many frames per action
-MIN_ANIMATION_SPEED = 5  # TODO: to jest troche mylące, bo im MIN_ANIMATION_SPEED jest mniejsze tym animacja może być szybsza
+MIN_ANIMATION_SPEED = 2  # TODO: to jest troche mylące, bo im MIN_ANIMATION_SPEED jest mniejsze tym animacja może być szybsza
 MAX_ANIMATION_SPEED = 60
 ANIMATION_SPEED_CHANGE = 3
 
@@ -28,15 +28,15 @@ HOW_OFTEN_CYCLES_MAKING_ALGAE: int = 5
 # Worm
 WORM_FALLING_STEPS: int = 15
 WORM_BOUNCE_STEPS: int = 20
-WORM_ENERGY_VALUE: int = 15
+WORM_ENERGY_VALUE: int = 30
 NUM_OF_NEW_WORMS_AT_CYCLE: int = 3
 HOW_OFTEN_CYCLES_MAKING_WORMS: int = 5
-CHANCE_TO_PRODUCE_WORMS: int = 40  # in %
+CHANCE_TO_PRODUCE_WORMS: int = 80  # in %
 
 # Algae maker
 MIN_ALGAE_TO_CREATE: int = 1
 MAX_ALGAE_TO_CREATE: int = 3
-CHANCE_TO_PRODUCE_ALGAE: int = 10  # in %
+CHANCE_TO_PRODUCE_ALGAE: int = 65  # in %
 
 # Fish
 FISH_MIN_SPEED: int = 5

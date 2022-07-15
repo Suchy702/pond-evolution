@@ -36,5 +36,4 @@ class Engine:
         self._interactor.remove_unnecessary_objects()
         self._interactor.handle_decisions()
         self._interactor.feed_fish()
-        # self._interactor._fish_handler.spoil_fishes_vitality()
         self._cycle_count += 1
