@@ -38,7 +38,6 @@ class PondObjectHandler(ABC):
         decisions = DecisionSet()
         for obj in self.objects:
             obj_decisions = obj.get_decisions()
-            print(decisions, obj_decisions)
             decisions += obj_decisions
 
         return decisions
