@@ -4,6 +4,7 @@ from typing import Iterable, Generator
 
 from overrides import overrides
 
+from src.decision.decision_set import DecisionSet
 from src.object.pond_object import PondObject
 from src.pond import Pond
 from src.pond_object_database import PondObjectDatabase
@@ -31,6 +32,18 @@ class PondObjectHandler(ABC):
 
     @abstractmethod
     def get_spot_obj(self, pos: Position) -> set[PondObject]:
+        pass
+
+    def get_decisions(self) -> DecisionSet:
+        decisions = DecisionSet()
+        for obj in self.objects:
+            obj_decisions = obj.get_decisions()
+            decisions += obj_decisions
+
+        return decisions
+
+    @abstractmethod
+    def handle_decisions(self, decisions: DecisionSet):
         pass
 
 

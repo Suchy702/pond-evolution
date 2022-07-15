@@ -1,5 +1,6 @@
 from random import randint
 
+from src.ai.ai import AlgaMakerAI
 from src.constants import MAX_ALGAE_TO_CREATE, MIN_ALGAE_TO_CREATE, ALGA_ENERGY_VALUE
 from src.object.alga import Alga
 from src.object.pond_object import PondObject
@@ -10,7 +11,7 @@ from src.position import Position
 
 class AlgaMaker(PondObject):
     def __init__(self, pos: Position, pond_height: int):
-        super().__init__(ObjectKind.ALGA_MAKER, pos)
+        super().__init__(ObjectKind.ALGA_MAKER, pos, AlgaMakerAI(self))
         self.min_algae_to_create: int = MIN_ALGAE_TO_CREATE
         self.max_algae_to_create: int = MAX_ALGAE_TO_CREATE
         self._pond_height: int = pond_height
