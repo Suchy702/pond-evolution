@@ -24,11 +24,5 @@ def test_have_to_make_next_step(graphic_event):
     assert not graphic_event.have_to_make_next_step()
 
 
-def test_get_event_with_next_step(graphic_event):
-    cp = graphic_event.get_event_with_next_step()
-    assert id(cp) != id(graphic_event)
-    assert cp.step == graphic_event.step + 1
-
-
 def test_graphic_event_str_format(graphic_event):
     assert re.search(r'GraphicEvent\([a-zA-Z_]+\)', str(graphic_event))

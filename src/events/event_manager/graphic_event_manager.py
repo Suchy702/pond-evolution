@@ -88,7 +88,8 @@ class GraphicEventManager(EventManager):
     @staticmethod
     def _add_event_with_next_step(event: GraphicEvent) -> None:
         if event.have_to_make_next_step():
-            event_emitter.emit_event(event.get_event_with_next_step())
+            event.step += 1
+            event_emitter.emit_event(event)
 
     def _set_event_total_step(self, event: GraphicEvent):
         if event.total_steps is None:

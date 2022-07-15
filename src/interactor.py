@@ -54,7 +54,7 @@ class Interactor:
     # beta function for testing
     def preparations(self) -> None:
         self._plant_handler.add_random(10)
-        self._fish_handler.add_random(3000)
+        self._fish_handler.add_random(4000)
 
     def _find_pos_where_eat(self) -> list[Position]:
         pos_where_eat = []
