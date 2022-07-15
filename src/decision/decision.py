@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Optional, TYPE_CHECKING
+from typing import Optional, TYPE_CHECKING, TypeAlias
 
 from src.decision.decision_type import DecisionType
 
@@ -28,6 +28,7 @@ class Decision:
         if self.decision_type not in decisions:
             decisions[self.decision_type] = {}
 
+        # TODO: dlaczego tu jest warning: local variable not used?
         obj_kind = None
         if self.pond_object is not None:
             obj_kind = self.pond_object.kind
@@ -49,4 +50,4 @@ class Decision:
                     decision.add_to_dict(b)
 
 
-decisionSetType = dict[DecisionType, dict[ObjectKind, list[Decision]]]
+decisionSetType: TypeAlias = dict[DecisionType, dict[ObjectKind, list[Decision]]]
