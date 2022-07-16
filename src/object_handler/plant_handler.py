@@ -1,3 +1,5 @@
+from typing import cast
+
 from overrides import overrides
 
 from src.decision.decision_set import DecisionSet
@@ -25,7 +27,8 @@ class PlantHandler(PondObjectHandlerBundler):
         self.alga_maker_handler.handle_decisions(decisions)
 
         for decision in decisions[DecisionType.REPRODUCE, ObjectKind.ALGA_MAKER]:
-            self.detach_algae_from_maker(decision.pond_object)
+            maker = cast(AlgaMaker, decision.pond_object)
+            self._detach_algae_from_maker(maker)
 
     @overrides
     def add_random(self, amount: int) -> None:
@@ -36,5 +39,5 @@ class PlantHandler(PondObjectHandlerBundler):
     def get_spot_obj(self, pos: Position) -> set[PondObject]:
         return self.alga_handler.get_spot_obj(pos) | self.alga_maker_handler.get_spot_obj(pos)
 
-    def detach_algae_from_maker(self, maker: AlgaMaker) -> None:
+    def _detach_algae_from_maker(self, maker: AlgaMaker) -> None:
         self.alga_handler.add_all(self.alga_maker_handler.create_algae(maker))

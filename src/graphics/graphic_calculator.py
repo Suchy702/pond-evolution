@@ -1,5 +1,7 @@
 from math import ceil, copysign
 
+from numba import jit
+
 from src.events.event import GraphicEvent
 from src.events.event_type import GraphicEventType
 from src.graphics.graphic_values_guard import GraphicValuesGuard
@@ -31,23 +33,26 @@ class GraphicCalculator:
         return new_x_offset, new_y_offset
 
     @staticmethod
+    @jit
     def _is_not_linear_fun(x1: int, x2: int) -> bool:
         return x1 == x2
 
     @staticmethod
-    def _calc_pos_for_non_linear_fun(x1: int, y1: int, y2: int, event: GraphicEvent) -> tuple[int, int]:
+    @jit
+    def _calc_pos_for_non_linear_fun(x1: int, y1: int, y2: int, step: int, total_steps: int) -> tuple[int, int]:
         dist = y2 - y1
-        y = y1 + dist * event.step / event.total_steps
+        y = y1 + dist * step / total_steps
         x = x1
         return int(x), int(y)
 
     @staticmethod
-    def _calc_pos_for_linear_fun(x1: int, y1: int, x2: int, y2: int, event: GraphicEvent) -> tuple[int, int]:
+    @jit
+    def _calc_pos_for_linear_fun(x1: int, y1: int, x2: int, y2: int, step: int, total_steps: int) -> tuple[int, int]:
         dist = x2 - x1
         a = (y2 - y1) / (x2 - x1)
         b = y1 - a * x1
 
-        x = x1 + dist * event.step / event.total_steps
+        x = x1 + dist * step / total_steps
         y = a * x + b
         return int(x), int(y)
 
@@ -68,9 +73,9 @@ class GraphicCalculator:
         x2, y2 = self._calc_end_point_in_animation(event, vals)
 
         if self._is_not_linear_fun(x1, x2):
-            return self._calc_pos_for_non_linear_fun(x1, y1, y2, event)
+            return self._calc_pos_for_non_linear_fun(x1, y1, y2, event.step, event.total_steps)
         else:
-            return self._calc_pos_for_linear_fun(x1, y1, x2, y2, event)
+            return self._calc_pos_for_linear_fun(x1, y1, x2, y2, event.step, event.total_steps)
 
     @staticmethod
     def _find_pos_to_draw_when_stay(event: GraphicEvent, vals: GraphicValuesGuard) -> tuple[int, int]:
