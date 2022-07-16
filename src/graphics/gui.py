@@ -55,5 +55,5 @@ class GUI:
 
     def draw_object(self, obj, x, y) -> None:
         rect = pygame.Rect(x, y, self.vals.cell_size, self.vals.cell_size)
-        image = get_object_image(obj)
-        self._screen.blit(pygame.transform.scale(image, (self.vals.cell_size, self.vals.cell_size)), rect)
+        image = get_object_image(obj, self.vals.cell_size)
+        self._screen.blit(image, rect)

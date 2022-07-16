@@ -9,13 +9,17 @@ from src.object.fish import Fish
 from src.object.pond_object import PondObject
 from src.object.worm import Worm
 
+fish_image_handler = FishImageHandler()
+worm_image_handler = WormImageHandler()
+plant_image_handler = PlantImageHandler()
 
-def get_object_image(obj: PondObject) -> Surface:
+
+def get_object_image(obj: PondObject, size: int) -> Surface:
     if isinstance(obj, Fish):
-        return FishImageHandler.get_object_image(obj)
+        return fish_image_handler.get_object_image(obj, size)
     elif isinstance(obj, Worm):
-        return WormImageHandler.get_object_image(obj)
+        return worm_image_handler.get_object_image(obj, size)
     elif isinstance(obj, Alga) or isinstance(obj, AlgaMaker):
-        return PlantImageHandler.get_object_image(obj)
+        return plant_image_handler.get_object_image(obj, size)
     else:
         raise Exception("Unknown object type")
