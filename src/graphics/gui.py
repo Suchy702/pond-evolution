@@ -6,7 +6,7 @@ from src.events.event import GraphicEvent
 from src.events.event_emitter import EventEmitter
 from src.graphics.graphic_calculator import GraphicCalculator
 from src.graphics.graphic_values_guard import GraphicValuesGuard
-from src.graphics.image_handler.utility import get_object_image
+from src.graphics.image_handler.image_loader import ImageLoader
 from src.simulation_settings import SimulationSettings
 
 
@@ -18,6 +18,7 @@ class GUI:
         self._screen: Surface = pygame.display.set_mode([self.settings.screen_width, self.settings.screen_height])
         self.center_view()
         self._event_emitter = EventEmitter()
+        self._image_loader = ImageLoader()
 
     def draw_empty_frame(self) -> None:
         self._screen.fill(BLACK)
@@ -55,5 +56,5 @@ class GUI:
 
     def draw_object(self, obj, x, y) -> None:
         rect = pygame.Rect(x, y, self.vals.cell_size, self.vals.cell_size)
-        image = get_object_image(obj, self.vals.cell_size)
+        image = self._image_loader.get_object_image(obj, self.vals.cell_size)
         self._screen.blit(image, rect)
