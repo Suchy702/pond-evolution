@@ -8,7 +8,7 @@ from src.game import Game
 
 os.environ["SDL_VIDEODRIVER"] = "dummy"
 
-IMG_DIR_PATH = os.path.join('..', '..', 'resources', 'object_images')
+IMG_DIR_PATH = os.path.join('resources', 'object_images')
 
 
 class SimulationSettingsMock:
