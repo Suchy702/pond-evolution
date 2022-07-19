@@ -13,6 +13,7 @@ py==1.11.0
 pygame==2.1.2
 pyparsing==3.0.9
 pytest==7.1.2
+pytest-timeout==2.1.0
 svg.path==6.2
 tomli==2.0.1
 typing-utils==0.1.0
