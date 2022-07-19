@@ -8,7 +8,14 @@ from src.game import Game
 
 os.environ["SDL_VIDEODRIVER"] = "dummy"
 
-IMG_DIR_PATH = os.path.join('resources', 'object_images')
+cwd = os.getcwd()
+move_to_parent = 0
+
+while os.path.basename(cwd) != 'pond-evolution':
+    move_to_parent += 1
+    cwd = os.path.dirname(cwd)
+
+IMG_DIR_PATH = os.path.join(*(['..'] * move_to_parent), 'resources', 'object_images')
 
 
 class SimulationSettingsMock:
