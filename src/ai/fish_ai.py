@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import math
 from random import randint, random
 from typing import Optional, TYPE_CHECKING
 
@@ -65,11 +66,17 @@ class FishAI(AI["Fish"]):
                     predator = fish
                     break
 
-        if predator is None:
+        if predator is None or random() < 0.2:
             return
 
-        diff_x = self.pond_object.pos.x - predator.pos.x
-        diff_y = self.pond_object.pos.y - predator.pos.y
+        diff_x = int(min(
+            abs(self.pond_object.pos.x - predator.pos.x),
+            self.pond_object.speed) * math.copysign(1, self.pond_object.pos.x - predator.pos.x)
+                     )
+        diff_y = int(min(
+            abs(self.pond_object.pos.y - predator.pos.y),
+            self.pond_object.speed) * math.copysign(1, self.pond_object.pos.y - predator.pos.y)
+                     )
 
         return Decision(
             DecisionType.MOVE, pond_object=self.pond_object,
