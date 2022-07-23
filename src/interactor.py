@@ -109,7 +109,6 @@ class Interactor:
             else:
                 f.is_eaten = True
 
-    # TODO:  mark eaten fish as dead
     def feed_fish(self) -> None:
         for pos in self._find_pos_where_eat():
             self._eat_at_spot(pos)

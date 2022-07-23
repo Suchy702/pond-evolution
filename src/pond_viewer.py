@@ -30,14 +30,14 @@ class PondViewer:
         yield from self._get_visible_objects(pos, eyesight, lambda obj: True)
 
     def get_visible_object_by_type(
-            self, pos: Position, eyesight: int, obj_type: list[ObjectKind], inverse: bool = False
+            self, pos: Position, eyesight: int, obj_type: list[ObjectKind], negate: bool = False
     ) -> Generator[list[PondObject]]:
-        yield from self._get_visible_objects(pos, eyesight, lambda obj: obj.kind in obj_type, inverse)
+        yield from self._get_visible_objects(pos, eyesight, lambda obj: obj.kind in obj_type, negate)
 
     def get_visible_object_by_trait(
-            self, pos: Position, eyesight: int, traits: list[FishTrait], inverse: bool = False
+            self, pos: Position, eyesight: int, traits: list[FishTrait], negate: bool = False
     ) -> Generator[list[Fish]]:
-        for fish_layer in self.get_visible_object_by_type(pos, eyesight, [ObjectKind.FISH], inverse):
+        for fish_layer in self.get_visible_object_by_type(pos, eyesight, [ObjectKind.FISH], negate):
             new_list = []
             for fish in fish_layer:
                 fish = cast(Fish, fish)
@@ -47,7 +47,7 @@ class PondViewer:
                 yield new_list
 
     def _get_visible_objects(
-            self, pos: Position, eyesight: int, obj_filter: Callable[[PondObject], bool], inverse: bool
+            self, pos: Position, eyesight: int, obj_filter: Callable[[PondObject], bool], negate: bool
     ) -> Generator[list[PondObject], None, None]:
         """Returns visible objects grouped by distance from `pos`. Groups are sorted in ascending order of distance"""
         offset = [(0, 1), (1, 0), (0, -1), (-1, 0)]
@@ -55,13 +55,13 @@ class PondViewer:
         for radius in range(eyesight):
             objects = []
             if radius == 0:
-                yield self._get_spot_objects(pos, obj_filter, inverse)
+                yield self._get_spot_objects(pos, obj_filter, negate)
                 continue
 
             for (off_x, off_y) in offset:
                 point = Position(pos.y + off_y * radius, pos.x + off_x * radius)
                 if 0 <= point.x < self.pond_width and 0 <= point.y < self.pond_height:
-                    objects.extend(self._get_spot_objects(point, obj_filter, inverse))
+                    objects.extend(self._get_spot_objects(point, obj_filter, negate))
 
             if radius == 1:
                 if objects:
@@ -83,7 +83,7 @@ class PondViewer:
                     objects.extend(self._get_spot_objects(
                         Position(p1.y + y_change * i, p1.x + x_change * i),
                         obj_filter,
-                        inverse
+                        negate
                     ))
 
             if objects:
@@ -129,12 +129,12 @@ class PondViewer:
         """Returns intersection of segment [a1, a2] with [b1, b2]"""
         return max(a1, b1), min(a2, b2)
 
-    def _get_spot_objects(self, pos: Position, obj_filter: Callable[[PondObject], bool], inverse: bool) -> list[
+    def _get_spot_objects(self, pos: Position, obj_filter: Callable[[PondObject], bool], negate: bool) -> list[
         PondObject]:
         objects = []
         for pond in self.ponds:
             for obj in pond.get_spot(pos):
-                if (inverse and not obj_filter(obj)) or (not inverse and obj_filter(obj)):
+                if (negate and not obj_filter(obj)) or (not negate and obj_filter(obj)):
                     objects.append(obj)
         return objects
 

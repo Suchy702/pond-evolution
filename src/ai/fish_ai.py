@@ -1,4 +1,4 @@
-from random import randint
+from random import randint, random
 
 from overrides import overrides
 
@@ -25,16 +25,19 @@ class FishAI(AI["Fish"]):
         return self._random_movement_decision()
 
     def _smart_movement_decision(self, pond_viewer: PondViewer) -> Decision:
-        # TODO: musimy się upewnić że w other_fish nie ma martwych ryb
+        if random() < 0.2:
+            return self._random_movement_decision()
+
         if FishTrait.PREDATOR in self.pond_object.traits:
             for fish_layer in pond_viewer.get_visible_object_by_trait(
                     self.pond_object.pos, self.pond_object.eyesight, [FishTrait.PREDATOR], True
             ):
                 for fish in fish_layer:
                     if fish.is_alive() and self.pond_object.is_position_reachable(fish.pos):
-                        return Decision(
-                            DecisionType.MOVE, pond_object=self.pond_object, to_x=fish.pos.x, to_y=fish.pos.y
-                        )
+                        if random() < 0.7:
+                            return Decision(
+                                DecisionType.MOVE, pond_object=self.pond_object, to_x=fish.pos.x, to_y=fish.pos.y
+                            )
                     else:
                         break
 
@@ -43,9 +46,11 @@ class FishAI(AI["Fish"]):
         ):
             for food in food_layer:
                 if self.pond_object.is_position_reachable(food.pos):
-                    return Decision(
-                        DecisionType.MOVE, pond_object=self.pond_object, to_x=food.pos.x, to_y=food.pos.y
-                    )
+                    if (food.pos.y < pond_viewer.pond_height - 1 and random() < 0.7) or (
+                            food.pos.y == pond_viewer.pond_height - 1 and random() < 0.2):
+                        return Decision(
+                            DecisionType.MOVE, pond_object=self.pond_object, to_x=food.pos.x, to_y=food.pos.y
+                        )
                 else:
                     break
 
