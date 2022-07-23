@@ -7,6 +7,7 @@ from src.constants import CHANCE_TO_PRODUCE_ALGAE
 from src.decision.decision import Decision
 from src.decision.decision_set import DecisionSet
 from src.decision.decision_type import DecisionType
+from src.pond_viewer import PondViewer
 
 
 class AlgaMakerAI(AI["AlgaMaker"]):
@@ -20,7 +21,7 @@ class AlgaMakerAI(AI["AlgaMaker"]):
             decisions.add(Decision(DecisionType.REPRODUCE, pond_object=self.pond_object))
 
     @overrides
-    def get_decisions(self) -> DecisionSet:
+    def get_decisions(self, pond_viewer: PondViewer) -> DecisionSet:
         decisions = DecisionSet()
         self._movement_decision(decisions)
         self._reproduce_decision(decisions)

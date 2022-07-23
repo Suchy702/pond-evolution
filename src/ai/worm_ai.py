@@ -8,6 +8,7 @@ from src.decision.decision import Decision
 from src.decision.decision_set import DecisionSet
 from src.decision.decision_type import DecisionType
 from src.object_kind import ObjectKind
+from src.pond_viewer import PondViewer
 from src.position import Position
 
 
@@ -30,7 +31,7 @@ class WormAI(AI["Worm"]):
             decisions.add(Decision(DecisionType.REPRODUCE, kind=ObjectKind.WORM))
 
     @overrides
-    def get_decisions(self) -> DecisionSet:
+    def get_decisions(self, pond_viewer: PondViewer) -> DecisionSet:
         decisions = DecisionSet()
         self._movement_decision(decisions)
         return decisions

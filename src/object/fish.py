@@ -21,12 +21,13 @@ class Fish(PondObject):
         self.size: int = size
         self.vitality: int = self.speed + self.size
         self.vitality_need_to_breed: int = self.vitality * FISH_NEED_MULTI_VITALITY_TO_BREED
+        self.is_eaten: bool = False
 
     def spoil_vitality(self) -> None:
         self.vitality -= FISH_VITALITY_SPOIL_RATE
 
-    def is_dead(self) -> bool:
-        return self.vitality <= 0
+    def is_alive(self) -> bool:
+        return self.vitality > 0 and not self.is_eaten
 
     @staticmethod
     def _calc_deviation(val):

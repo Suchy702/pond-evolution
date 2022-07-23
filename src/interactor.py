@@ -16,6 +16,7 @@ from src.object_handler.fish_handler import FishHandler
 from src.object_handler.plant_handler import PlantHandler
 from src.object_handler.pond_object_handler import PondObjectHandler
 from src.object_handler.worm_handler import WormHandler
+from src.pond_viewer import PondViewer
 from src.position import Position
 from src.simulation_settings import SimulationSettings
 
@@ -31,6 +32,10 @@ class Interactor:
         self.handlers: list[PondObjectHandler] = [self._plant_handler, self._worm_handler, self._fish_handler]
         self.ai_classes: list[Type[AI] | tuple[Type[AI], ...]] = [(AlgaAI, AlgaMakerAI), WormAI, FishAI]
 
+        self.pond_viewer = PondViewer(settings.pond_width, settings.pond_height)
+        for handler in self.handlers:
+            self.pond_viewer.add_ponds(handler.ponds)
+
     @property
     def all_objects(self) -> list[PondObject]:
         return reduce(lambda list_, handler: list_ + handler.objects, self.handlers, [])  # type: ignore
@@ -42,7 +47,7 @@ class Interactor:
                     yield ai.get_general_decisions(), idx
             else:
                 yield ai_classes.get_general_decisions(), idx
-            for decisions in handler.get_decisions():
+            for decisions in handler.get_decisions(self.pond_viewer):
                 yield decisions, idx
 
     def handle_decisions(self) -> None:
@@ -76,6 +81,7 @@ class Interactor:
         self._worm_handler.remove_at_spot(pos)
         self._plant_handler.alga_handler.remove_at_spot(pos)
 
+    # TODO:  mark eaten fish as dead
     def feed_fish(self) -> None:
         for pos in self._find_pos_where_eat():
             self._eat_at_one_spot(pos)
