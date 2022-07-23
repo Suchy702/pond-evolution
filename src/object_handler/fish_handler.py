@@ -94,4 +94,4 @@ class FishHandler(PondObjectHandlerHomogeneous):
         self.remove(fish)
 
     def remove_dead_fish(self) -> None:
-        self.remove_all([fish for fish in self.fishes if fish.is_dead()])
+        self.remove_all([fish for fish in self.fishes if not fish.is_alive()])

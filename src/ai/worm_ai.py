@@ -1,4 +1,5 @@
 from random import randint, random
+from typing import Optional
 
 from overrides import overrides
 
@@ -19,25 +20,23 @@ class WormAI(AI["Worm"]):
             randint(-self.pond_object.bounce_ratio, self.pond_object.bounce_ratio)
         )
 
-    def _movement_decision(self, decisions: DecisionSet):
+    def _movement_decision(self) -> Decision:
         pos_to_move = self._find_pos_to_move()
-        decisions.add(Decision(
-            DecisionType.MOVE, pond_object=self.pond_object, to_x=pos_to_move.x, to_y=pos_to_move.y
-        ))
+        return Decision(DecisionType.MOVE, pond_object=self.pond_object, to_x=pos_to_move.x, to_y=pos_to_move.y)
 
     @staticmethod
-    def _reproduce_decision(decisions: DecisionSet):
+    def _reproduce_decision() -> Optional[Decision]:
         if random() < CHANCE_TO_PRODUCE_WORMS / 100:
-            decisions.add(Decision(DecisionType.REPRODUCE, kind=ObjectKind.WORM))
+            return Decision(DecisionType.REPRODUCE, kind=ObjectKind.WORM)
 
     @overrides
     def get_decisions(self, pond_viewer: PondViewer) -> DecisionSet:
         decisions = DecisionSet()
-        self._movement_decision(decisions)
+        decisions.add(self._movement_decision())
         return decisions
 
     @staticmethod
     def get_general_decisions() -> DecisionSet:
         decisions = DecisionSet()
-        WormAI._reproduce_decision(decisions)
+        decisions.add(WormAI._reproduce_decision())
         return decisions

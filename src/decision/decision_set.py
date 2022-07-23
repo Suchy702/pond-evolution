@@ -10,6 +10,9 @@ class DecisionSet:
         self.decisions: dict[DecisionType, dict[ObjectKind, list[Decision]]] = {}
 
     def add(self, decision: Decision) -> None:
+        if decision is None:
+            return
+
         if decision.decision_type not in self.decisions:
             self.decisions[decision.decision_type] = {}
 
