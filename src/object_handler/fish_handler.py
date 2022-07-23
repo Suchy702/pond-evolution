@@ -1,6 +1,6 @@
 import functools
 import itertools
-from random import randint
+from random import randint, random
 from typing import cast, Generator
 
 from overrides import overrides
@@ -37,7 +37,11 @@ class FishHandler(PondObjectHandlerHomogeneous):
         speed = randint(FISH_MIN_SPEED, FISH_MAX_SPEED)
         size = randint(FISH_MIN_SIZE, FISH_MAX_SIZE)
         fish = Fish(speed, size, max(1, self._pond.height // 5), self._pond.random_position())
-        fish.traits.add(FishTrait.SMART)
+        if random() < 0.5:
+            fish.traits.add(FishTrait.SMART)
+        if random() < 0.2:
+            fish.traits.add(FishTrait.PREDATOR)
+            fish.eyesight = fish.eyesight * 15 // 10
         return fish
 
     @overrides

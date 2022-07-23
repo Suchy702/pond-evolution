@@ -11,6 +11,7 @@ from src.ai.worm_ai import WormAI
 from src.decision.decision_set import DecisionSet
 from src.events.event_emitter import EventEmitter
 from src.object.fish import Fish
+from src.object.fish_trait import FishTrait
 from src.object.pond_object import PondObject
 from src.object_handler.fish_handler import FishHandler
 from src.object_handler.plant_handler import PlantHandler
@@ -65,12 +66,18 @@ class Interactor:
 
     def _find_pos_where_eat(self) -> list[Position]:
         pos_where_eat = []
-        for fish in self._fish_handler.objects:
-            if self._worm_handler.is_sth_at_pos(fish.pos) or self._plant_handler.alga_handler.is_sth_at_pos(fish.pos):
+        for fish in self._fish_handler.fishes:
+            if self._worm_handler.is_sth_at_pos(fish.pos) or self._plant_handler.alga_handler.is_sth_at_pos(
+                    fish.pos) or (
+                    FishTrait.PREDATOR in fish.traits and len(self._fish_handler.get_spot_obj(fish.pos)) > 1):
                 pos_where_eat.append(fish.pos)
         return pos_where_eat
 
-    def _eat_at_one_spot(self, pos: Position) -> None:
+    def _eat_at_spot(self, pos: Position) -> None:
+        self.eat_other_non_fish_at_spot(pos)
+        self.eat_other_fish_at_spot(pos)
+
+    def eat_other_non_fish_at_spot(self, pos: Position) -> None:
         energy_val = self._worm_handler.get_spot_energy_val(pos)
         energy_val += self._plant_handler.alga_handler.get_spot_energy_val(pos)
 
@@ -81,10 +88,31 @@ class Interactor:
         self._worm_handler.remove_at_spot(pos)
         self._plant_handler.alga_handler.remove_at_spot(pos)
 
+    def eat_other_fish_at_spot(self, pos: Position) -> None:
+        fish = self._fish_handler.get_spot_obj(pos)
+        predator_cnt, predator_energy_val = 0, 0
+        energy_val = self._fish_handler.get_spot_energy_val(pos)
+
+        for f in fish:
+            f = cast(Fish, f)
+            if FishTrait.PREDATOR in f.traits:
+                predator_energy_val += f.energy_val
+                predator_cnt += 1
+
+        if predator_cnt == 0:
+            return
+
+        for f in fish:
+            f = cast(Fish, f)
+            if FishTrait.PREDATOR in f.traits:
+                f.vitality += (energy_val - predator_energy_val) // predator_cnt
+            else:
+                f.is_eaten = True
+
     # TODO:  mark eaten fish as dead
     def feed_fish(self) -> None:
         for pos in self._find_pos_where_eat():
-            self._eat_at_one_spot(pos)
+            self._eat_at_spot(pos)
 
     def remove_unnecessary_objects(self) -> None:
         self._fish_handler.remove_dead_fish()
