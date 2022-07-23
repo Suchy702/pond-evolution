@@ -28,10 +28,13 @@ class FishAI(AI["Fish"]):
         if random() < 0.2:
             return self._random_movement_decision()
 
-        if FishTrait.PREDATOR in self.pond_object.traits:
-            for fish_layer in pond_viewer.get_visible_object_by_trait(
-                    self.pond_object.pos, self.pond_object.eyesight, [FishTrait.PREDATOR], True
-            ):
+        cnt_fish = 0
+
+        for fish_layer in pond_viewer.get_visible_object_by_trait(
+                self.pond_object.pos, self.pond_object.eyesight, [FishTrait.PREDATOR], True
+        ):
+            cnt_fish += len(fish_layer)
+            if FishTrait.PREDATOR in self.pond_object.traits:
                 for fish in fish_layer:
                     if fish.is_alive() and self.pond_object.is_position_reachable(fish.pos):
                         if random() < 0.7:
@@ -46,8 +49,8 @@ class FishAI(AI["Fish"]):
         ):
             for food in food_layer:
                 if self.pond_object.is_position_reachable(food.pos):
-                    if (food.pos.y < pond_viewer.pond_height - 1 and random() < 0.7) or (
-                            food.pos.y == pond_viewer.pond_height - 1 and random() < 0.2):
+                    if (food.pos.y < pond_viewer.pond_height - 1 and random() < 0.7 - cnt_fish / 10) or (
+                            food.pos.y == pond_viewer.pond_height - 1 and random() < 0.2 - cnt_fish / 10):
                         return Decision(
                             DecisionType.MOVE, pond_object=self.pond_object, to_x=food.pos.x, to_y=food.pos.y
                         )

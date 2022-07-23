@@ -36,7 +36,7 @@ CHANCE_TO_PRODUCE_WORMS: int = 80  # in %
 # Algae maker
 MIN_ALGAE_TO_CREATE: int = 1
 MAX_ALGAE_TO_CREATE: int = 3
-CHANCE_TO_PRODUCE_ALGAE: int = 65  # in %
+CHANCE_TO_PRODUCE_ALGAE: int = 30  # in %
 
 # Fish
 FISH_MIN_SPEED: int = 5

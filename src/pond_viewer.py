@@ -37,10 +37,10 @@ class PondViewer:
     def get_visible_object_by_trait(
             self, pos: Position, eyesight: int, traits: list[FishTrait], negate: bool = False
     ) -> Generator[list[Fish]]:
-        for fish_layer in self.get_visible_object_by_type(pos, eyesight, [ObjectKind.FISH], negate):
+        for fish_layer in self.get_visible_object_by_type(pos, eyesight, [ObjectKind.FISH], False):
             new_list = []
             for fish in fish_layer:
-                fish = cast(Fish, fish)
+                fish = cast("Fish", fish)
                 if any(trait in traits for trait in fish.traits):
                     new_list.append(fish)
             if new_list:
