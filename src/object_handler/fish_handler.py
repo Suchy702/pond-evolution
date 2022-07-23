@@ -1,5 +1,5 @@
+import functools
 import itertools
-from operator import attrgetter
 from random import randint
 from typing import cast, Generator
 
@@ -13,6 +13,7 @@ from src.events.event import GraphicEvent
 from src.events.event_emitter import EventEmitter
 from src.events.event_type import GraphicEventType
 from src.object.fish import Fish
+from src.object.fish_trait import FishTrait
 from src.object.pond_object import PondObject
 from src.object_handler.pond_object_handler import PondObjectHandlerHomogeneous
 from src.object_kind import ObjectKind
@@ -38,13 +39,18 @@ class FishHandler(PondObjectHandlerHomogeneous):
 
     @overrides
     def get_decisions(self) -> Generator[DecisionSet, None, None]:
-        sorted_fish = sorted(self.fishes, key=attrgetter('fish_type'))
+        sorted_fish = sorted(self.fishes, key=functools.cmp_to_key(self._cmp_by_movement_order))
 
-        for key, group in itertools.groupby(sorted_fish, attrgetter('fish_type')):
+        for key, group in itertools.groupby(sorted_fish, lambda f: FishTrait.PREDATOR in f.traits):
             decisions = DecisionSet()
             for fish in group:
                 decisions += fish.get_decisions()
             yield decisions
+
+    @staticmethod
+    def _cmp_by_movement_order(a: Fish, b: Fish):
+        # predators move first
+        return (FishTrait.PREDATOR in b.traits) - (FishTrait.PREDATOR in a.traits)
 
     def handle_decisions(self, decisions: DecisionSet):
         for decision in decisions[DecisionType.MOVE, ObjectKind.FISH]:
