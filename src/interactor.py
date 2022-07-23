@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from functools import reduce
-from typing import cast, Type
+from typing import cast, Type, Generator
 
 from src.ai.ai import FishAI, WormAI, AlgaAI, AlgaMakerAI, AI
 from src.decision.decision_set import DecisionSet
@@ -23,30 +23,28 @@ class Interactor:
         self._fish_handler: FishHandler = FishHandler(settings)
         self._worm_handler: WormHandler = WormHandler(settings)
         self._plant_handler: PlantHandler = PlantHandler(settings)
-        self.handlers: list[PondObjectHandler] = [self._fish_handler, self._worm_handler, self._plant_handler]
-        self.ai_classes: list[Type[AI]] = [FishAI, WormAI, AlgaAI, AlgaMakerAI]
+        # order of handlers and AI classes is important
+        self.handlers: list[PondObjectHandler] = [self._plant_handler, self._worm_handler, self._fish_handler]
+        self.ai_classes: list[Type[AI] | tuple[Type[AI], ...]] = [(AlgaAI, AlgaMakerAI), WormAI, FishAI]
 
     @property
     def all_objects(self) -> list[PondObject]:
         return reduce(lambda list_, handler: list_ + handler.objects, self.handlers, [])  # type: ignore
 
-    def _get_decisions(self) -> DecisionSet:
-        decisions = DecisionSet()
-        for handler in self.handlers:
-            obj_decisions = handler.get_decisions()
-            decisions += obj_decisions
-
-        for ai_class in self.ai_classes:
-            class_decisions = ai_class.get_general_decisions()
-            decisions += class_decisions
-
-        return decisions
+    def _get_decisions(self) -> Generator[DecisionSet, None, None]:
+        for idx, (handler, ai_classes) in enumerate(zip(self.handlers, self.ai_classes)):
+            if type(ai_classes) is tuple:
+                for ai in ai_classes:
+                    yield ai.get_general_decisions(), idx
+            else:
+                yield ai_classes.get_general_decisions(), idx
+            for decisions in handler.get_decisions():
+                yield decisions, idx
 
     def handle_decisions(self) -> None:
-        decisions = self._get_decisions()
-        for handler in self.handlers:
-            handler.handle_decisions(decisions)
-        self._handle_decisions(decisions)
+        for decisions, handler_idx in self._get_decisions():
+            self.handlers[handler_idx].handle_decisions(decisions)
+            self._handle_decisions(decisions)
 
     def _handle_decisions(self, decisions: DecisionSet) -> None:
         pass

@@ -1,5 +1,7 @@
+import itertools
+from operator import attrgetter
 from random import randint
-from typing import cast
+from typing import cast, Generator
 
 from overrides import overrides
 
@@ -33,6 +35,16 @@ class FishHandler(PondObjectHandlerHomogeneous):
         speed = randint(FISH_MIN_SPEED, FISH_MAX_SPEED)
         size = randint(FISH_MIN_SIZE, FISH_MAX_SIZE)
         return Fish(speed, size, self._pond.random_position())
+
+    @overrides
+    def get_decisions(self) -> Generator[DecisionSet, None, None]:
+        sorted_fish = sorted(self.fishes, key=attrgetter('fish_type'))
+
+        for key, group in itertools.groupby(sorted_fish, attrgetter('fish_type')):
+            decisions = DecisionSet()
+            for fish in group:
+                decisions += fish.get_decisions()
+            yield decisions
 
     def handle_decisions(self, decisions: DecisionSet):
         for decision in decisions[DecisionType.MOVE, ObjectKind.FISH]:

@@ -34,13 +34,12 @@ class PondObjectHandler(ABC):
     def get_spot_obj(self, pos: Position) -> set[PondObject]:
         pass
 
-    def get_decisions(self) -> DecisionSet:
+    def get_decisions(self) -> Generator[DecisionSet, None, None]:
         decisions = DecisionSet()
         for obj in self.objects:
-            obj_decisions = obj.get_decisions()
-            decisions += obj_decisions
+            decisions += obj.get_decisions()
 
-        return decisions
+        yield decisions
 
     @abstractmethod
     def handle_decisions(self, decisions: DecisionSet):
