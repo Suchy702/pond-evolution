@@ -5,6 +5,7 @@ from random import randint
 from src.ai.ai import FishAI
 from src.constants import FISH_VITALITY_SPOIL_RATE, EVOLUTION_DEVIATION_DIV, MIN_FISH_TO_BIRTH, MAX_FISH_TO_BIRTH, \
     FISH_NEED_MULTI_VITALITY_TO_BREED
+from src.fish_type import FishType
 from src.object.pond_object import PondObject
 from src.object_kind import ObjectKind
 from src.position import Position
@@ -13,6 +14,7 @@ from src.position import Position
 class Fish(PondObject):
     def __init__(self, speed: int, size: int, pos: Position):
         super().__init__(ObjectKind.FISH, pos, FishAI(self))
+        self.fish_type = FishType.OMNIVORE
         self.speed: int = speed
         self.size: int = size
         self.vitality: int = self.speed + self.size
