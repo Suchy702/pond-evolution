@@ -8,7 +8,6 @@ from src.decision.decision_set import DecisionSet
 from src.decision.decision_type import DecisionType
 from src.object.fish_trait import FishTrait
 from src.object.fish_type import FishType
-from src.object_kind import ObjectKind
 from src.pond_viewer import PondViewer
 from src.position import Position
 
@@ -26,24 +25,29 @@ class FishAI(AI["Fish"]):
         return self._random_movement_decision()
 
     def _smart_movement_decision(self, pond_viewer: PondViewer) -> Decision:
-        other_fish = pond_viewer.get_visible_object_by_type(self.pond_object.pos, self.pond_object.eyesight,
-                                                            [ObjectKind.FISH])
-        other_food = pond_viewer.get_visible_object_by_type(self.pond_object.pos, self.pond_object.eyesight,
-                                                            FishType.get_edible_food(self.pond_object))
-
         # TODO: musimy się upewnić że w other_fish nie ma martwych ryb
         if FishTrait.PREDATOR in self.pond_object.traits:
-            for fish in other_fish:
-                if fish.is_alive() and self.pond_object.is_position_reachable(fish.pos):
-                    return Decision(
-                        DecisionType.MOVE, pond_object=self.pond_object, to_x=fish.pos.x, to_y=fish.pos.y
-                    )
+            for fish_layer in pond_viewer.get_visible_object_by_trait(
+                    self.pond_object.pos, self.pond_object.eyesight, [FishTrait.PREDATOR], True
+            ):
+                for fish in fish_layer:
+                    if fish.is_alive() and self.pond_object.is_position_reachable(fish.pos):
+                        return Decision(
+                            DecisionType.MOVE, pond_object=self.pond_object, to_x=fish.pos.x, to_y=fish.pos.y
+                        )
+                    else:
+                        break
 
-        for food in other_food:
-            if self.pond_object.is_position_reachable(food.pos):
-                return Decision(
-                    DecisionType.MOVE, pond_object=self.pond_object, to_x=food.pos.x, to_y=food.pos.y
-                )
+        for food_layer in pond_viewer.get_visible_object_by_type(
+                self.pond_object.pos, self.pond_object.eyesight, FishType.get_edible_food(self.pond_object)
+        ):
+            for food in food_layer:
+                if self.pond_object.is_position_reachable(food.pos):
+                    return Decision(
+                        DecisionType.MOVE, pond_object=self.pond_object, to_x=food.pos.x, to_y=food.pos.y
+                    )
+                else:
+                    break
 
         return self._random_movement_decision()
 
@@ -53,6 +57,7 @@ class FishAI(AI["Fish"]):
 
     def _reproduce_decision(self) -> Decision:
         if self.pond_object.vitality > self.pond_object.vitality_need_to_breed:
+            print("BREEDING: ", self.pond_object.pos.x, self.pond_object.pos.y)
             return Decision(DecisionType.REPRODUCE, pond_object=self.pond_object)
 
     @overrides

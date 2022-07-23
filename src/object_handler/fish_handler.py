@@ -37,9 +37,9 @@ class FishHandler(PondObjectHandlerHomogeneous):
         speed = randint(FISH_MIN_SPEED, FISH_MAX_SPEED)
         size = randint(FISH_MIN_SIZE, FISH_MAX_SIZE)
         fish = Fish(speed, size, max(1, self._pond.height // 5), self._pond.random_position())
-        if random() < 0.5:
+        if random() < 0.99:
             fish.traits.add(FishTrait.SMART)
-        if random() < 0.2:
+        if random() < 0.001:
             fish.traits.add(FishTrait.PREDATOR)
             fish.eyesight = fish.eyesight * 15 // 10
         return fish
@@ -51,8 +51,7 @@ class FishHandler(PondObjectHandlerHomogeneous):
         for key, group in itertools.groupby(sorted_fish, lambda f: FishTrait.PREDATOR in f.traits):
             decisions = DecisionSet()
             for fish in group:
-                if fish.is_alive():
-                    decisions += fish.get_decisions(pond_viewer)
+                decisions += fish.get_decisions(pond_viewer)
             yield decisions
 
     @staticmethod
