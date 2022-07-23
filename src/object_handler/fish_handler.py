@@ -69,7 +69,6 @@ class FishHandler(PondObjectHandlerHomogeneous):
             self.breed_fish(fish)
 
     def move_fish(self, decision: Decision, stay=False) -> None:
-        n_pos = self._pond.trim_position(Position(decision.to_y, decision.to_x))
         fish = cast(Fish, decision.pond_object)
 
         if stay:
@@ -80,6 +79,7 @@ class FishHandler(PondObjectHandlerHomogeneous):
                 )
             )
         else:
+            n_pos = self._pond.trim_position(Position(decision.to_y, decision.to_x))
             event_emitter.emit_event(
                 GraphicEvent(
                     GraphicEventType.ANIM_MOVE, pond_object=fish,
@@ -88,8 +88,7 @@ class FishHandler(PondObjectHandlerHomogeneous):
                 )
             )
             fish.spoil_vitality()
-
-        self._pond.change_position(fish, n_pos)
+            self._pond.change_position(fish, n_pos)
 
     def breed_fish(self, fish: Fish) -> None:
         self.add_all(fish.birth_fish())

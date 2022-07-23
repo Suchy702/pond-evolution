@@ -44,7 +44,9 @@ class Fish(PondObject):
         child_size = max(1, self.size + randint(-size_dev, size_dev))
         eyesight_dev = self._calc_deviation(self.eyesight)
         child_eyesight = max(1, self.eyesight + randint(-eyesight_dev, eyesight_dev))
-        return Fish(child_speed, child_size, child_eyesight, self.pos)
+        fish = Fish(child_speed, child_size, child_eyesight, self.pos)
+        fish.traits = self.traits.copy()
+        return fish
 
     def birth_fish(self) -> list[Fish]:
         return [self._birth_fish() for _ in range(randint(MIN_FISH_TO_BIRTH, MAX_FISH_TO_BIRTH))]

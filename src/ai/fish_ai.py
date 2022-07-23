@@ -57,7 +57,6 @@ class FishAI(AI["Fish"]):
 
     def _reproduce_decision(self) -> Decision:
         if self.pond_object.vitality > self.pond_object.vitality_need_to_breed:
-            print("BREEDING: ", self.pond_object.pos.x, self.pond_object.pos.y)
             return Decision(DecisionType.REPRODUCE, pond_object=self.pond_object)
 
     @overrides
@@ -67,4 +66,6 @@ class FishAI(AI["Fish"]):
         decisions.add(reproduce_decision)
         if reproduce_decision is None:
             decisions.add(self._movement_decision(pond_viewer))
+        else:
+            decisions.add(Decision(DecisionType.STAY, pond_object=self.pond_object))
         return decisions
