@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from random import randint
 
-from src.ai.ai import FishAI
+from src.ai.fish_ai import FishAI
 from src.constants import FISH_VITALITY_SPOIL_RATE, EVOLUTION_DEVIATION_DIV, MIN_FISH_TO_BIRTH, MAX_FISH_TO_BIRTH, \
     FISH_NEED_MULTI_VITALITY_TO_BREED
 from src.object.fish_trait import FishTrait

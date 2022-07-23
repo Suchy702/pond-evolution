@@ -3,7 +3,11 @@ from __future__ import annotations
 from functools import reduce
 from typing import cast, Type, Generator
 
-from src.ai.ai import FishAI, WormAI, AlgaAI, AlgaMakerAI, AI
+from src.ai.ai import AI
+from src.ai.alga_ai import AlgaAI
+from src.ai.alga_maker_ai import AlgaMakerAI
+from src.ai.fish_ai import FishAI
+from src.ai.worm_ai import WormAI
 from src.decision.decision_set import DecisionSet
 from src.events.event_emitter import EventEmitter
 from src.object.fish import Fish
