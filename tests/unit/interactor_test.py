@@ -38,5 +38,5 @@ def test_eat_at_one_spot(interactor):
     interactor._worm_handler.add_all([w])
     interactor._plant_handler.alga_handler.add_all([a])
     interactor._fish_handler.add_all([f1, f2])
-    interactor._eat_at_one_spot(Position(1, 1))
+    interactor._eat_at_spot(Position(1, 1))
     assert f1.vitality == 15 and f2.vitality == 15

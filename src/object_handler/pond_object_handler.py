@@ -8,6 +8,7 @@ from src.decision.decision_set import DecisionSet
 from src.object.pond_object import PondObject
 from src.pond import Pond
 from src.pond_object_database import PondObjectDatabase
+from src.pond_viewer import PondViewer
 from src.position import Position
 from src.simulation_settings import SimulationSettings
 
@@ -34,13 +35,17 @@ class PondObjectHandler(ABC):
     def get_spot_obj(self, pos: Position) -> set[PondObject]:
         pass
 
-    def get_decisions(self) -> DecisionSet:
+    @property
+    @abstractmethod
+    def ponds(self) -> list[Pond]:
+        pass
+
+    def get_decisions(self, pond_viewer: PondViewer) -> Generator[DecisionSet, None, None]:
         decisions = DecisionSet()
         for obj in self.objects:
-            obj_decisions = obj.get_decisions()
-            decisions += obj_decisions
+            decisions += obj.get_decisions(pond_viewer)
 
-        return decisions
+        yield decisions
 
     @abstractmethod
     def handle_decisions(self, decisions: DecisionSet):
@@ -62,6 +67,11 @@ class PondObjectHandlerHomogeneous(PondObjectHandler):
     @overrides
     def objects(self) -> list[PondObject]:
         return self._object_database.objects
+
+    @property  # type: ignore
+    @overrides
+    def ponds(self) -> list[Pond]:
+        return [self._pond]
 
     def add(self, obj: PondObject) -> None:
         self._object_database.add(obj)
@@ -120,6 +130,11 @@ class PondObjectHandlerBundler(PondObjectHandler):
     @overrides
     def objects(self) -> list[PondObject]:
         return reduce(lambda list_, handler: list_ + handler.objects, self._handlers, [])
+
+    @property  # type: ignore
+    @overrides
+    def ponds(self) -> list[Pond]:
+        return reduce(lambda list_, handler: list_ + handler.ponds, self._handlers, [])
 
     @abstractmethod
     def add_random(self, amount: int) -> None:
