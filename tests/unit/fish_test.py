@@ -6,16 +6,16 @@ from src.position import Position
 
 @pytest.fixture
 def fish():
-    return Fish(0, 0, Position(0, 0))
+    return Fish(0, 0, 0, Position(0, 0))
 
 
 def test_spoil_vitality(fish):
     fish.spoil_vitality()
-    assert fish.is_dead()
+    assert not fish.is_alive()
 
 
 def test_birth(fish):
     born = fish.birth_fish()
     for f in born:
         assert id(f) != id(fish)
-    assert fish.is_dead()
+    assert not fish.is_alive()

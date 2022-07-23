@@ -13,7 +13,7 @@ INF = 1_000_000_000
 
 def get_object(kind=ObjectKind.FISH, pos=Position(0, 0), speed=10, size=10, energy_val=15, pond_dim=(90, 160)):
     objects = {
-        ObjectKind.FISH: Fish(speed, size, pos),
+        ObjectKind.FISH: Fish(speed, size, 10, pos),
         ObjectKind.WORM: Worm(energy_val, pos, pond_dim),
         ObjectKind.ALGA: Alga(energy_val, pos, pond_dim[0]),
         ObjectKind.ALGA_MAKER: AlgaMaker(pos, pond_dim[0]),
