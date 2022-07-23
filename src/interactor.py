@@ -12,6 +12,7 @@ from src.decision.decision_set import DecisionSet
 from src.events.event_emitter import EventEmitter
 from src.object.fish import Fish
 from src.object.fish_trait import FishTrait
+from src.object.fish_type import FishType
 from src.object.pond_object import PondObject
 from src.object_handler.fish_handler import FishHandler
 from src.object_handler.plant_handler import PlantHandler
@@ -67,9 +68,9 @@ class Interactor:
     def _find_pos_where_eat(self) -> list[Position]:
         pos_where_eat = []
         for fish in self._fish_handler.fishes:
-            if self._worm_handler.is_sth_at_pos(fish.pos) or self._plant_handler.alga_handler.is_sth_at_pos(
-                    fish.pos) or (
-                    FishTrait.PREDATOR in fish.traits and len(self._fish_handler.get_spot_obj(fish.pos)) > 1):
+            if self._worm_handler.is_sth_at_pos(fish.pos) or \
+                    self._plant_handler.alga_handler.is_sth_at_pos(fish.pos) or \
+                    (FishTrait.PREDATOR in fish.traits and len(self._fish_handler.get_spot_obj(fish.pos)) > 1):
                 pos_where_eat.append(fish.pos)
         return pos_where_eat
 
@@ -78,12 +79,24 @@ class Interactor:
         self.eat_other_fish_at_spot(pos)
 
     def eat_other_non_fish_at_spot(self, pos: Position) -> None:
-        energy_val = self._worm_handler.get_spot_energy_val(pos)
-        energy_val += self._plant_handler.alga_handler.get_spot_energy_val(pos)
+        worm_energy_val = self._worm_handler.get_spot_energy_val(pos)
+        algae_energy_val = self._plant_handler.alga_handler.get_spot_energy_val(pos)
+
+        cnt_fish_that_will_eat_worm = 0
+        cnt_fish_that_will_eat_algae = 0
+        for fish in self._fish_handler.get_spot_obj(pos):
+            fish = cast(Fish, fish)
+            if fish.fish_type in [FishType.OMNIVORE, FishType.CARNIVORE]:
+                cnt_fish_that_will_eat_worm += 1
+            if fish.fish_type in [FishType.OMNIVORE, FishType.HERBIVORE]:
+                cnt_fish_that_will_eat_algae += 1
 
         for fish in self._fish_handler.get_spot_obj(pos):
             fish = cast(Fish, fish)
-            fish.vitality += energy_val // len(self._fish_handler.get_spot_obj(pos))
+            if fish.fish_type in [FishType.OMNIVORE, FishType.CARNIVORE]:
+                fish.vitality += worm_energy_val // cnt_fish_that_will_eat_worm
+            if fish.fish_type in [FishType.OMNIVORE, FishType.HERBIVORE]:
+                fish.vitality += algae_energy_val // cnt_fish_that_will_eat_algae
 
         self._worm_handler.remove_at_spot(pos)
         self._plant_handler.alga_handler.remove_at_spot(pos)

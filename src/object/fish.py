@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from random import randint
+from random import randint, random
 
 from src.ai.fish_ai import FishAI
 from src.constants import FISH_VITALITY_SPOIL_RATE, EVOLUTION_DEVIATION_DIV, MIN_FISH_TO_BIRTH, MAX_FISH_TO_BIRTH, \
@@ -45,7 +45,9 @@ class Fish(PondObject):
         eyesight_dev = self._calc_deviation(self.eyesight)
         child_eyesight = max(1, self.eyesight + randint(-eyesight_dev, eyesight_dev))
         fish = Fish(child_speed, child_size, child_eyesight, self.pos)
-        fish.traits = self.traits.copy()
+        for trait in self.traits:
+            if random() < 0.8:
+                fish.traits.add(trait)
         return fish
 
     def birth_fish(self) -> list[Fish]:
