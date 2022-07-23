@@ -13,12 +13,13 @@ from src.position import Position
 
 
 class Fish(PondObject):
-    def __init__(self, speed: int, size: int, pos: Position):
+    def __init__(self, speed: int, size: int, eyesight: int, pos: Position):
         super().__init__(ObjectKind.FISH, pos, FishAI(self))
         self.fish_type: FishType = FishType.OMNIVORE
         self.traits: set[FishTrait] = set()
         self.speed: int = speed
         self.size: int = size
+        self.eyesight: int = eyesight
         self.vitality: int = self.speed + self.size
         self.vitality_need_to_breed: int = self.vitality * FISH_NEED_MULTI_VITALITY_TO_BREED
         self.is_eaten: bool = False
@@ -29,16 +30,21 @@ class Fish(PondObject):
     def is_alive(self) -> bool:
         return self.vitality > 0 and not self.is_eaten
 
+    def is_position_reachable(self, pos: Position):
+        return abs(self.pos.x - pos.x) <= self.speed and abs(self.pos.y - pos.y) <= self.speed
+
     @staticmethod
     def _calc_deviation(val):
         return val // EVOLUTION_DEVIATION_DIV
 
     def _birth_fish(self) -> Fish:
         speed_dev = self._calc_deviation(self.speed)
-        child_speed = self.speed + randint(-speed_dev, speed_dev)
+        child_speed = max(1, self.speed + randint(-speed_dev, speed_dev))
         size_dev = self._calc_deviation(self.size)
-        child_size = self.size + randint(-size_dev, size_dev)
-        return Fish(child_speed, child_size, self.pos)
+        child_size = max(1, self.size + randint(-size_dev, size_dev))
+        eyesight_dev = self._calc_deviation(self.eyesight)
+        child_eyesight = max(1, self.eyesight + randint(-eyesight_dev, eyesight_dev))
+        return Fish(child_speed, child_size, child_eyesight, self.pos)
 
     def birth_fish(self) -> list[Fish]:
         return [self._birth_fish() for _ in range(randint(MIN_FISH_TO_BIRTH, MAX_FISH_TO_BIRTH))]

@@ -2,13 +2,14 @@ from __future__ import annotations
 
 from typing import Callable, cast, TYPE_CHECKING
 
+from src.position import Position
+
 if TYPE_CHECKING:
     from src.object.fish import Fish
     from src.object.fish_trait import FishTrait
     from src.object.pond_object import PondObject
     from src.object_kind import ObjectKind
     from src.pond import Pond
-    from src.position import Position
 
 
 class PondViewer:
@@ -30,9 +31,15 @@ class PondViewer:
     def get_visible_object_by_type(self, pos: Position, eyesight: int, obj_type: list[ObjectKind]) -> list[PondObject]:
         return self._get_visible_objects(pos, eyesight, lambda obj: obj.kind in obj_type)
 
-    def get_visible_object_by_trait(self, pos: Position, eyesight: int, traits: list[FishTrait]) -> list[PondObject]:
-        return self._get_visible_objects(pos, eyesight,
-                                         lambda obj: any(trait in cast(Fish, obj).traits for trait in traits))
+    def get_visible_object_by_trait(self, pos: Position, eyesight: int, traits: list[FishTrait]) -> list[Fish]:
+        fish = self.get_visible_object_by_type(pos, eyesight, [ObjectKind.FISH])
+        n_list = []
+        for f in fish:
+            f = cast(Fish, f)
+            if any(trait in traits for trait in f.traits):
+                n_list.append(f)
+
+        return n_list
 
     def _get_visible_objects(self, pos: Position, eyesight: int, obj_filter: Callable[[PondObject], bool]) -> list[
         PondObject]:

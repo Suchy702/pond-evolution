@@ -36,9 +36,8 @@ class FishHandler(PondObjectHandlerHomogeneous):
     def create_random_single(self) -> PondObject:
         speed = randint(FISH_MIN_SPEED, FISH_MAX_SPEED)
         size = randint(FISH_MIN_SIZE, FISH_MAX_SIZE)
-        fish = Fish(speed, size, self._pond.random_position())
-        if randint(1, 2) == 1:
-            fish.traits.add(FishTrait.PREDATOR)
+        fish = Fish(speed, size, max(1, self._pond.height // 5), self._pond.random_position())
+        fish.traits.add(FishTrait.SMART)
         return fish
 
     @overrides
