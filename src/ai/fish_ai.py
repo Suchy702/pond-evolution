@@ -63,11 +63,11 @@ class FishAI(AI["Fish"]):
         predator = None
         for fish_layer in fish_layers:
             for fish in fish_layer:
-                if FishTrait.PREDATOR in self.pond_object.traits:
+                if FishTrait.PREDATOR in fish.traits and fish.size > self.pond_object.size:
                     predator = fish
                     break
 
-        if predator is None or random() < 0.5:
+        if predator is None or random() < 0.2:
             return None
 
         diff_x = int(min(
@@ -88,7 +88,7 @@ class FishAI(AI["Fish"]):
     def _try_eat_other_fish(self, fish_layers: list[list[Fish]]) -> Optional[Decision]:
         for fish_layer in fish_layers:
             for fish in fish_layer:
-                if self.pond_object.is_position_reachable(fish.pos):
+                if self.pond_object.is_position_reachable(fish.pos) and fish.size < self.pond_object.size:
                     if random() < 0.7:
                         return Decision(
                             DecisionType.MOVE, pond_object=self.pond_object, to_x=fish.pos.x, to_y=fish.pos.y

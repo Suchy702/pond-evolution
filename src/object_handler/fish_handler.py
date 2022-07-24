@@ -43,7 +43,6 @@ class FishHandler(PondObjectHandlerHomogeneous):
             fish.traits.add(FishTrait.SMART)
         if random() < 0.1:
             fish.traits.add(FishTrait.PREDATOR)
-            fish.eyesight = fish.eyesight * 15 // 10
             if fish.fish_type == FishType.HERBIVORE:
                 if random() < 0.5:
                     fish.fish_type = FishType.CARNIVORE

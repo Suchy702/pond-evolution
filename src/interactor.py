@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import functools
 from functools import reduce
 from typing import cast, Type, Generator
 
@@ -102,25 +103,23 @@ class Interactor:
         self._plant_handler.alga_handler.remove_at_spot(pos)
 
     def eat_other_fish_at_spot(self, pos: Position) -> None:
-        fish = self._fish_handler.get_spot_obj(pos)
-        predator_cnt, predator_energy_val = 0, 0
-        energy_val = self._fish_handler.get_spot_energy_val(pos)
+        fish = list(self._fish_handler.get_spot_obj(pos))
+        fish = cast(list[Fish], fish)
+        fish.sort(key=functools.cmp_to_key(lambda a, b: a.speed - b.speed))
 
-        for f in fish:
-            f = cast(Fish, f)
-            if FishTrait.PREDATOR in f.traits:
-                predator_energy_val += f.energy_val
-                predator_cnt += 1
+        for i in range(len(fish)):
+            cnt_bigger_predators = 0
+            for j in range(i + 1, len(fish)):
+                if FishTrait.PREDATOR in fish[j].traits and fish[i].size < fish[j].size:
+                    cnt_bigger_predators += 1
 
-        if predator_cnt == 0:
-            return
+            if cnt_bigger_predators == 0:
+                continue
 
-        for f in fish:
-            f = cast(Fish, f)
-            if FishTrait.PREDATOR in f.traits:
-                f.vitality += (energy_val - predator_energy_val) // predator_cnt
-            else:
-                f.is_eaten = True
+            fish[i].is_eaten = True
+            for j in range(i + 1, len(fish)):
+                if FishTrait.PREDATOR in fish[j].traits and fish[i].size < fish[j].size:
+                    fish[j].vitality += fish[i].vitality // cnt_bigger_predators
 
     def feed_fish(self) -> None:
         for pos in self._find_pos_where_eat():
