@@ -18,6 +18,7 @@ from src.position import Position
 if TYPE_CHECKING:
     from src.object.fish import Fish
 
+
 class FishAI(AI["Fish"]):
     def _find_random_pos_to_move(self) -> Position:
         return self.pond_object.pos.changed(
@@ -66,13 +67,14 @@ class FishAI(AI["Fish"]):
                     predator = fish
                     break
 
-        if predator is None or random() < 0.2:
-            return
+        if predator is None or random() < 0.5:
+            return None
 
         diff_x = int(min(
             abs(self.pond_object.pos.x - predator.pos.x),
             self.pond_object.speed) * math.copysign(1, self.pond_object.pos.x - predator.pos.x)
                      )
+
         diff_y = int(min(
             abs(self.pond_object.pos.y - predator.pos.y),
             self.pond_object.speed) * math.copysign(1, self.pond_object.pos.y - predator.pos.y)

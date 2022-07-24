@@ -14,6 +14,7 @@ from src.events.event_emitter import EventEmitter
 from src.events.event_type import GraphicEventType
 from src.object.fish import Fish
 from src.object.fish_trait import FishTrait
+from src.object.fish_type import FishType
 from src.object.pond_object import PondObject
 from src.object_handler.pond_object_handler import PondObjectHandlerHomogeneous
 from src.object_kind import ObjectKind
@@ -37,11 +38,17 @@ class FishHandler(PondObjectHandlerHomogeneous):
         speed = randint(FISH_MIN_SPEED, FISH_MAX_SPEED)
         size = randint(FISH_MIN_SIZE, FISH_MAX_SIZE)
         fish = Fish(speed, size, max(1, self._pond.height // 5), self._pond.random_position())
-        if random() < 0.5:
+        fish.fish_type = FishType.get_random()
+        if random() < 0.7:
             fish.traits.add(FishTrait.SMART)
-        if random() < 0.2:
+        if random() < 0.1:
             fish.traits.add(FishTrait.PREDATOR)
             fish.eyesight = fish.eyesight * 15 // 10
+            if fish.fish_type == FishType.HERBIVORE:
+                if random() < 0.5:
+                    fish.fish_type = FishType.CARNIVORE
+                else:
+                    fish.fish_type = FishType.OMNIVORE
         return fish
 
     @overrides

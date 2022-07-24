@@ -45,9 +45,21 @@ class Fish(PondObject):
         eyesight_dev = self._calc_deviation(self.eyesight)
         child_eyesight = max(1, self.eyesight + randint(-eyesight_dev, eyesight_dev))
         fish = Fish(child_speed, child_size, child_eyesight, self.pos)
+        fish.fish_type = self.fish_type
+
         for trait in self.traits:
-            if random() < 0.8:
+            if random() < 0.9:
                 fish.traits.add(trait)
+
+        if random() < 0.2:
+            fish.traits.add(FishTrait.get_random())
+
+        if FishTrait.PREDATOR in fish.traits and fish.fish_type == FishType.HERBIVORE:
+            if random() < 0.5:
+                fish.fish_type = FishType.CARNIVORE
+            else:
+                fish.fish_type = FishType.OMNIVORE
+
         return fish
 
     def birth_fish(self) -> list[Fish]:

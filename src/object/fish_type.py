@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import random
 from enum import Enum, auto, unique
 from typing import TYPE_CHECKING
 
@@ -14,6 +15,10 @@ class FishType(Enum):
     HERBIVORE = auto()
     CARNIVORE = auto()
     OMNIVORE = auto()
+
+    @staticmethod
+    def get_random():
+        return random.choice(list(FishType))
 
     @staticmethod
     def get_edible_food(fish: Fish) -> list[ObjectKind]:
