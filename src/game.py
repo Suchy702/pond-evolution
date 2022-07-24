@@ -33,7 +33,6 @@ class Game:
 
     def run(self) -> None:
         clock = pygame.time.Clock()
-
         while self.running:
             clock.tick(FPS)
 

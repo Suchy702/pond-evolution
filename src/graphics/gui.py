@@ -36,8 +36,8 @@ class GUI:
         pygame.draw.rect(self._screen, GRAY, rect, 0)
 
     def _is_visible_now(self, x, y) -> bool:
-        x_in = 0 - self.vals.cell_size <= x <= self.settings.screen_pond_width + self.vals.cell_size
-        y_in = 0 - self.vals.cell_size <= y <= self.settings.screen_pond_height + self.vals.cell_size
+        x_in: bool = 0 - self.vals.cell_size <= x <= self.settings.screen_pond_width + self.vals.cell_size
+        y_in: bool = 0 - self.vals.cell_size <= y <= self.settings.screen_pond_height + self.vals.cell_size
         return x_in and y_in
 
     def draw_anim_event(self, event: GraphicEvent) -> None:

@@ -33,12 +33,12 @@ class GraphicCalculator:
         return new_x_offset, new_y_offset
 
     @staticmethod
-    @jit
+    @jit(nopython=True)
     def _is_not_linear_fun(x1: int, x2: int) -> bool:
         return x1 == x2
 
     @staticmethod
-    @jit
+    @jit(nopython=True)
     def _calc_pos_for_non_linear_fun(x1: int, y1: int, y2: int, step: int, total_steps: int) -> tuple[int, int]:
         dist = y2 - y1
         y = y1 + dist * step / total_steps
@@ -46,7 +46,7 @@ class GraphicCalculator:
         return int(x), int(y)
 
     @staticmethod
-    @jit
+    @jit(nopython=True)
     def _calc_pos_for_linear_fun(x1: int, y1: int, x2: int, y2: int, step: int, total_steps: int) -> tuple[int, int]:
         dist = x2 - x1
         a = (y2 - y1) / (x2 - x1)
