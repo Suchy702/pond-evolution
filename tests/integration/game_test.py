@@ -15,7 +15,7 @@ while os.path.basename(cwd) != 'pond-evolution':
     move_to_parent += 1
     cwd = os.path.dirname(cwd)
 
-IMG_DIR_PATH = os.path.join(*(['..'] * move_to_parent), 'resources', 'object_images')
+IMG_DIR_PATH = os.path.join(*(['..'] * move_to_parent), 'resources', 'object')
 
 
 class SimulationSettingsMock:

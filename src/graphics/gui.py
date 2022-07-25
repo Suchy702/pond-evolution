@@ -18,7 +18,7 @@ class GUI:
         self._screen: Surface = pygame.display.set_mode([self.settings.screen_width, self.settings.screen_height])
         self.center_view()
         self._event_emitter = EventEmitter()
-        self._image_loader = ImageLoader()
+        self._image_loader = ImageLoader(self.settings.screen_height - self.settings.screen_pond_height)
 
     def draw_empty_frame(self) -> None:
         self._screen.fill(BLACK)
