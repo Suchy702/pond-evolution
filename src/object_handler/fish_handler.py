@@ -42,7 +42,7 @@ class FishHandler(PondObjectHandlerHomogeneous):
         fish.fish_type = FishType.get_random()
         if random() < 0.7:
             fish.traits.add(FishTrait.SMART)
-        if random() < 0.1:
+        if random() < 0.2:
             fish.traits.add(FishTrait.PREDATOR)
             if fish.fish_type == FishType.HERBIVORE:
                 if random() < 0.5:

@@ -41,13 +41,14 @@ class PondViewer:
             new_list = []
             for fish in fish_layer:
                 fish = cast("Fish", fish)
-                if any(trait in traits for trait in fish.traits):
+                if (not negate and all(trait in traits for trait in fish.traits)) or \
+                        (negate and not any(trait in traits for trait in fish.traits)):
                     new_list.append(fish)
             if new_list:
                 yield new_list
 
     def _get_visible_objects(
-            self, pos: Position, eyesight: int, obj_filter: Callable[[PondObject], bool], negate: bool
+            self, pos: Position, eyesight: int, obj_filter: Callable[[PondObject], bool], negate: bool = False
     ) -> Generator[list[PondObject], None, None]:
         """Returns visible objects grouped by distance from `pos`. Groups are sorted in ascending order of distance"""
         offset = [(0, 1), (1, 0), (0, -1), (-1, 0)]
