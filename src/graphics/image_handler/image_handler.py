@@ -33,7 +33,8 @@ class DynamicImageHandler(ImageHandler):
             self._cache[name] = []
 
         if self._cache[name][size - CELL_MIN_PX_SIZE] is None:
-            self._cache[name][size - CELL_MIN_PX_SIZE] = pygame.transform.scale(self._base_image[name], (size, size))
+            self._cache[name][size - CELL_MIN_PX_SIZE] = pygame.transform.smoothscale(self._base_image[name],
+                                                                                      (size, size))
 
         return self._cache[name][size - CELL_MIN_PX_SIZE]
 
