@@ -43,7 +43,7 @@ class GUI:
     def draw_anim_event(self, event: GraphicEvent) -> None:
         x, y = self.calculator.find_pos_to_draw(event, self.vals)
         if self._is_visible_now(x, y):
-            self.draw_object(event.pond_object, x, y)
+            self.draw_object(event, x, y)
 
     def center_view(self) -> None:
         self.vals.x_offset, self.vals.y_offset = self.calculator.calc_center_view(self.vals)
@@ -54,7 +54,9 @@ class GUI:
     def is_animation_finished(self) -> bool:
         return not self._event_emitter.is_animation_event_present()
 
-    def draw_object(self, obj, x, y) -> None:
+    def draw_object(self, event: GraphicEvent, x: int, y: int) -> None:
         rect = pygame.Rect(x, y, self.vals.cell_size, self.vals.cell_size)
-        image = self._image_loader.get_object_image(obj, self.vals.cell_size)
+        image = self._image_loader.get_object_image(event.pond_object, self.vals.cell_size)
+        if event.is_flipped:
+            image = pygame.transform.flip(image, True, False)
         self._screen.blit(image, rect)

@@ -90,7 +90,8 @@ class FishHandler(PondObjectHandlerHomogeneous):
                 GraphicEvent(
                     GraphicEventType.ANIM_MOVE, pond_object=fish,
                     from_x=fish.pos.x, from_y=fish.pos.y,
-                    to_x=n_pos.x, to_y=n_pos.y
+                    to_x=n_pos.x, to_y=n_pos.y,
+                    is_flipped=fish.pos.x < n_pos.x
                 )
             )
             fish.spoil_vitality()

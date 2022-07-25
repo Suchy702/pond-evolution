@@ -56,7 +56,8 @@ class GraphicEvent(Event[GraphicEventType]):
                  to_x: Optional[int] = None,
                  to_y: Optional[int] = None,
                  step: Optional[int] = 1,
-                 total_steps: Optional[int] = None):
+                 total_steps: Optional[int] = None,
+                 is_flipped: Optional[bool] = None):
         super().__init__(event_type)
         self.key = key
         self.pond_object = pond_object
@@ -68,6 +69,7 @@ class GraphicEvent(Event[GraphicEventType]):
         self.to_y = to_y
         self.step = step
         self.total_steps = total_steps
+        self.is_flipped = is_flipped
 
     @overrides
     def copy(self) -> GraphicEvent:
