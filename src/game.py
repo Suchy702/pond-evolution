@@ -1,12 +1,12 @@
 import pygame
 
 from src.constants import FPS
-from src.engine import Engine
 from src.events.event_emitter import EventEmitter
 from src.events.event_manager.game_event_manager import GameEventManager
 from src.events.event_manager.graphic_event_manager import GraphicEventManager
 from src.events.event_manager.logic_event_manager import LogicEventManager
 from src.graphics.gui import GUI
+from src.logic.engine import Engine
 from src.simulation_settings import SimulationSettings
 
 

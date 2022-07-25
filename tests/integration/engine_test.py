@@ -2,8 +2,8 @@ from unittest.mock import patch
 
 import pytest
 
-from src.engine import Engine
 from src.events.event_emitter import EventEmitter
+from src.logic.engine import Engine
 # noinspection PyUnresolvedReferences
 from tests.helper import settings
 

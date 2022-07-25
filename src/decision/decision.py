@@ -5,7 +5,7 @@ from typing import Optional, TYPE_CHECKING
 if TYPE_CHECKING:
     from src.object.pond_object import PondObject
     from src.decision.decision_type import DecisionType
-    from src.object_kind import ObjectKind
+    from src.object.object_kind import ObjectKind
 
 
 class Decision:

@@ -1,4 +1,4 @@
-from src.interactor import Interactor
+from src.logic.interactor import Interactor
 from src.simulation_settings import SimulationSettings
 
 

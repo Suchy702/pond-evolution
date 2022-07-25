@@ -10,9 +10,9 @@ from src.events.event_emitter import EventEmitter
 from src.events.event_type import GraphicEventType
 from src.object.alga import Alga
 from src.object.alga_maker import AlgaMaker
+from src.object.object_kind import ObjectKind
 from src.object.pond_object import PondObject
 from src.object_handler.pond_object_handler import PondObjectHandlerHomogeneous
-from src.object_kind import ObjectKind
 from src.simulation_settings import SimulationSettings
 
 event_emitter = EventEmitter()

@@ -4,8 +4,8 @@ from abc import ABC
 from typing import TYPE_CHECKING
 
 from src.decision.decision_set import DecisionSet
-from src.object_kind import ObjectKind
-from src.pond_viewer import PondViewer
+from src.object.object_kind import ObjectKind
+from src.pond.pond_viewer import PondViewer
 from src.position import Position
 
 if TYPE_CHECKING:

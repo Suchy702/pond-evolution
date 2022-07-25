@@ -1,7 +1,7 @@
 from src.ai.worm_ai import WormAI
 from src.constants import WORM_FALLING_STEPS, WORM_BOUNCE_STEPS
+from src.object.object_kind import ObjectKind
 from src.object.pond_object import PondObject
-from src.object_kind import ObjectKind
 from src.position import Position
 
 

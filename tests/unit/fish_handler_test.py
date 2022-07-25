@@ -1,7 +1,7 @@
 import pytest
 
+from src.object.object_kind import ObjectKind
 from src.object_handler.fish_handler import FishHandler
-from src.object_kind import ObjectKind
 # noinspection PyUnresolvedReferences
 from tests.helper import get_object, INF, settings
 

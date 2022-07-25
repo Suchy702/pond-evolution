@@ -3,14 +3,14 @@ from __future__ import annotations
 import itertools
 from typing import Callable, cast, TYPE_CHECKING, Optional, Generator
 
-from src.object_kind import ObjectKind
+from src.object.object_kind import ObjectKind
 from src.position import Position
 
 if TYPE_CHECKING:
     from src.object.fish import Fish
     from src.object.fish_trait import FishTrait
     from src.object.pond_object import PondObject
-    from src.pond import Pond
+    from src.pond.pond import Pond
 
 
 class PondViewer:

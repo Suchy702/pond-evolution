@@ -4,7 +4,7 @@ from src.ai.ai import AI
 from src.decision.decision import Decision
 from src.decision.decision_set import DecisionSet
 from src.decision.decision_type import DecisionType
-from src.pond_viewer import PondViewer
+from src.pond.pond_viewer import PondViewer
 from src.position import Position
 
 

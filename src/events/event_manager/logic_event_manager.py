@@ -2,9 +2,9 @@ from typing import cast
 
 from overrides import overrides
 
-from src.engine import Engine
 from src.events.event import LogicEvent, Event
 from src.events.event_manager.event_manager import EventManager
+from src.logic.engine import Engine
 
 
 class LogicEventManager(EventManager):

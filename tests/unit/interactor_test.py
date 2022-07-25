@@ -1,7 +1,7 @@
 import pytest
 
-from src.interactor import Interactor
-from src.object_kind import ObjectKind
+from src.logic.interactor import Interactor
+from src.object.object_kind import ObjectKind
 from src.position import Position
 # noinspection PyUnresolvedReferences
 from tests.helper import get_object, settings

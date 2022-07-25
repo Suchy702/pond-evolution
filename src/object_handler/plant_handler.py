@@ -5,11 +5,11 @@ from overrides import overrides
 from src.decision.decision_set import DecisionSet
 from src.decision.decision_type import DecisionType
 from src.object.alga_maker import AlgaMaker
+from src.object.object_kind import ObjectKind
 from src.object.pond_object import PondObject
 from src.object_handler.alga_handler import AlgaHandler
 from src.object_handler.alga_maker_handler import AlgaMakerHandler
 from src.object_handler.pond_object_handler import PondObjectHandlerBundler
-from src.object_kind import ObjectKind
 from src.position import Position
 from src.simulation_settings import SimulationSettings
 

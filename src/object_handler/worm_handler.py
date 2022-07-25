@@ -9,10 +9,10 @@ from src.decision.decision_type import DecisionType
 from src.events.event import GraphicEvent
 from src.events.event_emitter import EventEmitter
 from src.events.event_type import GraphicEventType
+from src.object.object_kind import ObjectKind
 from src.object.pond_object import PondObject
 from src.object.worm import Worm
 from src.object_handler.pond_object_handler import PondObjectHandlerHomogeneous
-from src.object_kind import ObjectKind
 from src.position import Position
 from src.simulation_settings import SimulationSettings
 

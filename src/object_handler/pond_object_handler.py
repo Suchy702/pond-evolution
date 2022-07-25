@@ -6,9 +6,9 @@ from overrides import overrides
 
 from src.decision.decision_set import DecisionSet
 from src.object.pond_object import PondObject
-from src.pond import Pond
-from src.pond_object_database import PondObjectDatabase
-from src.pond_viewer import PondViewer
+from src.pond.pond import Pond
+from src.pond.pond_object_database import PondObjectDatabase
+from src.pond.pond_viewer import PondViewer
 from src.position import Position
 from src.simulation_settings import SimulationSettings
 

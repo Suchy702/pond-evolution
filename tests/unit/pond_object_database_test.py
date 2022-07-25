@@ -1,6 +1,6 @@
 import pytest
 
-from src.pond_object_database import PondObjectDatabase
+from src.pond.pond_object_database import PondObjectDatabase
 # noinspection PyUnresolvedReferences
 from tests.helper import pond_object, get_object
 

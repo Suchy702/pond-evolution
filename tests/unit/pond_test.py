@@ -1,6 +1,6 @@
 import pytest
 
-from src.pond import Pond
+from src.pond.pond import Pond
 from src.position import Position
 # noinspection PyUnresolvedReferences
 from tests.helper import pond_object, INF, settings

@@ -3,7 +3,7 @@ from typing import TypeVar, Generic
 
 from src.decision.decision_set import DecisionSet
 from src.object.pond_object import PondObject
-from src.pond_viewer import PondViewer
+from src.pond.pond_viewer import PondViewer
 
 T = TypeVar('T', bound=PondObject)
 

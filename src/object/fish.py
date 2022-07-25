@@ -7,8 +7,8 @@ from src.constants import FISH_VITALITY_SPOIL_RATE, EVOLUTION_DEVIATION_DIV, MIN
     FISH_NEED_MULTI_VITALITY_TO_BREED
 from src.object.fish_trait import FishTrait
 from src.object.fish_type import FishType
+from src.object.object_kind import ObjectKind
 from src.object.pond_object import PondObject
-from src.object_kind import ObjectKind
 from src.position import Position
 
 

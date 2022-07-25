@@ -1,7 +1,7 @@
 import pytest
 
+from src.object.object_kind import ObjectKind
 from src.object_handler.worm_handler import WormHandler
-from src.object_kind import ObjectKind
 from src.position import Position
 # noinspection PyUnresolvedReferences
 from tests.helper import get_object, settings

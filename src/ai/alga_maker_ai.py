@@ -8,7 +8,7 @@ from src.constants import CHANCE_TO_PRODUCE_ALGAE
 from src.decision.decision import Decision
 from src.decision.decision_set import DecisionSet
 from src.decision.decision_type import DecisionType
-from src.pond_viewer import PondViewer
+from src.pond.pond_viewer import PondViewer
 
 
 class AlgaMakerAI(AI["AlgaMaker"]):

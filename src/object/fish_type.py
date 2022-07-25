@@ -4,7 +4,7 @@ import random
 from enum import Enum, auto, unique
 from typing import TYPE_CHECKING
 
-from src.object_kind import ObjectKind
+from src.object.object_kind import ObjectKind
 
 if TYPE_CHECKING:
     from src.object.fish import Fish

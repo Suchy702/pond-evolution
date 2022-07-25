@@ -3,9 +3,9 @@ from random import randint
 from src.ai.alga_maker_ai import AlgaMakerAI
 from src.constants import MAX_ALGAE_TO_CREATE, MIN_ALGAE_TO_CREATE, ALGA_ENERGY_VALUE
 from src.object.alga import Alga
+from src.object.object_kind import ObjectKind
 from src.object.pond_object import PondObject
-from src.object_kind import ObjectKind
-from src.pond import Pond
+from src.pond.pond import Pond
 from src.position import Position
 
 
