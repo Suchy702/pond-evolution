@@ -48,10 +48,9 @@ class FishAI(AI["Fish"]):
             if decision is not None:
                 return decision
 
-        else:
-            decision = self._run_away_if_predator_close(fish_layers)
-            if decision is not None:
-                return decision
+        decision = self._run_away_if_predator_close(fish_layers)
+        if decision is not None:
+            return decision
 
         decision = self._try_eat_other_non_fish(pond_viewer, cnt_fish)
         if decision is not None:
