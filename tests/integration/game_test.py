@@ -15,8 +15,6 @@ while os.path.basename(cwd) != 'pond-evolution':
     move_to_parent += 1
     cwd = os.path.dirname(cwd)
 
-IMG_DIR_PATH = os.path.join(*(['..'] * move_to_parent), 'resources', 'object')
-
 
 class SimulationSettingsMock:
     screen_pond_height = 640
@@ -30,7 +28,6 @@ class SimulationSettingsMock:
 
 @patch('pygame.event.get')
 @patch('src.game.SimulationSettings', new=SimulationSettingsMock)
-@patch('src.graphics.image_handler.image_handler.IMG_DIR_PATH', IMG_DIR_PATH)
 @pytest.mark.timeout(30)
 def test_game(event_get_mock):
     events: list[any] = [[Mock()]] * 100 + [[pygame.event.Event(pygame.locals.QUIT)]]
