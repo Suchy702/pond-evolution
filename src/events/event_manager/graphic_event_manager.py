@@ -32,9 +32,11 @@ class GraphicEventManager(EventManager):
             self._events.append(event)
 
     def _handle_static_events(self) -> None:
-        for event in self._events:
-            self._handle_static_event(event)
+        cp_static_events = self._events.copy()
         self._events.clear()
+
+        for event in cp_static_events:
+            self._handle_static_event(event)
 
     def _handle_animation_events(self) -> None:
         cp_anim_events = self._animation_events.copy()
