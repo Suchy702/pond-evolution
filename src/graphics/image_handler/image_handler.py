@@ -48,7 +48,7 @@ class StaticImageHandler(ImageHandler):
 
         for img_path in self.__class__.img_paths:
             loaded_img = pygame.image.load(os.path.join(img_dir_path, img_path))
-            self._base_image[img_path] = pygame.transform.scale(loaded_img, (size, size))
+            self._base_image[img_path] = pygame.transform.smoothscale(loaded_img, (size, size))
 
     def get_static_image(self, name: str) -> Surface:
-        return self._base_image[f'name.svg']
+        return self._base_image[f'{name}.svg']

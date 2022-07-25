@@ -50,3 +50,6 @@ FISH_VITALITY_SPOIL_RATE: int = 1
 
 # Evolution
 EVOLUTION_DEVIATION_DIV: int = 10
+
+# UI
+UI_SCALE: float = 0.75
