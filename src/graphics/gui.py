@@ -57,6 +57,10 @@ class GUI:
     def draw_object(self, event: GraphicEvent, x: int, y: int) -> None:
         rect = pygame.Rect(x, y, self.vals.cell_size, self.vals.cell_size)
         image = self._image_loader.get_object_image(event.pond_object, self.vals.cell_size)
+
         if event.is_flipped:
             image = pygame.transform.flip(image, True, False)
+        if event.rotate is not None:
+            image = pygame.transform.rotate(image, event.rotate)
+
         self._screen.blit(image, rect)
