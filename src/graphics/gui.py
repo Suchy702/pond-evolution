@@ -39,8 +39,10 @@ class GUI:
         rect = pygame.Rect(0, self.settings.screen_pond_height, self.settings.screen_width, ui_height)
         pygame.draw.rect(self._screen, GRAY, rect, 0)
 
-        ui_components = ['plus', 'arrow3', 'fish', 'arrow3', 'spacer', 'arrow3', 'spacer', 'magnifying_glass', 'spacer',
-                         'cycle', 'spacer']
+        ui_components = [
+            'plus', 'arrow3', 'omnivore_fish', 'arrow3', 'spacer', 'arrow3', 'spacer', 'magnifying_glass', 'spacer',
+            'cycle', 'spacer'
+        ]
 
         for idx, ui_component in enumerate(ui_components):
             self._draw_ui_component(ui_component, idx, len(ui_components))
