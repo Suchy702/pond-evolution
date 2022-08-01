@@ -8,7 +8,7 @@ class EventType(Enum):
 
 @unique
 class LogicEventType(EventType):
-    pass
+    ADD = auto()
 
 
 @unique

@@ -5,9 +5,10 @@ def main():
     help_descr = """
     Buttons:
      arrows move camera
-     - or = changes zoom
-     , or . changes simulation speed
-     c centers camera
+     - or =     -> changes zoom
+     , or .     -> changes simulation speed
+     c          -> centers camera
+     leftclick  -> adding fish (demo)
     """
     print(help_descr)
 

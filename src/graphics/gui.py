@@ -8,6 +8,7 @@ from src.graphics.graphic_calculator import GraphicCalculator
 from src.graphics.graphic_values_guard import GraphicValuesGuard
 from src.graphics.image_handler.image_loader import ImageLoader
 from src.simulation_settings import SimulationSettings
+from src.graphics.ui import UI
 
 pygame.font.init()
 FONT = pygame.font.SysFont(pygame.font.get_default_font(), 30)
@@ -18,6 +19,7 @@ class GUI:
         self.settings: SimulationSettings = settings
         self.vals = GraphicValuesGuard(settings)
         self.calculator = GraphicCalculator(settings)
+        self.ui = UI()
         self._screen: Surface = pygame.display.set_mode([self.settings.screen_width, self.settings.screen_height])
         self.center_view()
         self._event_emitter = EventEmitter()

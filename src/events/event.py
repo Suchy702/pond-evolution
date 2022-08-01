@@ -28,8 +28,9 @@ class Event(ABC, Generic[T]):
 
 
 class LogicEvent(Event[LogicEventType]):
-    def __init__(self, event_type: LogicEventType):
+    def __init__(self, event_type: LogicEventType, obj: PondObject):
         super().__init__(event_type)
+        self.obj = obj
 
     @overrides
     def copy(self) -> LogicEvent:

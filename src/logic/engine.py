@@ -37,3 +37,6 @@ class Engine:
         self._interactor.handle_decisions()
         self._interactor.feed_fish()
         self._cycle_count += 1
+
+    def add_obj_by_click(self, obj):
+        self._interactor.add_obj_by_click(obj)

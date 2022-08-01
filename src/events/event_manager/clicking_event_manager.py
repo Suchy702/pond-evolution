@@ -3,9 +3,10 @@ from typing import cast
 from overrides import overrides
 
 from src.events.event_manager.event_manager import EventManager
-from src.events.event import Event, ClickEvent
-from src.events.event_type import ClickEventType
+from src.events.event import Event, ClickEvent, LogicEvent
+from src.events.event_type import ClickEventType, LogicEventType
 from src.graphics.gui import GUI
+from src.events.event_emitter import EventEmitter
 
 
 class ClickingEventManager(EventManager):
@@ -14,6 +15,7 @@ class ClickingEventManager(EventManager):
         self._check_events = []
 
         self._gui = gui
+        self.event_emitter = EventEmitter()
 
     @overrides
     def add_event(self, event: Event) -> None:
@@ -24,8 +26,11 @@ class ClickingEventManager(EventManager):
             self._check_events.append(event)
 
     def _handle_add_event(self, event: ClickEvent) -> None:
+        adding_obj = self._gui.ui.adding_object
         click_coor = self._gui.get_click_coor(event.pos)
-
+        adding_obj.pos.x = click_coor[0]
+        adding_obj.pos.y = click_coor[1]
+        self.event_emitter.emit_event(LogicEvent(LogicEventType.ADD, adding_obj))
 
     def _handle_add_events(self) -> None:
         cp_events = self._add_events.copy()
