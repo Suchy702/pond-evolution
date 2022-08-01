@@ -23,3 +23,9 @@ class GraphicEventType(EventType):
 @unique
 class GameEventType(EventType):
     QUIT = auto()
+
+
+@unique
+class ClickEventType(EventType):
+    CHECKING = auto()
+    ADDING = auto()

@@ -5,7 +5,7 @@ from typing import Optional, TypeVar, Generic, cast, ClassVar
 
 from overrides import overrides
 
-from src.events.event_type import LogicEventType, GraphicEventType, EventType, GameEventType
+from src.events.event_type import LogicEventType, GraphicEventType, EventType, GameEventType, ClickEventType
 from src.object.pond_object import PondObject
 
 T = TypeVar('T', bound=EventType)
@@ -96,3 +96,13 @@ class GameEvent(Event[GameEventType]):
 
     def __str__(self):
         return f'GameEvent({self.event_type.name})'
+
+
+class ClickEvent(Event[ClickEventType]):
+    def __init__(self, event_type: ClickEventType, pos: tuple[int, int]):
+        super().__init__(event_type)
+        self.pos = pos
+
+    def __str__(self):
+        return f'ClickEvent({self.event_type.name})'
+
