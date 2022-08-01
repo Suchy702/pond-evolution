@@ -13,7 +13,7 @@ class ClickingEventManager(EventManager):
         self._add_events = []
         self._check_events = []
 
-        self.gui = gui
+        self._gui = gui
 
     @overrides
     def add_event(self, event: Event) -> None:
@@ -24,7 +24,8 @@ class ClickingEventManager(EventManager):
             self._check_events.append(event)
 
     def _handle_add_event(self, event: ClickEvent) -> None:
-        pass
+        click_coor = self._gui.get_click_coor(event.pos)
+
 
     def _handle_add_events(self) -> None:
         cp_events = self._add_events.copy()

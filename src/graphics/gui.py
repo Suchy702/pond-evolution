@@ -95,3 +95,6 @@ class GUI:
             image = pygame.transform.rotate(image, event.rotate)
 
         self._screen.blit(image, rect)
+
+    def get_click_coor(self, click_pos: tuple[int, int]) -> tuple[int, int]:
+        return self.calculator.get_click_coor(click_pos, self.vals)

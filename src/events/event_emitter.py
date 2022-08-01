@@ -14,7 +14,6 @@ from pygame.locals import (  # type: ignore
     K_COMMA,
     K_PERIOD,
     QUIT,
-    MOUSEBUTTONDOWN,
 )
 
 from src.events.event import Event, GameEvent, LogicEvent, GraphicEvent, ClickEvent
@@ -54,10 +53,12 @@ class EventEmitter(metaclass=Singleton):
             self.emit_event(event)
 
     def _emit_pygame_events(self) -> None:
-        for event in pygame.event.get():
+        event_list = pygame.event.get()
+        for event in event_list:
             converted = self._from_pygame_event(event)
             if converted is not None:
                 self.emit_event(converted)
+        self._emit_pygame_click_events(event_list)
         self._emit_pygame_pressed_keys_events(pygame.key.get_pressed())
 
     @staticmethod
@@ -76,7 +77,7 @@ class EventEmitter(metaclass=Singleton):
 
     def _emit_pygame_click_events(self, pygame_events) -> None:
         for event in pygame_events:
-            if event.type == MOUSEBUTTONDOWN:
+            if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == LEFT_MOUSE_BUTTON:
                     self.emit_event(ClickEvent(ClickEventType.ADDING, pygame.mouse.get_pos()))
                 else:

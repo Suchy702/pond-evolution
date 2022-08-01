@@ -89,6 +89,15 @@ class GraphicCalculator:
         else:
             return self._find_pos_to_draw_when_stay(event, vals)
 
+    def get_click_coor(self, click_pos: tuple[int, int], vals: GraphicValuesGuard) -> tuple[int, int]:
+        x_min, x_max, y_min, y_max = self.get_visible_grid_coordinates(vals)
+        x, y = click_pos
+
+        x_cell_add = x // vals.cell_size
+        y_cell_add = y // vals.cell_size
+
+        return x_min + x_cell_add, y_min + y_cell_add
+
     # Magic function
     def calc_zoom(self, change: int, vals: GraphicValuesGuard) -> None:
         old_cell_size = vals.cell_size
