@@ -34,7 +34,8 @@ class Pond:
         self.get_spot(obj.pos).add(obj)
 
     def remove(self, obj: PondObject) -> None:
-        if obj not in self.get_spot(obj.pos):
+        spot = self.get_spot(obj.pos)
+        if obj not in spot:
             raise Exception("No object in that spot!")
 
         self.get_spot(obj.pos).remove(obj)

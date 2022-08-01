@@ -1,6 +1,7 @@
 import functools
 import itertools
 import math
+import multiprocessing
 from random import randint, random
 from typing import cast, Generator, Optional
 
@@ -29,6 +30,7 @@ event_emitter = EventEmitter()
 class FishHandler(PondObjectHandlerHomogeneous):
     def __init__(self, settings: SimulationSettings):
         super().__init__(settings)
+        self.pool = multiprocessing.Pool(8)
 
     @property
     def fishes(self) -> list[Fish]:
@@ -57,8 +59,10 @@ class FishHandler(PondObjectHandlerHomogeneous):
 
         for key, group in itertools.groupby(sorted_fish, lambda f: FishTrait.PREDATOR in f.traits):
             decisions = DecisionSet()
-            for fish in group:
-                decisions += fish.get_decisions(pond_viewer)
+            results = self.pool.imap(functools.partial(PondObject.get_decisions, pond_viewer=pond_viewer), group)
+
+            for result in results:
+                decisions += result
             yield decisions
 
     @staticmethod
@@ -69,8 +73,10 @@ class FishHandler(PondObjectHandlerHomogeneous):
     def handle_decisions(self, decisions: DecisionSet):
         for decision in decisions[DecisionType.MOVE, ObjectKind.FISH]:
             self.move_fish(decision)
+            self._object_database._object_database[decision.pond_object.id] = decision.pond_object
         for decision in decisions[DecisionType.STAY, ObjectKind.FISH]:
             self.move_fish(decision, True)
+            self._object_database._object_database[decision.pond_object.id] = decision.pond_object
         for decision in decisions[DecisionType.REPRODUCE, ObjectKind.FISH]:
             fish = cast(Fish, decision.pond_object)
             self.breed_fish(fish)

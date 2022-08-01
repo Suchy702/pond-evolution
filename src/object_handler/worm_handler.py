@@ -48,6 +48,7 @@ class WormHandler(PondObjectHandlerHomogeneous):
                          )
         )
         self._pond.change_position(decision.pond_object, n_pos)
+        self._object_database._object_database[decision.pond_object.id] = decision.pond_object
 
     def add_worms(self) -> None:
         self.add_all([self.create_random_single() for _ in range(NUM_OF_NEW_WORMS_AT_CYCLE)])

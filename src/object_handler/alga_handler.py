@@ -46,6 +46,7 @@ class AlgaHandler(PondObjectHandlerHomogeneous):
             )
         )
         self._pond.change_position(decision.pond_object, n_pos)
+        self._object_database._object_database[decision.pond_object.id] = decision.pond_object
 
     def remove_algae_on_surface(self) -> None:
         self.remove_all([alga for alga in self.algae if self._pond.is_on_surface(alga.pos)])
