@@ -3,8 +3,8 @@ from typing import cast
 from overrides import overrides
 
 from src.events.event_manager.event_manager import EventManager
-from src.events.event import Event, ClickEvent, LogicEvent
-from src.events.event_type import ClickEventType, LogicEventType
+from src.events.event import Event, ClickEvent, LogicEvent, GraphicEvent
+from src.events.event_type import ClickEventType, LogicEventType, GraphicEventType
 from src.graphics.gui import GUI
 from src.events.event_emitter import EventEmitter
 
@@ -31,6 +31,12 @@ class ClickingEventManager(EventManager):
         adding_obj.pos.x = click_coor[0]
         adding_obj.pos.y = click_coor[1]
         self.event_emitter.emit_event(LogicEvent(LogicEventType.ADD, adding_obj))
+        self.event_emitter.emit_event(
+            GraphicEvent(
+                GraphicEventType.ANIM_STAY, pond_object=adding_obj,
+                x=adding_obj.pos.x, y=adding_obj.pos.y
+            )
+        )
 
     def _handle_add_events(self) -> None:
         cp_events = self._add_events.copy()

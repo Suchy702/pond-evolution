@@ -23,6 +23,8 @@ class GraphicEventManager(EventManager):
         self._animation_speed_changed = False
         self._last_animation_speed_change_time = time.time()
 
+        self._max_anim_step = 1
+
     @overrides
     def add_event(self, event: Event) -> None:
         event = cast(GraphicEvent, event)
@@ -41,6 +43,8 @@ class GraphicEventManager(EventManager):
     def _handle_animation_events(self) -> None:
         cp_anim_events = self._animation_events.copy()
         self._animation_events.clear()
+
+        self._max_anim_step = max([event.step for event in cp_anim_events])
 
         self._gui.draw_empty_frame()
         for event in cp_anim_events:
@@ -85,8 +89,7 @@ class GraphicEventManager(EventManager):
             case ".":
                 self.change_animation_speed(-ANIMATION_SPEED_CHANGE)
 
-    @staticmethod
-    def _add_event_with_next_step(event: GraphicEvent) -> None:
+    def _add_event_with_next_step(self, event: GraphicEvent) -> None:
         if event.have_to_make_next_step():
             event.step += 1
             event_emitter.emit_event(event)
@@ -94,6 +97,7 @@ class GraphicEventManager(EventManager):
     def _set_event_total_step(self, event: GraphicEvent):
         if event.total_steps is None:
             event.total_steps = self._gui.vals.animation_speed
+            event.step = self._max_anim_step
 
     def _customize_total_steps_to_anim_speed(self, event: GraphicEvent) -> None:
         percentage = event.step / event.total_steps
