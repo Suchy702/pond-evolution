@@ -33,7 +33,7 @@ class ClickingEventManager(EventManager):
         self.event_emitter.emit_event(LogicEvent(LogicEventType.ADD, adding_obj))
         self.event_emitter.emit_event(
             GraphicEvent(
-                GraphicEventType.ANIM_STAY, pond_object=adding_obj,
+                GraphicEventType.ANIM_NEW, pond_object=adding_obj,
                 x=adding_obj.pos.x, y=adding_obj.pos.y
             )
         )

@@ -6,6 +6,7 @@ from overrides import overrides
 
 from src.constants import SCREEN_MOVE_CHANGE, SCREEN_ZOOM_CHANGE, ANIMATION_SPEED_CHANGE
 from src.events.event import GraphicEvent, Event
+from src.events.event_type import GraphicEventType
 from src.events.event_emitter import EventEmitter
 from src.events.event_manager.event_manager import EventManager
 from src.graphics.gui import GUI
@@ -23,7 +24,7 @@ class GraphicEventManager(EventManager):
         self._animation_speed_changed = False
         self._last_animation_speed_change_time = time.time()
 
-        self._max_anim_step = 1
+        self._max_anim_step = -1
 
     @overrides
     def add_event(self, event: Event) -> None:
@@ -40,11 +41,19 @@ class GraphicEventManager(EventManager):
         for event in cp_static_events:
             self._handle_static_event(event)
 
+    @staticmethod
+    def _is_only_new_object_which_shouldnt_be_shown(cp_anim_events: list[GraphicEvent]) -> bool:
+        return len([event for event in cp_anim_events if event.event_type != GraphicEventType.ANIM_NEW]) == 0
+
     def _handle_animation_events(self) -> None:
         cp_anim_events = self._animation_events.copy()
         self._animation_events.clear()
 
+        self._max_anim_step = -1
         self._max_anim_step = max([event.step for event in cp_anim_events])
+
+        if self._is_only_new_object_which_shouldnt_be_shown(cp_anim_events):
+            return
 
         self._gui.draw_empty_frame()
         for event in cp_anim_events:

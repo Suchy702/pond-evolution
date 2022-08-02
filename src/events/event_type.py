@@ -18,6 +18,7 @@ class GraphicEventType(EventType):
     # ANIMATION
     ANIM_MOVE = auto()
     ANIM_STAY = auto()
+    ANIM_NEW = auto()
 
 
 @unique
