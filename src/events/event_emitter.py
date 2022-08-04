@@ -11,9 +11,11 @@ from pygame.locals import (  # type: ignore
     K_MINUS,
     K_EQUALS,
     K_c,
+    K_q,
     K_COMMA,
     K_PERIOD,
     QUIT,
+    MOUSEBUTTONDOWN,
 )
 
 from src.events.event import Event, GameEvent, LogicEvent, GraphicEvent, ClickEvent
@@ -53,13 +55,24 @@ class EventEmitter(metaclass=Singleton):
             self.emit_event(event)
 
     def _emit_pygame_events(self) -> None:
-        event_list = pygame.event.get()
-        for event in event_list:
-            converted = self._from_pygame_event(event)
-            if converted is not None:
-                self.emit_event(converted)
-        self._emit_pygame_click_events(event_list)
+        self._handle_not_pressed_events(pygame.event.get())
         self._emit_pygame_pressed_keys_events(pygame.key.get_pressed())
+
+    def _emit_clicking_event(self, event):
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.button == LEFT_MOUSE_BUTTON:
+                self.emit_event(ClickEvent(ClickEventType.LEFT_CLICK, pygame.mouse.get_pos()))
+            else:
+                self.emit_event(ClickEvent(ClickEventType.RIGHT_CLICK, pygame.mouse.get_pos()))
+
+    def _handle_not_pressed_events(self, event_list):
+        for event in event_list:
+            if event.type == QUIT:
+                self.emit_event(GameEvent(GameEventType.QUIT))
+            elif event.type == MOUSEBUTTONDOWN:
+                self._emit_clicking_event(event)
+            elif event.type == pygame.KEYDOWN and event.key == K_q:
+                self.emit_event(GraphicEvent(GraphicEventType.CHANGE_ADD))
 
     @staticmethod
     def _from_pygame_event(event) -> Event | None:
@@ -74,14 +87,6 @@ class EventEmitter(metaclass=Singleton):
         for idx, supported_key in enumerate(supported_keys):
             if keys[supported_key]:
                 self.emit_event(GraphicEvent(GraphicEventType.KEY_PRESSED, key=transformed_keys[idx]))
-
-    def _emit_pygame_click_events(self, pygame_events) -> None:
-        for event in pygame_events:
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if event.button == LEFT_MOUSE_BUTTON:
-                    self.emit_event(ClickEvent(ClickEventType.ADDING, pygame.mouse.get_pos()))
-                else:
-                    self.emit_event(ClickEvent(ClickEventType.CHECKING, pygame.mouse.get_pos()))
 
     def handle_events(self) -> None:
         self._emit_pygame_events()

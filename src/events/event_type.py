@@ -20,6 +20,9 @@ class GraphicEventType(EventType):
     ANIM_STAY = auto()
     ANIM_NEW = auto()
 
+    # UI
+    CHANGE_ADD = auto()
+
 
 @unique
 class GameEventType(EventType):
@@ -28,5 +31,5 @@ class GameEventType(EventType):
 
 @unique
 class ClickEventType(EventType):
-    CHECKING = auto()
-    ADDING = auto()
+    LEFT_CLICK = auto()
+    RIGHT_CLICK = auto()

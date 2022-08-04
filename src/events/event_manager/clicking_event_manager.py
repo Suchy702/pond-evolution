@@ -17,10 +17,16 @@ class ClickingEventManager(EventManager):
         self._gui = gui
         self.event_emitter = EventEmitter()
 
+    def _is_clicked_on_pond(self, x, y):
+        return 0 <= x <= self._gui.settings.screen_width and 0 <= y <= self._gui.settings.screen_pond_height
+
+    def _is_adding_event(self, event: ClickEvent):
+        return self._is_clicked_on_pond(event.pos[0], event.pos[1]) and event.event_type == ClickEventType.LEFT_CLICK
+
     @overrides
     def add_event(self, event: Event) -> None:
         event = cast(ClickEvent, event)
-        if event.event_type == ClickEventType.ADDING:
+        if self._is_adding_event(event):
             self._add_events.append(event)
         else:
             self._check_events.append(event)

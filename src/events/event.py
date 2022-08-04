@@ -102,7 +102,7 @@ class GameEvent(Event[GameEventType]):
 class ClickEvent(Event[ClickEventType]):
     def __init__(self, event_type: ClickEventType, pos: tuple[int, int]):
         super().__init__(event_type)
-        self.pos = pos
+        self.pos: tuple[int, int] = pos
 
     def __str__(self):
         return f'ClickEvent({self.event_type.name})'

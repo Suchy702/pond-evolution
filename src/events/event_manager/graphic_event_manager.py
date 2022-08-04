@@ -63,7 +63,7 @@ class GraphicEventManager(EventManager):
         self._handle_static_events()
         self._handle_animation_events()
         self._animation_speed_changed = False
-        self._gui.draw_ui()
+        self._gui.ui.draw()
         pygame.display.update()
 
     def is_too_small_time_diff_between_anim_changes(self) -> bool:
