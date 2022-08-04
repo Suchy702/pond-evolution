@@ -6,9 +6,9 @@ from overrides import overrides
 
 from src.constants import SCREEN_MOVE_CHANGE, SCREEN_ZOOM_CHANGE, ANIMATION_SPEED_CHANGE
 from src.events.event import GraphicEvent, Event
-from src.events.event_type import GraphicEventType
 from src.events.event_emitter import EventEmitter
 from src.events.event_manager.event_manager import EventManager
+from src.events.event_type import GraphicEventType
 from src.graphics.gui import GUI
 
 event_emitter = EventEmitter()
@@ -100,7 +100,8 @@ class GraphicEventManager(EventManager):
             case "q":
                 self._gui.ui.next_add_object()
 
-    def _add_event_with_next_step(self, event: GraphicEvent) -> None:
+    @staticmethod
+    def _add_event_with_next_step(event: GraphicEvent) -> None:
         if event.have_to_make_next_step():
             event.step += 1
             event_emitter.emit_event(event)

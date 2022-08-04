@@ -107,8 +107,8 @@ class GraphicCalculator:
             return
 
         """
-        The idea is to find distance between point in the middle of the screen and point in the middle ozond and
-        then inspect how this distance changes upon cell_size change
+        The idea is to find distance between point in the middle of the screen and point in the middle of the pond, and
+        then inspect how this distance changes upon cell_size change.
         """
 
         pond_center_x: float = vals.x_offset + old_cell_size * self.settings.pond_width // 2

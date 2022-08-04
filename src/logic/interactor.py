@@ -31,13 +31,13 @@ class Interactor:
         self._fish_handler: FishHandler = FishHandler(settings)
         self._worm_handler: WormHandler = WormHandler(settings)
         self._plant_handler: PlantHandler = PlantHandler(settings)
-        # order of handlers and AI classes is important
+        # Order of handlers and AI classes is important
         self.handlers: list[PondObjectHandler] = [self._plant_handler, self._worm_handler, self._fish_handler]
         self.ai_classes: list[Type[AI] | tuple[Type[AI], ...]] = [(AlgaAI, AlgaMakerAI), WormAI, FishAI]
 
-        self.pond_viewer = PondViewer(settings.pond_width, settings.pond_height)
+        self._pond_viewer = PondViewer(settings.pond_width, settings.pond_height)
         for handler in self.handlers:
-            self.pond_viewer.add_ponds(handler.ponds)
+            self._pond_viewer.add_ponds(handler.ponds)
 
     @property
     def all_objects(self) -> list[PondObject]:
@@ -50,7 +50,7 @@ class Interactor:
                     yield ai.get_general_decisions(), idx
             else:
                 yield ai_classes.get_general_decisions(), idx
-            for decisions in handler.get_decisions(self.pond_viewer):
+            for decisions in handler.get_decisions(self._pond_viewer):
                 yield decisions, idx
 
     def handle_decisions(self) -> None:

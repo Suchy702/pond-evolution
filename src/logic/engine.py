@@ -20,19 +20,14 @@ class Engine:
         return self._interactor.handlers
 
     def show_pond(self) -> None:
-        board: list[list[list[str]]] = [
-            [[] for _ in range(self._settings.pond_width)] for _ in range(self._settings.pond_height)
-        ]
+        board = [[[] for _ in range(self._settings.pond_width)] for _ in range(self._settings.pond_height)]
         for obj in self.all_objects:
             board[obj.pos.y][obj.pos.x].append(str(obj))
         for row in board:
             print(row)
 
-    # Kolejnosc:
-    # Usuwanie niepotrzebnych elementow
-    # Decyzje
-    # Jedzenie
     def cycle(self):
+        # Order is important
         self._interactor.remove_unnecessary_objects()
         self._interactor.handle_decisions()
         self._interactor.feed_fish()

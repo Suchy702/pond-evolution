@@ -7,8 +7,8 @@ from src.events.event_emitter import EventEmitter
 from src.graphics.graphic_calculator import GraphicCalculator
 from src.graphics.graphic_values_guard import GraphicValuesGuard
 from src.graphics.image_handler.image_loader import ImageLoader
-from src.simulation_settings import SimulationSettings
 from src.graphics.ui import UI
+from src.simulation_settings import SimulationSettings
 
 
 class GUI:
@@ -18,6 +18,7 @@ class GUI:
         self.calculator = GraphicCalculator(settings)
         self._screen: Surface = pygame.display.set_mode([self.settings.screen_width, self.settings.screen_height])
         self.center_view()
+
         self._event_emitter = EventEmitter()
 
         static_size = int((self.settings.screen_height - self.settings.screen_pond_height) * UI_SCALE)
