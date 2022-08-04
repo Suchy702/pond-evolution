@@ -1,16 +1,15 @@
 import pygame
 
 from src.constants import GRAY
-from src.object.fish import Fish
-from src.object.worm import Worm
+from src.graphics.graphic_values_guard import GraphicValuesGuard
+from src.graphics.image_handler.image_loader import ImageLoader
 from src.object.alga import Alga
 from src.object.alga_maker import AlgaMaker
+from src.object.fish import Fish
 from src.object.fish_type import FishType
+from src.object.worm import Worm
 from src.position import Position
-
 from src.simulation_settings import SimulationSettings
-from src.graphics.image_handler.image_loader import ImageLoader
-from src.graphics.graphic_values_guard import GraphicValuesGuard
 
 pygame.font.init()
 FONT = pygame.font.SysFont(pygame.font.get_default_font(), 30)

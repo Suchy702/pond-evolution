@@ -16,7 +16,11 @@ class GUI:
         self.settings: SimulationSettings = settings
         self.vals = GraphicValuesGuard(settings)
         self.calculator = GraphicCalculator(settings)
-        self._screen: Surface = pygame.display.set_mode([self.settings.screen_width, self.settings.screen_height])
+
+        screen_flags = pygame.SCALED | pygame.FULLSCREEN if self.settings.fullscreen else 0
+        self._screen: Surface = pygame.display.set_mode(
+            [self.settings.screen_width, self.settings.screen_height], flags=screen_flags, vsync=1
+        )
         self.center_view()
 
         self._event_emitter = EventEmitter()
