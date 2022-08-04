@@ -10,6 +10,7 @@ from src.ai.alga_maker_ai import AlgaMakerAI
 from src.ai.fish_ai import FishAI
 from src.ai.worm_ai import WormAI
 from src.decision.decision_set import DecisionSet
+from src.events.event import LogicEvent
 from src.events.event_emitter import EventEmitter
 from src.object.fish import Fish
 from src.object.fish_trait import FishTrait
@@ -130,7 +131,7 @@ class Interactor:
         self._worm_handler.remove_worms_on_the_ground()
         self._plant_handler.alga_handler.remove_algae_on_surface()
 
-    def add_obj_by_click(self, event):
+    def add_obj_by_click(self, event: LogicEvent) -> None:
         match event.obj:
             case "worm":
                 self._worm_handler.add_by_click(event)
@@ -140,4 +141,3 @@ class Interactor:
                 self._plant_handler.alga_maker_handler.add_by_click(event)
             case _:
                 self._fish_handler.add_by_click(event)
-
