@@ -97,6 +97,8 @@ class GraphicEventManager(EventManager):
                 self.change_animation_speed(ANIMATION_SPEED_CHANGE)
             case ".":
                 self.change_animation_speed(-ANIMATION_SPEED_CHANGE)
+            case "q":
+                self._gui.ui.next_add_object()
 
     def _add_event_with_next_step(self, event: GraphicEvent) -> None:
         if event.have_to_make_next_step():

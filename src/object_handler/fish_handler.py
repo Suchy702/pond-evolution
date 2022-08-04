@@ -52,6 +52,21 @@ class FishHandler(PondObjectHandlerHomogeneous):
         return fish
 
     @overrides
+    def add_by_click(self, event) -> None:
+        half_speed = (FISH_MIN_SPEED + FISH_MAX_SPEED) // 2
+        half_size = (FISH_MIN_SIZE + FISH_MAX_SIZE) // 2
+        eyesight = max(1, self._pond.height // 5)
+        fish = Fish(half_speed, half_size, eyesight, event.pos)
+        fish.traits.add(FishTrait.SMART)
+        if event.obj == "fish_herbi":
+            fish.fish_type = FishType.HERBIVORE
+        elif event.obj == "fish_carni":
+            fish.fish_type = FishType.CARNIVORE
+        else:
+            fish.fish_type = FishType.OMNIVORE
+        self.add(fish)
+
+    @overrides
     def get_decisions(self, pond_viewer: PondViewer) -> Generator[DecisionSet, None, None]:
         sorted_fish = sorted(self.fishes, key=functools.cmp_to_key(self._cmp_by_movement_order))
 

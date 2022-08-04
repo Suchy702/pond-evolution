@@ -7,6 +7,7 @@ from overrides import overrides
 
 from src.events.event_type import LogicEventType, GraphicEventType, EventType, GameEventType, ClickEventType
 from src.object.pond_object import PondObject
+from src.position import Position
 
 T = TypeVar('T', bound=EventType)
 
@@ -28,9 +29,10 @@ class Event(ABC, Generic[T]):
 
 
 class LogicEvent(Event[LogicEventType]):
-    def __init__(self, event_type: LogicEventType, obj: PondObject):
+    def __init__(self, event_type: LogicEventType, obj: str, pos: Position):
         super().__init__(event_type)
         self.obj = obj
+        self.pos = pos
 
     @overrides
     def copy(self) -> LogicEvent:

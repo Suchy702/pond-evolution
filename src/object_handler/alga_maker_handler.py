@@ -44,5 +44,9 @@ class AlgaMakerHandler(PondObjectHandlerHomogeneous):
         pos.y = self._pond.height - 1
         return AlgaMaker(pos, self._pond.height)
 
+    @overrides
+    def add_by_click(self, event) -> None:
+        self.add(AlgaMaker(event.pos, self._pond.height))
+
     def create_algae(self, algae_maker: AlgaMaker) -> list[Alga]:
         return algae_maker.create_algae(self._pond)

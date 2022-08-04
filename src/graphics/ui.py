@@ -1,56 +1,68 @@
 import pygame
 
 from src.constants import GRAY
-
 from src.object.fish import Fish
+from src.object.worm import Worm
+from src.object.alga import Alga
+from src.object.alga_maker import AlgaMaker
+from src.object.fish_type import FishType
 from src.position import Position
+
+from src.simulation_settings import SimulationSettings
+from src.graphics.image_handler.image_loader import ImageLoader
+from src.graphics.graphic_values_guard import GraphicValuesGuard
 
 pygame.font.init()
 FONT = pygame.font.SysFont(pygame.font.get_default_font(), 30)
 
 
 class UI:
-    def __init__(self, settings, screen, image_loader):
+    def __init__(self, settings: SimulationSettings, screen, image_loader: ImageLoader, vals: GraphicValuesGuard):
         self.settings = settings
+        self._vals = vals
         self._screen = screen
         self._image_loader = image_loader
         self._adding_object = Fish(10, 10, 3, Position(-1, -1))
+        self.ui_height = self.settings.screen_height - self.settings.screen_pond_height
+
+        self._adding_object_list = ["fish_herbi", "fish_carni", "fish_omni", "worm", "alga", "alga_maker"]
+        self._adding_object_dummies = self._initialize_adding_dummies()
+        self._adding_object_idx = 0
 
     @property
     def adding_object(self):
-        return Fish(10, 10, 3, Position(-1, -1))
+        return self._adding_object_list[self._adding_object_idx], self._adding_object_dummies[self._adding_object_idx]
 
-    def draw(self) -> None:
-        ui_height = self.settings.screen_height - self.settings.screen_pond_height
-        rect = pygame.Rect(0, self.settings.screen_pond_height, self.settings.screen_width, ui_height)
-        pygame.draw.rect(self._screen, GRAY, rect, 0)
+    def next_add_object(self):
+        self._adding_object_idx = (self._adding_object_idx + 1) % len(self._adding_object_list)
 
-        ui_components = [
-            'plus', 'arrow3', 'omnivore_fish', 'arrow3', 'spacer', 'arrow3', 'spacer', 'magnifying_glass', 'spacer',
-            'cycle', 'spacer'
+    def _initialize_adding_dummies(self):
+        fish_herbi = Fish(-1, -1, -1, Position(-1, -1))
+        fish_herbi.fish_type = FishType.HERBIVORE
+
+        fish_carni = Fish(-1, -1, -1, Position(-1, -1))
+        fish_carni.fish_type = FishType.CARNIVORE
+
+        fish_omni = Fish(-1, -1, -1, Position(-1, -1))
+        fish_omni.fish_type = FishType.OMNIVORE
+
+        adding_object_dummies = [
+            fish_herbi,
+            fish_carni,
+            fish_omni,
+            Worm(-1, Position(-1, -1), (-1, -1)),
+            Alga(-1, Position(-1, -1), -1),
+            AlgaMaker(Position(-1, -1), -1),
         ]
 
-        for idx, ui_component in enumerate(ui_components):
-            self._draw_ui_component(ui_component, idx, len(ui_components))
+        return adding_object_dummies
 
-    def _draw_ui_component(self, name: str, idx: int, total: int) -> None:
-        img = None
+    def _draw_act_adding_obj(self):
+        add_obj_dummy = self._adding_object_dummies[self._adding_object_idx]
+        img = self._image_loader.get_object_image(add_obj_dummy, 80)
+        self._screen.blit(img, pygame.Rect(0, self.settings.screen_height - self.ui_height, 80, 80))
 
-        if name == 'spacer':
-            return
-        elif name == 'cycle':
-            img = FONT.render('Cycle: ', True, (0, 0, 0))
-        else:
-            img = self._image_loader.get_ui_image(name)
-
-        cell_width = self.settings.screen_width // total
-        ui_height = self.settings.screen_height - self.settings.screen_pond_height
-        x_coor = idx * cell_width + (cell_width - img.get_width()) // 2
-        y_coor = self.settings.screen_pond_height + (ui_height - img.get_height()) // 2
-
-        rect = pygame.Rect(x_coor, y_coor, img.get_width(), img.get_height())
-
-        self._screen.blit(img, rect)
-
-    def change_adding_object(self):
-        pass
+    def draw(self) -> None:
+        rect = pygame.Rect(0, self.settings.screen_pond_height, self.settings.screen_width, self.ui_height)
+        pygame.draw.rect(self._screen, GRAY, rect, 0)
+        self._draw_act_adding_obj()

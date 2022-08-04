@@ -101,6 +101,10 @@ class PondObjectHandlerHomogeneous(PondObjectHandler):
     def create_random_single(self) -> PondObject:
         pass
 
+    @abstractmethod
+    def add_by_click(self, event) -> None:
+        pass
+
     @overrides
     def get_spot_obj(self, pos: Position) -> set[PondObject]:
         return self._pond.get_spot(pos)

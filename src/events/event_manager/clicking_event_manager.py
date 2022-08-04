@@ -7,6 +7,7 @@ from src.events.event import Event, ClickEvent, LogicEvent, GraphicEvent
 from src.events.event_type import ClickEventType, LogicEventType, GraphicEventType
 from src.graphics.gui import GUI
 from src.events.event_emitter import EventEmitter
+from src.position import Position
 
 
 class ClickingEventManager(EventManager):
@@ -32,15 +33,19 @@ class ClickingEventManager(EventManager):
             self._check_events.append(event)
 
     def _handle_add_event(self, event: ClickEvent) -> None:
-        adding_obj = self._gui.ui.adding_object
+        adding_obj_str, dummy = self._gui.ui.adding_object
         click_coor = self._gui.get_click_coor(event.pos)
-        adding_obj.pos.x = click_coor[0]
-        adding_obj.pos.y = click_coor[1]
-        self.event_emitter.emit_event(LogicEvent(LogicEventType.ADD, adding_obj))
+        if adding_obj_str == "alga_maker" and click_coor[1] != self._gui.settings.pond_height-1:
+            return
+
+        self.event_emitter.emit_event(
+            LogicEvent(LogicEventType.ADD, adding_obj_str, Position(click_coor[1], click_coor[0]))
+        )
+
         self.event_emitter.emit_event(
             GraphicEvent(
-                GraphicEventType.ANIM_NEW, pond_object=adding_obj,
-                x=adding_obj.pos.x, y=adding_obj.pos.y
+                GraphicEventType.ANIM_NEW, pond_object=dummy,
+                x=click_coor[0], y=click_coor[1]
             )
         )
 

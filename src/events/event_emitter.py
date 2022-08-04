@@ -71,8 +71,9 @@ class EventEmitter(metaclass=Singleton):
                 self.emit_event(GameEvent(GameEventType.QUIT))
             elif event.type == MOUSEBUTTONDOWN:
                 self._emit_clicking_event(event)
-            elif event.type == pygame.KEYDOWN and event.key == K_q:
-                self.emit_event(GraphicEvent(GraphicEventType.CHANGE_ADD))
+            elif event.type == pygame.KEYDOWN:
+                if event.key == K_q:
+                    self.emit_event(GraphicEvent(GraphicEventType.KEY_PRESSED, key="q"))
 
     @staticmethod
     def _from_pygame_event(event) -> Event | None:

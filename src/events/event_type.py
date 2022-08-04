@@ -20,9 +20,6 @@ class GraphicEventType(EventType):
     ANIM_STAY = auto()
     ANIM_NEW = auto()
 
-    # UI
-    CHANGE_ADD = auto()
-
 
 @unique
 class GameEventType(EventType):

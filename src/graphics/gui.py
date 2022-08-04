@@ -23,7 +23,7 @@ class GUI:
         static_size = int((self.settings.screen_height - self.settings.screen_pond_height) * UI_SCALE)
         self._image_loader = ImageLoader(static_size)
 
-        self.ui = UI(self.settings, self._screen, self._image_loader)
+        self.ui = UI(self.settings, self._screen, self._image_loader, self.vals)
 
     def draw_empty_frame(self) -> None:
         self.draw_pond_area()
