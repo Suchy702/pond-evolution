@@ -1,3 +1,5 @@
+from typing import TYPE_CHECKING
+
 from overrides import overrides
 
 from src.ai.ai import AI
@@ -6,6 +8,9 @@ from src.decision.decision_set import DecisionSet
 from src.decision.decision_type import DecisionType
 from src.pond.pond_viewer import PondViewer
 from src.position import Position
+
+if TYPE_CHECKING:
+    pass
 
 
 class AlgaAI(AI["Alga"]):

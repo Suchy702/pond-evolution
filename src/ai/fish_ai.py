@@ -99,6 +99,7 @@ class FishAI(AI["Fish"]):
                         )
                 else:
                     break
+        return None
 
     def _try_eat_other_non_fish(self, pond_viewer: PondViewer, cnt_fish: int) -> Optional[Decision]:
         for food_layer in pond_viewer.get_visible_object_by_type(
@@ -113,14 +114,16 @@ class FishAI(AI["Fish"]):
                         )
                 else:
                     break
+        return None
 
     def _random_movement_decision(self) -> Decision:
         pos_to_move = self._find_random_pos_to_move()
         return Decision(DecisionType.MOVE, pond_object=self.pond_object, to_x=pos_to_move.x, to_y=pos_to_move.y)
 
-    def _reproduce_decision(self) -> Decision:
+    def _reproduce_decision(self) -> Optional[Decision]:
         if self.pond_object.vitality > self.pond_object.vitality_need_to_breed:
             return Decision(DecisionType.REPRODUCE, pond_object=self.pond_object)
+        return None
 
     @overrides
     def get_decisions(self, pond_viewer: PondViewer) -> DecisionSet:

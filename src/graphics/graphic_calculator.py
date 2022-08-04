@@ -73,9 +73,9 @@ class GraphicCalculator:
         x2, y2 = self._calc_end_point_in_animation(event, vals)
 
         if self._is_not_linear_fun(x1, x2):
-            return self._calc_pos_for_non_linear_fun(x1, y1, y2, event.step, event.total_steps)
-        else:
-            return self._calc_pos_for_linear_fun(x1, y1, x2, y2, event.step, event.total_steps)
+            return self._calc_pos_for_non_linear_fun(x1, y1, y2, event.step, event.total_steps)  # type: ignore
+
+        return self._calc_pos_for_linear_fun(x1, y1, x2, y2, event.step, event.total_steps)  # type: ignore
 
     @staticmethod
     def _find_pos_to_draw_when_stay(event: GraphicEvent, vals: GraphicValuesGuard) -> tuple[int, int]:

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="MypyConfigService">
-    <option name="mypyArguments" value="--no-strict-optional" />
+    <option name="mypyArguments" value="--config-file=./config/mypy.ini " />
   </component>
 </project>

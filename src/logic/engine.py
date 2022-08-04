@@ -23,7 +23,9 @@ class Engine:
         return self._interactor.handlers
 
     def show_pond(self) -> None:
-        board = [[[] for _ in range(self._settings.pond_width)] for _ in range(self._settings.pond_height)]
+        board: list[list[list[str]]] = [
+            [[] for _ in range(self._settings.pond_width)] for _ in range(self._settings.pond_height)
+        ]
         for obj in self.all_objects:
             board[obj.pos.y][obj.pos.x].append(str(obj))
         for row in board:

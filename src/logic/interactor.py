@@ -42,11 +42,11 @@ class Interactor:
 
     @property
     def all_objects(self) -> list[PondObject]:
-        return reduce(lambda list_, handler: list_ + handler.objects, self.handlers, [])  # type: ignore
+        return reduce(lambda list_, handler: list_ + handler.objects, self.handlers, [])
 
-    def _get_decisions(self) -> Generator[DecisionSet, None, None]:
+    def _get_decisions(self) -> Generator[tuple[DecisionSet, int], None, None]:
         for idx, (handler, ai_classes) in enumerate(zip(self.handlers, self.ai_classes)):
-            if type(ai_classes) is tuple:
+            if isinstance(ai_classes, tuple):
                 for ai in ai_classes:
                     yield ai.get_general_decisions(), idx
             else:
@@ -106,7 +106,7 @@ class Interactor:
     def eat_other_fish_at_spot(self, pos: Position) -> None:
         fish = list(self._fish_handler.get_spot_obj(pos))
         fish = cast(list[Fish], fish)
-        fish.sort(key=functools.cmp_to_key(lambda a, b: a.speed - b.speed))
+        fish.sort(key=functools.cmp_to_key(lambda a, b: a.speed - b.speed))  # type: ignore
 
         for i in range(len(fish)):
             cnt_bigger_predators = 0

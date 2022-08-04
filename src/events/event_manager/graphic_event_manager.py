@@ -42,8 +42,8 @@ class GraphicEventManager(EventManager):
             self._handle_static_event(event)
 
     @staticmethod
-    def _is_only_new_object_which_shouldnt_be_shown(cp_anim_events: list[GraphicEvent]) -> bool:
-        return len([event for event in cp_anim_events if event.event_type != GraphicEventType.ANIM_NEW]) == 0
+    def _is_only_new_object_which_shouldnt_be_shown(events: list[GraphicEvent]) -> bool:
+        return len([event for event in events if event.event_type != GraphicEventType.ANIM_NEW]) == 0
 
     def _handle_animation_events(self) -> None:
         cp_anim_events = self._animation_events.copy()
@@ -77,7 +77,7 @@ class GraphicEventManager(EventManager):
         self._gui.vals.animation_speed += val
         self._animation_speed_changed = True
 
-    def _handle_static_event(self, event: GraphicEvent):
+    def _handle_static_event(self, event: GraphicEvent) -> None:
         match event.key:
             case "up":
                 self._gui.vals.y_offset += SCREEN_MOVE_CHANGE
@@ -106,7 +106,7 @@ class GraphicEventManager(EventManager):
             event.step += 1
             event_emitter.emit_event(event)
 
-    def _set_event_total_step(self, event: GraphicEvent):
+    def _set_event_total_step(self, event: GraphicEvent) -> None:
         if event.total_steps is None:
             event.total_steps = self._gui.vals.animation_speed
             event.step = self._max_anim_step
@@ -125,5 +125,5 @@ class GraphicEventManager(EventManager):
         self._gui.draw_anim_event(event)
         self._add_event_with_next_step(event)
 
-    def is_animation_event(self):
+    def is_animation_event(self) -> bool:
         return len(self._animation_events) > 0

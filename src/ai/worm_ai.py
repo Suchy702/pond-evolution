@@ -1,5 +1,5 @@
 from random import randint, random
-from typing import Optional
+from typing import Optional, TYPE_CHECKING
 
 from overrides import overrides
 
@@ -11,6 +11,9 @@ from src.decision.decision_type import DecisionType
 from src.object.object_kind import ObjectKind
 from src.pond.pond_viewer import PondViewer
 from src.position import Position
+
+if TYPE_CHECKING:
+    pass
 
 
 class WormAI(AI["Worm"]):
@@ -28,6 +31,7 @@ class WormAI(AI["Worm"]):
     def _reproduce_decision() -> Optional[Decision]:
         if random() < CHANCE_TO_PRODUCE_WORMS / 100:
             return Decision(DecisionType.REPRODUCE, kind=ObjectKind.WORM)
+        return None
 
     @overrides
     def get_decisions(self, pond_viewer: PondViewer) -> DecisionSet:

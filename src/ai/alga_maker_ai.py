@@ -1,5 +1,5 @@
 from random import random
-from typing import Optional
+from typing import Optional, TYPE_CHECKING
 
 from overrides import overrides
 
@@ -9,6 +9,9 @@ from src.decision.decision import Decision
 from src.decision.decision_set import DecisionSet
 from src.decision.decision_type import DecisionType
 from src.pond.pond_viewer import PondViewer
+
+if TYPE_CHECKING:
+    pass
 
 
 class AlgaMakerAI(AI["AlgaMaker"]):
@@ -20,6 +23,7 @@ class AlgaMakerAI(AI["AlgaMaker"]):
     def _reproduce_decision(self) -> Optional[Decision]:
         if random() < CHANCE_TO_PRODUCE_ALGAE / 100:
             return Decision(DecisionType.REPRODUCE, pond_object=self.pond_object)
+        return None
 
     @overrides
     def get_decisions(self, pond_viewer: PondViewer) -> DecisionSet:

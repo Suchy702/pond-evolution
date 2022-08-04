@@ -31,12 +31,12 @@ class PondViewer:
 
     def get_visible_object_by_type(
             self, pos: Position, eyesight: int, obj_type: list[ObjectKind], negate: bool = False
-    ) -> Generator[list[PondObject]]:
+    ) -> Generator[list[PondObject], None, None]:
         yield from self._get_visible_objects(pos, eyesight, lambda obj: obj.kind in obj_type, negate)
 
     def get_visible_object_by_trait(
             self, pos: Position, eyesight: int, traits: list[FishTrait], negate: bool = False
-    ) -> Generator[list[Fish]]:
+    ) -> Generator[list[Fish], None, None]:
         for fish_layer in self.get_visible_object_by_type(pos, eyesight, [ObjectKind.FISH], False):
             new_list = []
             for fish in fish_layer:
@@ -69,11 +69,11 @@ class PondViewer:
                     yield objects
                 continue
 
-            for p1, p2 in itertools.pairwise(offset + [(0, 1)]):
-                x_change = p2[0] - p1[0]
-                y_change = p2[1] - p1[1]
-                p1 = Position(pos.y + p1[1] * radius + y_change, pos.x + p1[0] * radius + x_change)
-                p2 = Position(pos.y + p2[1] * radius - y_change, pos.x + p2[0] * radius - x_change)
+            for dummy_p1, dummy_p2 in itertools.pairwise(offset + [(0, 1)]):
+                x_change = dummy_p2[0] - dummy_p1[0]
+                y_change = dummy_p2[1] - dummy_p1[1]
+                p1 = Position(pos.y + dummy_p1[1] * radius + y_change, pos.x + dummy_p1[0] * radius + x_change)
+                p2 = Position(pos.y + dummy_p2[1] * radius - y_change, pos.x + dummy_p2[0] * radius - x_change)
 
                 (first_idx, last_idx) = self._get_intersection_indices(p1, p2)
 
@@ -126,7 +126,7 @@ class PondViewer:
         return indices
 
     @staticmethod
-    def _get_intersection(a1, a2, b1, b2):
+    def _get_intersection(a1, a2, b1, b2) -> tuple[int, int]:
         """Returns intersection of segment [a1, a2] with [b1, b2]"""
         return max(a1, b1), min(a2, b2)
 

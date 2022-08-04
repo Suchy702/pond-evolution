@@ -13,7 +13,8 @@ T = TypeVar('T', bound=EventType)
 
 
 class Event(ABC, Generic[T]):
-    attributes: ClassVar[tuple[str]] = ('event_type',)
+    # TODO: moze atrybuty brac automatycznie z parametrow konstruktora zamiast wypisywac tutaj?
+    attributes: ClassVar[tuple[str, ...]] = ('event_type',)
 
     def __init__(self, event_type: T, **kwargs):
         self.event_type: T = event_type
@@ -29,6 +30,10 @@ class Event(ABC, Generic[T]):
 
 
 class LogicEvent(Event[LogicEventType]):
+    attributes = (
+        'event_type', 'obj', 'pos'
+    )
+
     def __init__(self, event_type: LogicEventType, obj: str, pos: Position):
         super().__init__(event_type)
         self.obj = obj
@@ -44,7 +49,7 @@ class LogicEvent(Event[LogicEventType]):
 
 
 class GraphicEvent(Event[GraphicEventType]):
-    attributes: ClassVar[tuple[str]] = (
+    attributes = (
         'event_type', 'key', 'pond_object', 'x', 'y', 'from_x', 'from_y', 'to_x', 'to_y', 'step', 'total_steps'
     )
 
@@ -102,10 +107,13 @@ class GameEvent(Event[GameEventType]):
 
 
 class ClickEvent(Event[ClickEventType]):
+    attributes = (
+        'event_type', 'pos'
+    )
+
     def __init__(self, event_type: ClickEventType, pos: tuple[int, int]):
         super().__init__(event_type)
         self.pos: tuple[int, int] = pos
 
     def __str__(self):
         return f'ClickEvent({self.event_type.name})'
-
