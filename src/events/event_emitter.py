@@ -11,6 +11,7 @@ from pygame.locals import (  # type: ignore
     K_MINUS,
     K_EQUALS,
     K_c,
+    K_e,
     K_q,
     K_COMMA,
     K_PERIOD,
@@ -19,14 +20,14 @@ from pygame.locals import (  # type: ignore
 )
 
 from src.events.event import Event, GameEvent, LogicEvent, GraphicEvent, ClickEvent
+from src.events.event_type import GameEventType, GraphicEventType, ClickEventType
+from src.singleton import Singleton
 
 if TYPE_CHECKING:
     from src.events.event_manager.game_event_manager import GameEventManager
     from src.events.event_manager.graphic_event_manager import GraphicEventManager
     from src.events.event_manager.logic_event_manager import LogicEventManager
     from src.events.event_manager.clicking_event_manager import ClickingEventManager
-from src.events.event_type import GameEventType, GraphicEventType, ClickEventType
-from src.singleton import Singleton
 
 LEFT_MOUSE_BUTTON = 1
 
@@ -55,8 +56,8 @@ class EventEmitter(metaclass=Singleton):
             self.emit_event(event)
 
     def _emit_pygame_events(self) -> None:
-        self._handle_not_pressed_events(pygame.event.get())
-        self._emit_pygame_pressed_keys_events(pygame.key.get_pressed())
+        self._emit_pygame_non_key_events(pygame.event.get())
+        self._emit_pygame_key_events(pygame.key.get_pressed())
 
     def _emit_clicking_event(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
@@ -65,7 +66,7 @@ class EventEmitter(metaclass=Singleton):
             else:
                 self.emit_event(ClickEvent(ClickEventType.RIGHT_CLICK, pygame.mouse.get_pos()))
 
-    def _handle_not_pressed_events(self, event_list):
+    def _emit_pygame_non_key_events(self, event_list):
         for event in event_list:
             if event.type == QUIT:
                 self.emit_event(GameEvent(GameEventType.QUIT))
@@ -75,13 +76,7 @@ class EventEmitter(metaclass=Singleton):
                 if event.key == K_q:
                     self.emit_event(GraphicEvent(GraphicEventType.KEY_PRESSED, key="q"))
 
-    @staticmethod
-    def _from_pygame_event(event) -> Event | None:
-        if event.type == QUIT:
-            return GameEvent(GameEventType.QUIT)
-        return None
-
-    def _emit_pygame_pressed_keys_events(self, keys) -> None:
+    def _emit_pygame_key_events(self, keys) -> None:
         supported_keys = [K_UP, K_DOWN, K_LEFT, K_RIGHT, K_EQUALS, K_MINUS, K_c, K_COMMA, K_PERIOD]
         transformed_keys = ['up', 'down', 'left', 'right', '=', '-', 'c', ',', '.']
 
@@ -89,12 +84,15 @@ class EventEmitter(metaclass=Singleton):
             if keys[supported_key]:
                 self.emit_event(GraphicEvent(GraphicEventType.KEY_PRESSED, key=transformed_keys[idx]))
 
+        if keys[K_e]:
+            self.emit_event(GameEvent(GameEventType.QUIT))
+
     def handle_events(self) -> None:
         self._emit_pygame_events()
         self.game_event_manager.handle_events()
         self.graphic_event_manager.handle_events()
-        self.logic_event_manager.handle_events()
         self.clicking_event_manager.handle_events()
+        self.logic_event_manager.handle_events()
 
     def is_animation_event_present(self) -> bool:
         return self.graphic_event_manager.is_animation_event()

@@ -8,7 +8,9 @@ def main():
      - or =     -> changes zoom
      , or .     -> changes simulation speed
      c          -> centers camera
+     e          -> exit
      leftclick  -> adding fish (demo)
+     q          -> change fish
     """
     print(help_descr)
 
