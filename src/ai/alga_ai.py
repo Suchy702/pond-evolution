@@ -10,7 +10,8 @@ from src.pond.pond_viewer import PondViewer
 from src.position import Position
 
 if TYPE_CHECKING:
-    pass
+    # noinspection PyUnresolvedReferences
+    from src.object.alga import Alga
 
 
 class AlgaAI(AI["Alga"]):

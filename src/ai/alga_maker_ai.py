@@ -11,7 +11,8 @@ from src.decision.decision_type import DecisionType
 from src.pond.pond_viewer import PondViewer
 
 if TYPE_CHECKING:
-    pass
+    # noinspection PyUnresolvedReferences
+    from src.object.alga_maker import AlgaMaker
 
 
 class AlgaMakerAI(AI["AlgaMaker"]):
