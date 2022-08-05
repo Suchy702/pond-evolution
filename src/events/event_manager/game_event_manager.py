@@ -32,3 +32,9 @@ class GameEventManager(EventManager):
     def _handle_event(self, event: GameEvent):
         if event.event_type == GameEventType.QUIT:
             self._game.running = False
+        elif event.event_type == GameEventType.SKIP:
+            self._game.skip = 10
+
+    @overrides
+    def clear(self) -> None:
+        self._events.clear()

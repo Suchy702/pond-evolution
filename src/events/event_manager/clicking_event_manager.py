@@ -59,3 +59,7 @@ class ClickingEventManager(EventManager):
                 self._handle_add_event(event)
             elif event.event_type == ClickEventType.RIGHT_CLICK:
                 self._handle_check_event(event)
+
+    @overrides
+    def clear(self) -> None:
+        self._events.clear()

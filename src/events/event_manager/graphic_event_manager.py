@@ -49,6 +49,9 @@ class GraphicEventManager(EventManager):
         cp_anim_events = self._animation_events.copy()
         self._animation_events.clear()
 
+        if len(cp_anim_events) == 0:
+            return
+
         self._max_anim_step = -1
         self._max_anim_step = max([event.step for event in cp_anim_events])
 
@@ -127,3 +130,8 @@ class GraphicEventManager(EventManager):
 
     def is_animation_event(self) -> bool:
         return len(self._animation_events) > 0
+
+    @overrides
+    def clear(self) -> None:
+        self._events.clear()
+        self._animation_events.clear()

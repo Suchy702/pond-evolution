@@ -12,6 +12,7 @@ from pygame.locals import (  # type: ignore
     K_EQUALS,
     K_c,
     K_e,
+    K_j,
     K_q,
     K_COMMA,
     K_PERIOD,
@@ -86,6 +87,8 @@ class EventEmitter(metaclass=Singleton):
 
         if keys[K_e]:
             self.emit_event(GameEvent(GameEventType.QUIT))
+        if keys[K_j]:
+            self.emit_event(GameEvent(GameEventType.SKIP))
 
     def handle_events(self) -> None:
         self._emit_pygame_events()
@@ -96,3 +99,7 @@ class EventEmitter(metaclass=Singleton):
 
     def is_animation_event_present(self) -> bool:
         return self.graphic_event_manager.is_animation_event()
+
+    def clear_gui_events(self) -> None:
+        self.graphic_event_manager.clear()
+        self.clicking_event_manager.clear()

@@ -24,7 +24,7 @@ class GraphicEventType(EventType):
 @unique
 class GameEventType(EventType):
     QUIT = auto()
-
+    SKIP = auto()
 
 @unique
 class ClickEventType(EventType):

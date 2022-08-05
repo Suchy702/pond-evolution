@@ -15,3 +15,7 @@ class EventManager(ABC):
     def add_events(self, events: list[Event]) -> None:
         for event in events:
             self.add_event(event)
+
+    @abstractmethod
+    def clear(self) -> None:
+        pass

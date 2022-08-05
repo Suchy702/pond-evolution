@@ -3,8 +3,8 @@ from typing import cast
 from overrides import overrides
 
 from src.events.event import LogicEvent, Event
-from src.events.event_type import LogicEventType
 from src.events.event_manager.event_manager import EventManager
+from src.events.event_type import LogicEventType
 from src.logic.engine import Engine
 
 
@@ -29,3 +29,7 @@ class LogicEventManager(EventManager):
         for event in cp_events:
             if event.event_type == LogicEventType.ADD:
                 self._handle_add_event(event)
+
+    @overrides
+    def clear(self) -> None:
+        self._events.clear()
