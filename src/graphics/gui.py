@@ -3,7 +3,7 @@ from typing import cast
 import pygame
 from pygame.surface import Surface
 
-from src.constants import LIGHT_BLUE, UI_SCALE, FISH_MAX_SIZE, FISH_MIN_SIZE
+from src.constants import LIGHT_BLUE, UI_SCALE, FISH_MAX_SIZE, FISH_MIN_SIZE, CELL_MIN_PX_SIZE, CELL_MAX_PX_SIZE
 from src.events.event import GraphicEvent
 from src.events.event_emitter import EventEmitter
 from src.graphics.graphic_calculator import GraphicCalculator
@@ -69,7 +69,7 @@ class GUI:
         if event.pond_object.kind == ObjectKind.FISH:
             fish = cast(Fish, event.pond_object)
             size = int(fish.size / ((FISH_MAX_SIZE + FISH_MIN_SIZE) // 2) * self.vals.cell_size)
-            size = clip(size, FISH_MIN_SIZE, FISH_MAX_SIZE)
+            size = clip(size, CELL_MIN_PX_SIZE, CELL_MAX_PX_SIZE)
         image = self._image_loader.get_object_image(event.pond_object, size)
 
         if event.is_flipped:
