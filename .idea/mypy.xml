@@ -2,5 +2,6 @@
 <project version="4">
   <component name="MypyConfigService">
     <option name="mypyArguments" value="--config-file=./config/mypy.ini " />
+    <option name="scanBeforeCheckin" value="true" />
   </component>
 </project>
