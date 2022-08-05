@@ -1,6 +1,6 @@
 import pygame
 
-from src.constants import GRAY
+from src.constants import GRAY, FISH_MIN_SIZE, FISH_MAX_SIZE
 from src.graphics.graphic_values_guard import GraphicValuesGuard
 from src.graphics.image_handler.image_loader import ImageLoader
 from src.object.alga import Alga
@@ -38,16 +38,17 @@ class UI:
         self._adding_object_idx = (self._adding_object_idx + 1) % len(self._adding_object_list)
 
     def _initialize_adding_dummies(self):
-        fish_herbi = Fish(-1, -1, -1, Position(-1, -1))
+        size = (FISH_MIN_SIZE + FISH_MAX_SIZE) // 2
+        fish_herbi = Fish(-1, size, -1, Position(-1, -1))
         fish_herbi.fish_type = FishType.HERBIVORE
 
-        fish_carni = Fish(-1, -1, -1, Position(-1, -1))
+        fish_carni = Fish(-1, size, -1, Position(-1, -1))
         fish_carni.fish_type = FishType.CARNIVORE
 
-        fish_omni = Fish(-1, -1, -1, Position(-1, -1))
+        fish_omni = Fish(-1, size, -1, Position(-1, -1))
         fish_omni.fish_type = FishType.OMNIVORE
 
-        fish_predator = Fish(-1, -1, -1, Position(-1, -1))
+        fish_predator = Fish(-1, size + 5, -1, Position(-1, -1))
         fish_predator.fish_type = FishType.CARNIVORE
         fish_predator.traits.add(FishTrait.PREDATOR)
 

@@ -65,7 +65,7 @@ class FishHandler(PondObjectHandlerHomogeneous):
             fish.traits.add(FishTrait.PREDATOR)
             fish.eyesight -= 15
             fish.speed += 5
-            fish.size += 100
+            fish.size += 5
         self.add(fish)
 
     @overrides

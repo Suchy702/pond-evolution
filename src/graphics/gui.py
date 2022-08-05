@@ -1,13 +1,17 @@
+from typing import cast
+
 import pygame
 from pygame.surface import Surface
 
-from src.constants import LIGHT_BLUE, UI_SCALE
+from src.constants import LIGHT_BLUE, UI_SCALE, FISH_MAX_SIZE, FISH_MIN_SIZE
 from src.events.event import GraphicEvent
 from src.events.event_emitter import EventEmitter
 from src.graphics.graphic_calculator import GraphicCalculator
-from src.graphics.graphic_values_guard import GraphicValuesGuard
+from src.graphics.graphic_values_guard import GraphicValuesGuard, clip
 from src.graphics.image_handler.image_loader import ImageLoader
 from src.graphics.ui import UI
+from src.object.fish import Fish
+from src.object.object_kind import ObjectKind
 from src.simulation_settings import SimulationSettings
 
 
@@ -60,7 +64,13 @@ class GUI:
 
     def draw_object(self, event: GraphicEvent, x: int, y: int) -> None:
         rect = pygame.Rect(x, y, self.vals.cell_size, self.vals.cell_size)
-        image = self._image_loader.get_object_image(event.pond_object, self.vals.cell_size)
+
+        size = self.vals.cell_size
+        if event.pond_object.kind == ObjectKind.FISH:
+            fish = cast(Fish, event.pond_object)
+            size = int(fish.size / ((FISH_MAX_SIZE + FISH_MIN_SIZE) // 2) * self.vals.cell_size)
+            size = clip(size, FISH_MIN_SIZE, FISH_MAX_SIZE)
+        image = self._image_loader.get_object_image(event.pond_object, size)
 
         if event.is_flipped:
             image = pygame.transform.flip(image, True, False)

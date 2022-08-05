@@ -55,7 +55,7 @@ class FishAI(AI["Fish"]):
                 return self._random_movement_decision()
 
         else:
-            decision = self._run_away_if_predator_close(fish_layers)
+            decision = self._run_away_if_predator_close(fish_layers, cnt_fish)
             if decision is not None:
                 return decision
 
@@ -65,7 +65,7 @@ class FishAI(AI["Fish"]):
 
         return self._random_movement_decision()
 
-    def _run_away_if_predator_close(self, fish_layers: list[list[Fish]]) -> Optional[Decision]:
+    def _run_away_if_predator_close(self, fish_layers: list[list[Fish]], cnt_fish: int) -> Optional[Decision]:
         predator = None
         for fish_layer in fish_layers[1:-1]:  # skip predators that are in the same cell as current fish
             for fish in fish_layer:
@@ -73,7 +73,7 @@ class FishAI(AI["Fish"]):
                     predator = fish
                     break
 
-        if predator is None or random() < 0.05:
+        if predator is None or random() < 0.3 - cnt_fish / 20:
             return None
 
         diff_x = int(min(
