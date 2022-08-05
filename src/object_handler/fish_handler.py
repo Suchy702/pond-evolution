@@ -44,26 +44,28 @@ class FishHandler(PondObjectHandlerHomogeneous):
             fish.traits.add(FishTrait.SMART)
         if random() < 0.2:
             fish.traits.add(FishTrait.PREDATOR)
-            if fish.fish_type == FishType.HERBIVORE:
-                if random() < 0.5:
-                    fish.fish_type = FishType.CARNIVORE
-                else:
-                    fish.fish_type = FishType.OMNIVORE
+            fish.fish_type = FishType.CARNIVORE
         return fish
 
     @overrides
     def add_by_click(self, event) -> None:
         half_speed = (FISH_MIN_SPEED + FISH_MAX_SPEED) // 2
         half_size = (FISH_MIN_SIZE + FISH_MAX_SIZE) // 2
-        eyesight = max(1, self._pond.height // 5)
+        eyesight = max(1, self._pond.height // 4) + 15
         fish = Fish(half_speed, half_size, eyesight, event.pos)
         fish.traits.add(FishTrait.SMART)
         if event.obj == "fish_herbi":
             fish.fish_type = FishType.HERBIVORE
         elif event.obj == "fish_carni":
             fish.fish_type = FishType.CARNIVORE
-        else:
+        elif event.obj == "fish_omni":
             fish.fish_type = FishType.OMNIVORE
+        else:
+            fish.fish_type = FishType.CARNIVORE
+            fish.traits.add(FishTrait.PREDATOR)
+            fish.eyesight -= 15
+            fish.speed += 5
+            fish.size += 100
         self.add(fish)
 
     @overrides
@@ -78,8 +80,8 @@ class FishHandler(PondObjectHandlerHomogeneous):
 
     @staticmethod
     def _cmp_by_movement_order(a: Fish, b: Fish):
-        # predators move first
-        return (FishTrait.PREDATOR in b.traits) - (FishTrait.PREDATOR in a.traits)
+        # predators move last
+        return (FishTrait.PREDATOR in a.traits) - (FishTrait.PREDATOR in b.traits)
 
     def handle_decisions(self, decisions: DecisionSet):
         for decision in decisions[DecisionType.MOVE, ObjectKind.FISH]:

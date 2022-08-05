@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import functools
 from functools import reduce
+from random import random
 from typing import cast, Type, Generator
 
 from src.ai.ai import AI
@@ -88,6 +89,8 @@ class Interactor:
         cnt_fish_that_will_eat_algae = 0
         for fish in self._fish_handler.get_spot_obj(pos):
             fish = cast(Fish, fish)
+            if FishTrait.PREDATOR in fish.traits:
+                continue
             if fish.fish_type in [FishType.OMNIVORE, FishType.CARNIVORE]:
                 cnt_fish_that_will_eat_worm += 1
             if fish.fish_type in [FishType.OMNIVORE, FishType.HERBIVORE]:
@@ -95,6 +98,8 @@ class Interactor:
 
         for fish in self._fish_handler.get_spot_obj(pos):
             fish = cast(Fish, fish)
+            if FishTrait.PREDATOR in fish.traits:
+                continue
             if fish.fish_type in [FishType.OMNIVORE, FishType.CARNIVORE]:
                 fish.vitality += worm_energy_val // cnt_fish_that_will_eat_worm
             if fish.fish_type in [FishType.OMNIVORE, FishType.HERBIVORE]:
@@ -106,9 +111,12 @@ class Interactor:
     def eat_other_fish_at_spot(self, pos: Position) -> None:
         fish = list(self._fish_handler.get_spot_obj(pos))
         fish = cast(list[Fish], fish)
-        fish.sort(key=functools.cmp_to_key(lambda a, b: a.speed - b.speed))  # type: ignore
+        fish.sort(key=functools.cmp_to_key(lambda a, b: a.size - b.size))  # type: ignore
 
         for i in range(len(fish)):
+            if FishTrait.PREDATOR in fish[i].traits and random() < 0.5:
+                continue
+
             cnt_bigger_predators = 0
             for j in range(i + 1, len(fish)):
                 if FishTrait.PREDATOR in fish[j].traits and fish[i].size < fish[j].size:

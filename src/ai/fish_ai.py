@@ -51,15 +51,17 @@ class FishAI(AI["Fish"]):
             decision = self._try_eat_other_fish(fish_layers)
             if decision is not None:
                 return decision
+            else:
+                return self._random_movement_decision()
 
-        if FishTrait.PREDATOR not in self.pond_object.traits:
+        else:
             decision = self._run_away_if_predator_close(fish_layers)
             if decision is not None:
                 return decision
 
-        decision = self._try_eat_other_non_fish(pond_viewer, cnt_fish)
-        if decision is not None:
-            return decision
+            decision = self._try_eat_other_non_fish(pond_viewer, cnt_fish)
+            if decision is not None:
+                return decision
 
         return self._random_movement_decision()
 
@@ -71,7 +73,7 @@ class FishAI(AI["Fish"]):
                     predator = fish
                     break
 
-        if predator is None or random() < 0.1:
+        if predator is None or random() < 0.05:
             return None
 
         diff_x = int(min(
@@ -93,7 +95,7 @@ class FishAI(AI["Fish"]):
         for fish_layer in fish_layers:
             for fish in fish_layer:
                 if self.pond_object.is_position_reachable(fish.pos):
-                    if fish.size < self.pond_object.size and random() < 0.7:
+                    if fish.size < self.pond_object.size:
                         return Decision(
                             DecisionType.MOVE, pond_object=self.pond_object, to_x=fish.pos.x, to_y=fish.pos.y
                         )
@@ -107,8 +109,8 @@ class FishAI(AI["Fish"]):
         ):
             for food in food_layer:
                 if self.pond_object.is_position_reachable(food.pos):
-                    if (food.pos.y < pond_viewer.pond_height - 1 and random() < 0.7 - cnt_fish / 20) or \
-                            (food.pos.y == pond_viewer.pond_height - 1 and random() < 0.5 - cnt_fish / 20):
+                    if (food.pos.y < pond_viewer.pond_height - 1 and random() < 0.8 - cnt_fish / 20) or \
+                            (food.pos.y == pond_viewer.pond_height - 1 and random() < 0.65 - cnt_fish / 20):
                         return Decision(
                             DecisionType.MOVE, pond_object=self.pond_object, to_x=food.pos.x, to_y=food.pos.y
                         )

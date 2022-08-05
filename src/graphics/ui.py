@@ -6,6 +6,7 @@ from src.graphics.image_handler.image_loader import ImageLoader
 from src.object.alga import Alga
 from src.object.alga_maker import AlgaMaker
 from src.object.fish import Fish
+from src.object.fish_trait import FishTrait
 from src.object.fish_type import FishType
 from src.object.worm import Worm
 from src.position import Position
@@ -24,7 +25,8 @@ class UI:
         self._adding_object = Fish(10, 10, 3, Position(-1, -1))
         self.ui_height = self.settings.screen_height - self.settings.screen_pond_height
 
-        self._adding_object_list = ["fish_herbi", "fish_carni", "fish_omni", "worm", "alga", "alga_maker"]
+        self._adding_object_list = ["fish_herbi", "fish_carni", "fish_omni", "fish_predator", "worm", "alga",
+                                    "alga_maker"]
         self._adding_object_dummies = self._initialize_adding_dummies()
         self._adding_object_idx = 0
 
@@ -45,10 +47,15 @@ class UI:
         fish_omni = Fish(-1, -1, -1, Position(-1, -1))
         fish_omni.fish_type = FishType.OMNIVORE
 
+        fish_predator = Fish(-1, -1, -1, Position(-1, -1))
+        fish_predator.fish_type = FishType.CARNIVORE
+        fish_predator.traits.add(FishTrait.PREDATOR)
+
         adding_object_dummies = [
             fish_herbi,
             fish_carni,
             fish_omni,
+            fish_predator,
             Worm(-1, Position(-1, -1), (-1, -1)),
             Alga(-1, Position(-1, -1), -1),
             AlgaMaker(Position(-1, -1), -1),

@@ -54,11 +54,8 @@ class Fish(PondObject):
         if random() < 0.2:
             fish.traits.add(FishTrait.get_random())
 
-        if FishTrait.PREDATOR in fish.traits and fish.fish_type == FishType.HERBIVORE:
-            if random() < 0.5:
-                fish.fish_type = FishType.CARNIVORE
-            else:
-                fish.fish_type = FishType.OMNIVORE
+        if FishTrait.PREDATOR in fish.traits:
+            fish.fish_type = FishType.CARNIVORE
 
         return fish
 
