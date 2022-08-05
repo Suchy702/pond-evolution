@@ -73,7 +73,7 @@ class FishAI(AI["Fish"]):
                     predator = fish
                     break
 
-        if predator is None or random() < 0.3 - cnt_fish / 20:
+        if predator is None or random() < 0.1 + cnt_fish / 20:
             return None
 
         diff_x = int(min(
