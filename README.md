@@ -16,3 +16,6 @@ Project is being developed using Pycharm IDE and python 3.10 To create developme
 2. run command  ```bash config/configure_env.sh``` from **pond-evolution** directory which will create local virtual environment for python and store it in **venv** subdirectory
 3. run command  ```source venv/bin/activate``` from **pond-evolution** to activate virtual environment
 4. open this project in Pycharm, go to "Add python interpreter" and then in section "Exisitng environment" set path so that it points to **venv** directory
+5. install mypy plugin for Pycharm
+
+Project comes with two Run/Debug Configurations. One called Run which starts the application and other called Test which tests whole project using pytest. It is adviced to check code with mypy and pytest before every commit. This can be easily done in Pycharm by checking boxes "Scan with Mypy" and "Run tests" in "Before commit" section in "Commit" window.
