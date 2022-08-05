@@ -5,5 +5,5 @@ from src.graphics.image_handler.image_handler import StaticImageHandler
 
 class UIImageHandler(StaticImageHandler):
     img_paths: ClassVar[list[str]] = [
-        'arrow.svg', 'arrow2.svg', 'arrow3.svg', 'omnivore_fish.svg', 'magnifying_glass.svg', 'plus.svg'
+        'adding_obejct_description.svg', 'behaviour_description.svg', 'control_description.svg', 'cycle.svg'
     ]

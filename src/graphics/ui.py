@@ -17,59 +17,103 @@ FONT = pygame.font.SysFont(pygame.font.get_default_font(), 30)
 
 
 class UI:
-    def __init__(self, settings: SimulationSettings, screen, image_loader: ImageLoader, vals: GraphicValuesGuard):
+    def __init__(self, settings: SimulationSettings, screen, vals: GraphicValuesGuard):
         self.settings = settings
         self._vals = vals
         self._screen = screen
-        self._image_loader = image_loader
+        self._image_loader = None
         self._adding_object = Fish(10, 10, 3, Position(-1, -1))
-        self.ui_height = self.settings.screen_height - self.settings.screen_pond_height
 
-        self._adding_object_list = ["fish_herbi", "fish_carni", "fish_omni", "fish_predator", "worm", "alga",
-                                    "alga_maker"]
-        self._adding_object_dummies = self._initialize_adding_dummies()
+        self.ui_height = self.settings.screen_height - self.settings.screen_pond_height
+        self.num_of_squares = 8
+        self.edge = int(self.ui_height * 0.05)
+        self.square_dim = self.ui_height - self.edge*2
+        self.break_ = self.calc_break()
+
+        self.square_up = self.settings.screen_pond_height + self.edge
+
+        self._adding_object_list = ["fish_herbi", "fish_carni", "fish_omni", "fish_predator",
+                                    "worm", "alga", "alga_maker"]
+        self._adding_object_dummies = []
+        self._initialize_adding_dummies()
         self._adding_object_idx = 0
 
     @property
     def adding_object(self):
         return self._adding_object_list[self._adding_object_idx], self._adding_object_dummies[self._adding_object_idx]
 
+    def set_image_loader(self, img_loader):
+        self._image_loader = img_loader
+
+    def calc_break(self):
+        all_squares_width = self.num_of_squares*self.square_dim
+        return (self.settings.screen_width - all_squares_width - self.edge*2) // (self.num_of_squares-1)
+
     def next_add_object(self):
         self._adding_object_idx = (self._adding_object_idx + 1) % len(self._adding_object_list)
 
-    def _initialize_adding_dummies(self):
+    def _add_fishes_dummies(self):
         size = (FISH_MIN_SIZE + FISH_MAX_SIZE) // 2
-        fish_herbi = Fish(-1, size, -1, Position(-1, -1))
-        fish_herbi.fish_type = FishType.HERBIVORE
+        for fish_type in [FishType.HERBIVORE, FishType.CARNIVORE, FishType.OMNIVORE, FishType.CARNIVORE]:
+            fish = Fish(-1, size, -1, Position(-1, -1))
+            fish.fish_type = fish_type
+            self._adding_object_dummies.append(fish)
+        self._adding_object_dummies[-1].traits.add(FishTrait.PREDATOR)
 
-        fish_carni = Fish(-1, size, -1, Position(-1, -1))
-        fish_carni.fish_type = FishType.CARNIVORE
-
-        fish_omni = Fish(-1, size, -1, Position(-1, -1))
-        fish_omni.fish_type = FishType.OMNIVORE
-
-        fish_predator = Fish(-1, size + 5, -1, Position(-1, -1))
-        fish_predator.fish_type = FishType.CARNIVORE
-        fish_predator.traits.add(FishTrait.PREDATOR)
-
-        adding_object_dummies = [
-            fish_herbi,
-            fish_carni,
-            fish_omni,
-            fish_predator,
+    @staticmethod
+    def _get_other_dummies():
+        other_dummies = [
             Worm(-1, Position(-1, -1), (-1, -1)),
             Alga(-1, Position(-1, -1), -1),
             AlgaMaker(Position(-1, -1), -1),
         ]
+        return other_dummies
 
-        return adding_object_dummies
+    def _initialize_adding_dummies(self):
+        self._add_fishes_dummies()
+        self._adding_object_dummies.extend(self._get_other_dummies())
 
-    def _draw_act_adding_obj(self):
+    def _get_dummy_img(self):
         add_obj_dummy = self._adding_object_dummies[self._adding_object_idx]
-        img = self._image_loader.get_object_image(add_obj_dummy, 80)
-        self._screen.blit(img, pygame.Rect(0, self.settings.screen_height - self.ui_height, 80, 80))
+        return self._image_loader.get_object_image(add_obj_dummy, self.square_dim)
 
-    def draw(self) -> None:
+    def _get_rect(self, x):
+        return pygame.Rect(x, self.square_up, self.square_dim, self.square_dim)
+
+    def _draw_act_adding_obj(self, x):
+        self._screen.blit(self._get_dummy_img(), self._get_rect(x))
+
+    def _draw_empty_panel(self):
         rect = pygame.Rect(0, self.settings.screen_pond_height, self.settings.screen_width, self.ui_height)
         pygame.draw.rect(self._screen, GRAY, rect, 0)
-        self._draw_act_adding_obj()
+
+    def _draw_square(self, x, name):
+        self._screen.blit(self._image_loader.get_ui_image(name), self._get_rect(x))
+
+    def _draw_cycle_square(self, x):
+        self._draw_square(x, "cycle")
+
+    def _draw_stats_square(self, x):
+        pass
+
+    def draw(self) -> None:
+        self._draw_empty_panel()
+
+        x = self.edge
+        for i in range(self.num_of_squares):
+            match i:
+                case 0:
+                    self._draw_square(x, "adding_obejct_description")
+                case 1:
+                    self._draw_act_adding_obj(x)
+                case 3:
+                    self._draw_square(x, "behaviour_description")
+                case 4:
+                    self._draw_stats_square(x)
+                case 6:
+                    self._draw_square(x, "control_description")
+                case 7:
+                    self._draw_cycle_square(x)
+            x += self.break_ + self.square_dim
+
+

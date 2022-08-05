@@ -29,10 +29,11 @@ class GUI:
 
         self._event_emitter = EventEmitter()
 
-        static_size = int((self.settings.screen_height - self.settings.screen_pond_height) * UI_SCALE)
-        self._image_loader = ImageLoader(static_size)
+        self.ui = UI(self.settings, self._screen, self.vals)
 
-        self.ui = UI(self.settings, self._screen, self._image_loader, self.vals)
+        self._image_loader = ImageLoader(self.ui.square_dim)
+
+        self.ui.set_image_loader(self._image_loader)
 
     def draw_empty_frame(self) -> None:
         self.draw_pond_area()
