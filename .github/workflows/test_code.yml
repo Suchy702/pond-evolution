@@ -34,3 +34,6 @@ jobs:
     - name: Integration tests
       run: |
         pytest --suppress-no-test-exit-code tests/integration
+    - name: Type annotations check
+      run: |
+         mypy --config-file=./config/mypy.ini
