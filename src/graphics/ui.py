@@ -71,7 +71,7 @@ class UI:
         return x_pos, y_pos
 
     def _render_cycles_count_text(self, x):
-        text_surface = self.font.render(str(self._engine.cycle_count), False, (0, 0, 0))
+        text_surface = self.font.render(str(self._engine.cycle_count), True, (0, 0, 0))
         self._screen.blit(text_surface, self._calc_text_rendering_pos(x))
 
     def _draw_cycle_square(self, x):
