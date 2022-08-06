@@ -1,15 +1,8 @@
 import pygame
 
-from src.constants import GRAY, FISH_MIN_SIZE, FISH_MAX_SIZE
+from src.constants import GRAY
 from src.graphics.graphic_values_guard import GraphicValuesGuard
-from src.graphics.image_handler.image_loader import ImageLoader
-from src.object.alga import Alga
-from src.object.alga_maker import AlgaMaker
-from src.object.fish import Fish
-from src.object.fish_trait import FishTrait
-from src.object.fish_type import FishType
-from src.object.worm import Worm
-from src.position import Position
+from src.object.dummy_type import DummyType
 from src.simulation_settings import SimulationSettings
 
 pygame.font.init()
@@ -22,32 +15,28 @@ class UI:
         self._vals = vals
         self._screen = screen
         self._image_loader = None
-        self._adding_object = Fish(10, 10, 3, Position(-1, -1))
+        self._engine = None
 
         self.ui_height = self.settings.screen_height - self.settings.screen_pond_height
         self.num_of_squares = 12
-        self.edge = int(self.ui_height * 0.03)
-        self.square_dim = self.ui_height - self.edge*2
+        self.edge = int(self.ui_height * 0.08)
+        self.square_dim = self.ui_height - self.edge * 2
         self.break_ = self.calc_break()
 
         self.square_up = self.settings.screen_pond_height + self.edge
 
-        self._adding_object_list = ["fish_herbi", "fish_carni", "fish_omni", "fish_predator",
-                                    "worm", "alga", "alga_maker"]
-        self._adding_object_dummies = []
-        self._initialize_adding_dummies()
+        self._adding_object_list = list(DummyType)
         self._adding_object_idx = 0
 
-    @property
-    def adding_object(self):
-        return self._adding_object_list[self._adding_object_idx], self._adding_object_dummies[self._adding_object_idx]
+    def set_engine(self, engine):
+        self._engine = engine
 
     def set_image_loader(self, img_loader):
         self._image_loader = img_loader
 
     def calc_break(self):
-        all_squares_width = self.num_of_squares*self.square_dim
-        break_ = (self.settings.screen_width - all_squares_width - self.edge*2) // (self.num_of_squares-1)
+        all_squares_width = self.num_of_squares * self.square_dim
+        break_ = (self.settings.screen_width - all_squares_width - self.edge * 2) // (self.num_of_squares - 1)
         if break_ < 0:
             raise Exception("Bad dimensions of panel!")
         return break_
@@ -55,30 +44,11 @@ class UI:
     def next_add_object(self):
         self._adding_object_idx = (self._adding_object_idx + 1) % len(self._adding_object_list)
 
-    def _add_fishes_dummies(self):
-        size = (FISH_MIN_SIZE + FISH_MAX_SIZE) // 2
-        for fish_type in [FishType.HERBIVORE, FishType.CARNIVORE, FishType.OMNIVORE, FishType.CARNIVORE]:
-            fish = Fish(-1, size, -1, Position(-1, -1))
-            fish.fish_type = fish_type
-            self._adding_object_dummies.append(fish)
-        self._adding_object_dummies[-1].traits.add(FishTrait.PREDATOR)
-
-    @staticmethod
-    def _get_other_dummies():
-        other_dummies = [
-            Worm(-1, Position(-1, -1), (-1, -1)),
-            Alga(-1, Position(-1, -1), -1),
-            AlgaMaker(Position(-1, -1), -1),
-        ]
-        return other_dummies
-
-    def _initialize_adding_dummies(self):
-        self._add_fishes_dummies()
-        self._adding_object_dummies.extend(self._get_other_dummies())
+    def get_dummy(self):
+        return self._engine.get_dummy(self._adding_object_list[self._adding_object_idx])
 
     def _get_dummy_img(self):
-        add_obj_dummy = self._adding_object_dummies[self._adding_object_idx]
-        return self._image_loader.get_object_image(add_obj_dummy, self.square_dim)
+        return self._image_loader.get_object_image(self.get_dummy(), self.square_dim)
 
     def _get_rect(self, x):
         return pygame.Rect(x, self.square_up, self.square_dim, self.square_dim)

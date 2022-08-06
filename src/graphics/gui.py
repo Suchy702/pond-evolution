@@ -3,7 +3,7 @@ from typing import cast
 import pygame
 from pygame.surface import Surface
 
-from src.constants import LIGHT_BLUE, UI_SCALE, FISH_MAX_SIZE, FISH_MIN_SIZE, CELL_MIN_PX_SIZE, CELL_MAX_PX_SIZE
+from src.constants import LIGHT_BLUE, FISH_MAX_SIZE, FISH_MIN_SIZE, CELL_MIN_PX_SIZE, CELL_MAX_PX_SIZE
 from src.events.event import GraphicEvent
 from src.events.event_emitter import EventEmitter
 from src.graphics.graphic_calculator import GraphicCalculator
@@ -16,7 +16,7 @@ from src.simulation_settings import SimulationSettings
 
 
 class GUI:
-    def __init__(self, settings: SimulationSettings):
+    def __init__(self, settings: SimulationSettings, engine):
         self.settings: SimulationSettings = settings
         self.vals = GraphicValuesGuard(settings)
         self.calculator = GraphicCalculator(settings)
@@ -34,6 +34,7 @@ class GUI:
         self._image_loader = ImageLoader(self.ui.square_dim)
 
         self.ui.set_image_loader(self._image_loader)
+        self.ui.set_engine(engine)
 
     def draw_empty_frame(self) -> None:
         self.draw_pond_area()

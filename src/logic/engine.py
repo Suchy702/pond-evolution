@@ -1,5 +1,6 @@
 from src.events.event import LogicEvent
 from src.logic.interactor import Interactor
+from src.object.dummy_type import DummyType
 from src.object.pond_object import PondObject
 from src.object_handler.pond_object_handler import PondObjectHandler
 from src.simulation_settings import SimulationSettings
@@ -40,3 +41,6 @@ class Engine:
 
     def add_obj_by_click(self, event: LogicEvent) -> None:
         self._interactor.add_obj_by_click(event)
+
+    def get_dummy(self, dummy_type: DummyType) -> PondObject:
+        return self._interactor.get_dummy(dummy_type)

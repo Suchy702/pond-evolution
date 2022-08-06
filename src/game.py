@@ -20,7 +20,7 @@ class Game:
 
         self._engine = Engine(self._settings)
         self._engine.demo()
-        self._gui = GUI(self._settings)
+        self._gui = GUI(self._settings, self._engine)
 
         self._event_emitter = EventEmitter()
         self._game_event_manager = GameEventManager(self)

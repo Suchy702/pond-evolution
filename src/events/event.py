@@ -34,7 +34,7 @@ class LogicEvent(Event[LogicEventType]):
         'event_type', 'obj', 'pos'
     )
 
-    def __init__(self, event_type: LogicEventType, obj: str, pos: Position):
+    def __init__(self, event_type: LogicEventType, obj: PondObject, pos: Position):
         super().__init__(event_type)
         self.obj = obj
         self.pos = pos

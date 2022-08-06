@@ -7,6 +7,7 @@ from src.events.event_emitter import EventEmitter
 from src.events.event_manager.event_manager import EventManager
 from src.events.event_type import ClickEventType, LogicEventType, GraphicEventType
 from src.graphics.gui import GUI
+from src.object.object_kind import ObjectKind
 from src.position import Position
 
 
@@ -29,14 +30,14 @@ class ClickingEventManager(EventManager):
         if not self._is_clicked_on_pond(event.pos[0], event.pos[1]):
             return
 
-        adding_obj_str, dummy = self._gui.ui.adding_object
+        dummy = self._gui.ui.get_dummy()
         click_coor = self._gui.get_click_coor(event.pos)
 
-        if adding_obj_str == "alga_maker" and click_coor[1] != self._gui.settings.pond_height - 1:
+        if dummy.kind == ObjectKind.ALGA_MAKER and click_coor[1] != self._gui.settings.pond_height - 1:
             return
 
         self.event_emitter.emit_event(
-            LogicEvent(LogicEventType.ADD, adding_obj_str, Position(click_coor[1], click_coor[0]))
+            LogicEvent(LogicEventType.ADD, dummy, Position(click_coor[1], click_coor[0]))
         )
 
         self.event_emitter.emit_event(

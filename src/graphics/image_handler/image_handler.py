@@ -23,7 +23,7 @@ class DynamicImageHandler(ImageHandler):
         self._cache: dict[str, list[Optional[Surface]]] = {}
 
         for img_path in self.__class__.img_paths:
-            self._base_image[img_path] = pygame.image.load(os.path.join(IMG_PATH_DIR, img_path))
+            self._base_image[img_path] = pygame.image.load(os.path.join(IMG_PATH_DIR, img_path)).convert_alpha()
             self._cache[img_path] = [None for _ in range(CELL_MAX_PX_SIZE - CELL_MIN_PX_SIZE + 100)]
 
     @abstractmethod

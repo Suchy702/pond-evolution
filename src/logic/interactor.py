@@ -13,9 +13,11 @@ from src.ai.worm_ai import WormAI
 from src.decision.decision_set import DecisionSet
 from src.events.event import LogicEvent
 from src.events.event_emitter import EventEmitter
+from src.object.dummy_type import DummyType
 from src.object.fish import Fish
 from src.object.fish_trait import FishTrait
 from src.object.fish_type import FishType
+from src.object.object_kind import ObjectKind
 from src.object.pond_object import PondObject
 from src.object_handler.fish_handler import FishHandler
 from src.object_handler.plant_handler import PlantHandler
@@ -140,12 +142,40 @@ class Interactor:
         self._plant_handler.alga_handler.remove_algae_on_surface()
 
     def add_obj_by_click(self, event: LogicEvent) -> None:
-        match event.obj:
-            case "worm":
-                self._worm_handler.add_by_click(event)
-            case "alga":
-                self._plant_handler.alga_handler.add_by_click(event)
-            case "alga_maker":
-                self._plant_handler.alga_maker_handler.add_by_click(event)
-            case _:
-                self._fish_handler.add_by_click(event)
+        event.obj.pos = event.pos
+        match event.obj.kind:
+            case ObjectKind.WORM:
+                self._worm_handler.add(event.obj)
+            case ObjectKind.ALGA:
+                self._plant_handler.alga_handler.add(event.obj)
+            case ObjectKind.ALGA_MAKER:
+                self._plant_handler.alga_maker_handler.add(event.obj)
+            case ObjectKind.FISH:
+                self._fish_handler.add(event.obj)
+
+    def get_dummy(self, dummy_type: DummyType) -> PondObject:
+        match dummy_type:
+            case DummyType.ALGA:
+                return self._plant_handler.alga_handler.create_random_single()
+            case DummyType.ALGA_MAKER:
+                return self._plant_handler.alga_maker_handler.create_random_single()
+            case DummyType.WORM:
+                return self._worm_handler.create_random_single()
+
+        fish = self._fish_handler.create_random_single()
+        fish = cast(Fish, fish)
+        fish.traits.clear()
+        fish.traits.add(FishTrait.SMART)
+
+        match dummy_type:
+            case DummyType.FISH_HERBIVORE:
+                fish.fish_type = FishType.HERBIVORE
+            case DummyType.FISH_CARNIVORE:
+                fish.fish_type = FishType.CARNIVORE
+            case DummyType.FISH_OMNIVORE:
+                fish.fish_type = FishType.OMNIVORE
+            case DummyType.FISH_PREDATOR:
+                fish.fish_type = FishType.CARNIVORE
+                fish.traits.add(FishTrait.PREDATOR)
+
+        return fish

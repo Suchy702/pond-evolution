@@ -33,10 +33,6 @@ class WormHandler(PondObjectHandlerHomogeneous):
         pos.y = 0
         return Worm(WORM_ENERGY_VALUE, pos, self._pond.shape)
 
-    @overrides
-    def add_by_click(self, event) -> None:
-        self.add(Worm(WORM_ENERGY_VALUE, event.pos, self._pond.shape))
-
     def handle_decisions(self, decisions: DecisionSet):
         for decision in decisions[DecisionType.MOVE, ObjectKind.WORM]:
             self.move_worm(decision)

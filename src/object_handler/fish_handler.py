@@ -38,35 +38,18 @@ class FishHandler(PondObjectHandlerHomogeneous):
     def create_random_single(self) -> PondObject:
         speed = randint(FISH_MIN_SPEED, FISH_MAX_SPEED)
         size = randint(FISH_MIN_SIZE, FISH_MAX_SIZE)
-        fish = Fish(speed, size, max(1, self._pond.height // 5), self._pond.random_position())
+        eyesight = randint(2, self._pond.height // 2) + 5
+        fish = Fish(speed, size, eyesight, self._pond.random_position())
         fish.fish_type = FishType.get_random()
         if random() < 0.7:
             fish.traits.add(FishTrait.SMART)
         if random() < 0.2:
             fish.traits.add(FishTrait.PREDATOR)
             fish.fish_type = FishType.CARNIVORE
-        return fish
-
-    @overrides
-    def add_by_click(self, event) -> None:
-        half_speed = (FISH_MIN_SPEED + FISH_MAX_SPEED) // 2
-        half_size = (FISH_MIN_SIZE + FISH_MAX_SIZE) // 2
-        eyesight = max(1, self._pond.height // 4) + 15
-        fish = Fish(half_speed, half_size, eyesight, event.pos)
-        fish.traits.add(FishTrait.SMART)
-        if event.obj == "fish_herbi":
-            fish.fish_type = FishType.HERBIVORE
-        elif event.obj == "fish_carni":
-            fish.fish_type = FishType.CARNIVORE
-        elif event.obj == "fish_omni":
-            fish.fish_type = FishType.OMNIVORE
-        else:
-            fish.fish_type = FishType.CARNIVORE
-            fish.traits.add(FishTrait.PREDATOR)
-            fish.eyesight -= 15
+            fish.eyesight -= 5
             fish.speed += 5
             fish.size += 5
-        self.add(fish)
+        return fish
 
     @overrides
     def get_decisions(self, pond_viewer: PondViewer) -> Generator[DecisionSet, None, None]:
