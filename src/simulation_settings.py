@@ -6,59 +6,68 @@ from src.constants import CELL_MIN_PX_SIZE
 
 class SimulationSettings:
     def __init__(self):
-        self._root: tk.Tk
-        self._resolution_var: tk.StringVar
-        self._fullscreen_var: tk.BooleanVar
+        self._root: tk.Tk = None
+        self._resolution_var: tk.StringVar = None
+        self._fullscreen_var: tk.BooleanVar = None
+        self._statistics_var: tk.BooleanVar = None
 
-        self.screen_width: int
-        self.screen_height: int
+        self.fullscreen: bool = None
+        self.statistics: bool = None
 
-        self.fullscreen: bool
+        self.screen_width: int = None
+        self.screen_height: int = None
 
-        self.screen_pond_width: int
-        self.screen_pond_height: int
+        self.screen_pond_width: int = None
+        self.screen_pond_height: int = None
 
-        self.pond_width: int
-        self.pond_height: int
+        self.pond_width: int = None
+        self.pond_height: int = None
 
     def get_user_settings(self) -> None:
         self._root = tk.Tk()
         self._root.title("Settings")
-        self._root.geometry("350x200")
+        self._root.geometry("350x250")
 
         self._root.columnconfigure(0, weight=1)
         self._root.columnconfigure(1, weight=2)
 
-        self._add_resolution_setting()
-        self._add_fullscreen_setting()
+        self._add_resolution_setting(0)
+        self._add_fullscreen_setting(1)
+        self._add_statistics_setting(2)
 
         tk.Button(
             self._root, text="Run simulation", command=self._apply_settings
-        ).grid(row=2, column=0, columnspan=2)
+        ).grid(row=3, column=0, columnspan=2)
 
         # There are a few rows with 2 widgets and one with 1 widget
         for i in range((len(self._root.winfo_children()) + 1) // 2):
             self._root.rowconfigure(i, weight=1)
 
         for child in self._root.winfo_children():
-            child.grid_configure(padx=10, pady=10)
+            child.grid_configure(padx=10)
 
         self._root.mainloop()
 
-    def _add_resolution_setting(self):
-        tk.Label(self._root, text='Resolution: ').grid(row=0, column=0, sticky='w')
+    def _add_resolution_setting(self, row):
+        tk.Label(self._root, text='Resolution: ').grid(row=row, column=0, sticky='w')
         self._resolution_var = tk.StringVar()
         resolution = ttk.Combobox(self._root, textvariable=self._resolution_var)
         resolution['values'] = ('1920x1080', '1080x720', '720x480')
         resolution['state'] = 'readonly'
         resolution.current(1)
-        resolution.grid(row=0, column=1, sticky='we')
+        resolution.grid(row=row, column=1, sticky='we')
 
-    def _add_fullscreen_setting(self):
-        tk.Label(self._root, text='Full screen mode: ').grid(row=1, column=0, sticky='w')
+    def _add_fullscreen_setting(self, row):
+        tk.Label(self._root, text='Full screen mode: ').grid(row=row, column=0, sticky='w')
         self._fullscreen_var = tk.BooleanVar()
         fullscreen = tk.Checkbutton(self._root, variable=self._fullscreen_var)
-        fullscreen.grid(row=1, column=1, sticky='we')
+        fullscreen.grid(row=row, column=1, sticky='we')
+
+    def _add_statistics_setting(self, row):
+        tk.Label(self._root, text='Show statistics: ').grid(row=row, column=0, sticky='w')
+        self._statistics_var = tk.BooleanVar()
+        statistics = tk.Checkbutton(self._root, variable=self._statistics_var)
+        statistics.grid(row=row, column=1, sticky='we')
 
     def _apply_settings(self) -> None:
         res = self._resolution_var.get().split('x')
@@ -66,6 +75,7 @@ class SimulationSettings:
         self.screen_height = int(res[1])
 
         self.fullscreen = self._fullscreen_var.get()
+        self.statistics = self._statistics_var.get()
 
         self.screen_pond_width = self.screen_width
         self.screen_pond_height = int(self.screen_height * 0.9)
