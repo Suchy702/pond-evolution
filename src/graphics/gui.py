@@ -65,8 +65,6 @@ class GUI:
         return not self._event_emitter.is_animation_event_present()
 
     def draw_object(self, event: GraphicEvent, x: int, y: int) -> None:
-        rect = pygame.Rect(x, y, self.vals.cell_size, self.vals.cell_size)
-
         size = self.vals.cell_size
         if event.pond_object.kind == ObjectKind.FISH:
             fish = cast(Fish, event.pond_object)
@@ -79,7 +77,10 @@ class GUI:
         if event.rotate is not None:
             image = pygame.transform.rotate(image, event.rotate)
 
-        self._screen.blit(image, rect)
+        x += (self.vals.cell_size - size) // 2
+        y += (self.vals.cell_size - size) // 2
+
+        self._screen.blit(image, (x, y))
 
     def get_click_coor(self, click_pos: tuple[int, int]) -> tuple[int, int]:
         return self.calculator.get_click_coor(click_pos, self.vals)
