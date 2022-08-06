@@ -6,7 +6,6 @@ from src.object.dummy_type import DummyType
 from src.simulation_settings import SimulationSettings
 
 pygame.font.init()
-FONT = pygame.font.SysFont("Comic Sans MS", 30)
 
 
 class UI:
@@ -27,6 +26,8 @@ class UI:
 
         self._adding_object_list = list(DummyType)
         self._adding_object_idx = 0
+
+        self.font = pygame.font.SysFont("Comic Sans MS", int(self.square_dim*0.45))
 
     def set_engine(self, engine):
         self._engine = engine
@@ -70,7 +71,7 @@ class UI:
         return x_pos, y_pos
 
     def _render_cycles_count_text(self, x):
-        text_surface = FONT.render(str(self._engine.cycle_count), False, (0, 0, 0))
+        text_surface = self.font.render(str(self._engine.cycle_count), False, (0, 0, 0))
         self._screen.blit(text_surface, self._calc_text_rendering_pos(x))
 
     def _draw_cycle_square(self, x):
