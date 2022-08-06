@@ -25,8 +25,8 @@ class UI:
         self._adding_object = Fish(10, 10, 3, Position(-1, -1))
 
         self.ui_height = self.settings.screen_height - self.settings.screen_pond_height
-        self.num_of_squares = 8
-        self.edge = int(self.ui_height * 0.05)
+        self.num_of_squares = 12
+        self.edge = int(self.ui_height * 0.03)
         self.square_dim = self.ui_height - self.edge*2
         self.break_ = self.calc_break()
 
@@ -47,7 +47,10 @@ class UI:
 
     def calc_break(self):
         all_squares_width = self.num_of_squares*self.square_dim
-        return (self.settings.screen_width - all_squares_width - self.edge*2) // (self.num_of_squares-1)
+        break_ = (self.settings.screen_width - all_squares_width - self.edge*2) // (self.num_of_squares-1)
+        if break_ < 0:
+            raise Exception("Bad dimensions of panel!")
+        return break_
 
     def next_add_object(self):
         self._adding_object_idx = (self._adding_object_idx + 1) % len(self._adding_object_list)
@@ -91,29 +94,23 @@ class UI:
         self._screen.blit(self._image_loader.get_ui_image(name), self._get_rect(x))
 
     def _draw_cycle_square(self, x):
-        self._draw_square(x, "cycle")
+        self._draw_square(x, "panel_11")
 
     def _draw_stats_square(self, x):
         pass
 
     def draw(self) -> None:
         self._draw_empty_panel()
+        empty_squares = {2, 6, 9}
 
         x = self.edge
         for i in range(self.num_of_squares):
             match i:
-                case 0:
-                    self._draw_square(x, "adding_obejct_description")
                 case 1:
                     self._draw_act_adding_obj(x)
-                case 3:
-                    self._draw_square(x, "behaviour_description")
-                case 4:
-                    self._draw_stats_square(x)
-                case 6:
-                    self._draw_square(x, "control_description")
-                case 7:
+                case 11:
                     self._draw_cycle_square(x)
+                case _:
+                    if i not in empty_squares:
+                        self._draw_square(x, f"panel_{i}")
             x += self.break_ + self.square_dim
-
-
