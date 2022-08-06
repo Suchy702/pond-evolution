@@ -23,6 +23,10 @@ class Engine:
     def all_handlers(self) -> list[PondObjectHandler]:
         return self._interactor.handlers
 
+    @property
+    def cycle_count(self):
+        return self._cycle_count
+
     def show_pond(self) -> None:
         board: list[list[list[str]]] = [
             [[] for _ in range(self._settings.pond_width)] for _ in range(self._settings.pond_height)

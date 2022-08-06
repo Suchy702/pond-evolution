@@ -6,7 +6,7 @@ from src.object.dummy_type import DummyType
 from src.simulation_settings import SimulationSettings
 
 pygame.font.init()
-FONT = pygame.font.SysFont(pygame.font.get_default_font(), 30)
+FONT = pygame.font.SysFont("Comic Sans MS", 30)
 
 
 class UI:
@@ -63,8 +63,19 @@ class UI:
     def _draw_square(self, x, name):
         self._screen.blit(self._image_loader.get_ui_image(name), self._get_rect(x))
 
+    def _calc_text_rendering_pos(self, x):
+        try_center = (len(str(self._engine.cycle_count)) - 1)*self.square_dim*0.08
+        x_pos = x + int(self.square_dim * 0.4) - try_center
+        y_pos = self.settings.screen_pond_height + int(self.ui_height * 0.5)
+        return x_pos, y_pos
+
+    def _render_cycles_count_text(self, x):
+        text_surface = FONT.render(str(self._engine.cycle_count), False, (0, 0, 0))
+        self._screen.blit(text_surface, self._calc_text_rendering_pos(x))
+
     def _draw_cycle_square(self, x):
         self._draw_square(x, "panel_11")
+        self._render_cycles_count_text(x)
 
     def _draw_stats_square(self, x):
         pass
