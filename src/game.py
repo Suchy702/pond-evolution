@@ -1,4 +1,5 @@
 import pygame
+import sys
 
 from src.constants import FPS
 from src.events.event_emitter import EventEmitter
@@ -19,6 +20,9 @@ class Game:
         self._settings = SimulationSettings()
         self._settings.get_user_settings()
 
+        if self._user_close_program():
+            sys.exit()
+
         self._engine = Engine(self._settings)
         self._engine.demo()
         self._gui = GUI(self._settings, self._engine)
@@ -37,6 +41,9 @@ class Game:
 
         self.running: bool = True
         self.skip: int = 0
+
+    def _user_close_program(self):
+        return self._settings.screen_height is None
 
     def run(self) -> None:
         clock = pygame.time.Clock()

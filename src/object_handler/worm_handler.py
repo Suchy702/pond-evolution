@@ -22,6 +22,7 @@ event_emitter = EventEmitter()
 class WormHandler(PondObjectHandlerHomogeneous):
     def __init__(self, settings: SimulationSettings):
         super().__init__(settings)
+        self.worms_from_heaven = not settings.no_worms_from_heaven
 
     @property
     def worms(self):
@@ -50,7 +51,8 @@ class WormHandler(PondObjectHandlerHomogeneous):
         self._pond.change_position(decision.pond_object, n_pos)
 
     def add_worms(self) -> None:
-        self.add_all([self.create_random_single() for _ in range(NUM_OF_NEW_WORMS_AT_CYCLE)])
+        if self.worms_from_heaven:
+            self.add_all([self.create_random_single() for _ in range(NUM_OF_NEW_WORMS_AT_CYCLE)])
 
     def remove_worms_on_the_ground(self) -> None:
         self.remove_all([worm for worm in self.worms if self._pond.is_on_ground(worm.pos)])
