@@ -30,14 +30,18 @@ class SimulationSettings:
 
         self._root.columnconfigure(0, weight=1)
         self._root.columnconfigure(1, weight=2)
+        self._root.columnconfigure(2, weight=3)
+        self._root.columnconfigure(3, weight=4)
 
         self._add_resolution_setting(0)
         self._add_fullscreen_setting(1)
         self._add_statistics_setting(2)
+        self._add_empty_pond_setting(3)
+        self._add_no_worms_from_heaven_setting(4)
 
         tk.Button(
             self._root, text="Run simulation", command=self._apply_settings
-        ).grid(row=3, column=0, columnspan=2)
+        ).grid(row=5, column=0, columnspan=2)
 
         # There are a few rows with 2 widgets and one with 1 widget
         for i in range((len(self._root.winfo_children()) + 1) // 2):
@@ -69,6 +73,18 @@ class SimulationSettings:
         statistics = tk.Checkbutton(self._root, variable=self._statistics_var)
         statistics.grid(row=row, column=1, sticky='we')
 
+    def _add_empty_pond_setting(self, row):
+        tk.Label(self._root, text='Empty pond: ').grid(row=row, column=0, sticky='w')
+        self._empty_pond_setting_var = tk.BooleanVar()
+        empty_pond_setting = tk.Checkbutton(self._root, variable=self._empty_pond_setting_var)
+        empty_pond_setting.grid(row=row, column=1, sticky='we')
+
+    def _add_no_worms_from_heaven_setting(self, row):
+        tk.Label(self._root, text='No worms from heaven: ').grid(row=row, column=0, sticky='w')
+        self._no_worms_from_heaven_var = tk.BooleanVar()
+        no_worms_from_heaven = tk.Checkbutton(self._root, variable=self._no_worms_from_heaven_var)
+        no_worms_from_heaven.grid(row=row, column=1, sticky='we')
+
     def _apply_settings(self) -> None:
         res = self._resolution_var.get().split('x')
         self.screen_width = int(res[0])
@@ -76,6 +92,8 @@ class SimulationSettings:
 
         self.fullscreen = self._fullscreen_var.get()
         self.statistics = self._statistics_var.get()
+        self.empty_pond_setting = self._empty_pond_setting_var.get()
+        self.no_worms_from_heaven = self._no_worms_from_heaven_var.get()
 
         self.screen_pond_width = self.screen_width
         self.screen_pond_height = int(self.screen_height * 0.9)
