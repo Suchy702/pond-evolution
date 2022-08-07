@@ -30,8 +30,6 @@ class SimulationSettings:
 
         self._root.columnconfigure(0, weight=1)
         self._root.columnconfigure(1, weight=2)
-        self._root.columnconfigure(2, weight=3)
-        self._root.columnconfigure(3, weight=4)
 
         self._add_resolution_setting(0)
         self._add_fullscreen_setting(1)
