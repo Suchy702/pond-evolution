@@ -56,4 +56,5 @@ class Game:
 
                 self._event_emitter.handle_events()
 
+        self._gui.hide_screen()
         self._statistics.show_statistics()

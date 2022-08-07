@@ -19,7 +19,8 @@ class SimulationSettingsMock:
     pond_width = 54
     screen_height = 720
     screen_width = 1080
-    fullscreen = 0
+    fullscreen = False
+    statistics = False
     get_user_settings = Mock()
 
 
