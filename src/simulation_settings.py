@@ -26,7 +26,7 @@ class SimulationSettings:
     def get_user_settings(self) -> None:
         self._root = tk.Tk()
         self._root.title("Settings")
-        self._root.geometry("350x250")
+        self._root.geometry("550x250")
 
         self._root.columnconfigure(0, weight=1)
         self._root.columnconfigure(1, weight=2)
@@ -68,7 +68,8 @@ class SimulationSettings:
         fullscreen.grid(row=row, column=1, sticky='we')
 
     def _add_statistics_setting(self, row):
-        tk.Label(self._root, text='Show statistics: ').grid(row=row, column=0, sticky='w')
+        text = 'Show statistics (it may take a while after simulation): '
+        tk.Label(self._root, text=text).grid(row=row, column=0, sticky='w')
         self._statistics_var = tk.BooleanVar()
         statistics = tk.Checkbutton(self._root, variable=self._statistics_var)
         statistics.grid(row=row, column=1, sticky='we')
