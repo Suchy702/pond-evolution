@@ -86,7 +86,7 @@ class FishHandler(PondObjectHandlerHomogeneous):
                 )
             )
         else:
-            n_pos = self._pond.trim_position(Position(decision.to_y, decision.to_x))
+            n_pos = self._special_trim(decision.to_x, decision.to_y)
             event_emitter.emit_event(
                 GraphicEvent(
                     GraphicEventType.ANIM_MOVE, pond_object=fish,
@@ -98,6 +98,11 @@ class FishHandler(PondObjectHandlerHomogeneous):
             )
             fish.spoil_vitality()
             self._pond.change_position(fish, n_pos)
+
+    def _special_trim(self, x, y):
+        n_pos = self._pond.trim_position(Position(y, x))
+        n_pos.y = min(n_pos.y, self._pond.height-2)
+        return n_pos
 
     @staticmethod
     def _get_rotation_angle(x: int, y: int) -> Optional[float]:
