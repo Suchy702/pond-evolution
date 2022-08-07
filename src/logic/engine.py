@@ -1,6 +1,7 @@
 from src.events.event import LogicEvent
 from src.logic.interactor import Interactor
 from src.object.dummy_type import DummyType
+from src.object.object_kind import ObjectKind
 from src.object.pond_object import PondObject
 from src.object_handler.pond_object_handler import PondObjectHandler
 from src.simulation_settings import SimulationSettings
@@ -18,6 +19,9 @@ class Engine:
     @property
     def all_objects(self) -> list[PondObject]:
         return self._interactor.all_objects
+
+    def objects_by_type(self, obj_type: ObjectKind):
+        return self._interactor.objects_by_type(obj_type)
 
     @property
     def all_handlers(self) -> list[PondObjectHandler]:

@@ -21,7 +21,7 @@ from src.object.object_kind import ObjectKind
 from src.object.pond_object import PondObject
 from src.object_handler.fish_handler import FishHandler
 from src.object_handler.plant_handler import PlantHandler
-from src.object_handler.pond_object_handler import PondObjectHandler
+from src.object_handler.pond_object_handler import PondObjectHandler, PondObjectHandlerHomogeneous
 from src.object_handler.worm_handler import WormHandler
 from src.pond.pond_viewer import PondViewer
 from src.position import Position
@@ -141,17 +141,22 @@ class Interactor:
         self._worm_handler.remove_worms_on_the_ground()
         self._plant_handler.alga_handler.remove_algae_on_surface()
 
+    def _dispatch_handler(self, kind: ObjectKind) -> PondObjectHandlerHomogeneous:
+        match kind:
+            case ObjectKind.WORM:
+                return self._worm_handler
+            case ObjectKind.ALGA:
+                return self._plant_handler.alga_handler
+            case ObjectKind.ALGA_MAKER:
+                return self._plant_handler.alga_maker_handler
+            case ObjectKind.FISH:
+                return self._fish_handler
+        return None
+
     def add_obj_by_click(self, event: LogicEvent) -> None:
         event.obj.pos = event.pos
-        match event.obj.kind:
-            case ObjectKind.WORM:
-                self._worm_handler.add(event.obj)
-            case ObjectKind.ALGA:
-                self._plant_handler.alga_handler.add(event.obj)
-            case ObjectKind.ALGA_MAKER:
-                self._plant_handler.alga_maker_handler.add(event.obj)
-            case ObjectKind.FISH:
-                self._fish_handler.add(event.obj)
+        handler = self._dispatch_handler(event.obj.kind)
+        handler.add(event.obj)
 
     def get_dummy(self, dummy_type: DummyType) -> PondObject:
         match dummy_type:
@@ -179,3 +184,6 @@ class Interactor:
                 fish.traits.add(FishTrait.PREDATOR)
 
         return fish
+
+    def objects_by_type(self, obj_type: ObjectKind) -> list[PondObject]:
+        return self._dispatch_handler(obj_type).objects
