@@ -18,15 +18,7 @@ class Statistics:
         self._settings = settings
         self._engine = engine
 
-        self._dataframe: pd.DataFrame = pd.DataFrame(
-            columns=['cycle', 'size', 'speed', 'eyesight', 'type', 'is_smart']
-        )
-        dtypes = {
-            'cycle': 'int32', 'size': 'int32', 'speed': 'int32', 'eyesight': 'int32', 'type': 'category',
-            'is_smart': 'bool'
-        }
-        self._dataframe = self._dataframe.astype(dtypes)
-
+        self._data_raw: list[list] = []
         self._plot_idx = 0
 
     def make_snapshot(self) -> None:
@@ -45,12 +37,22 @@ class Statistics:
             'predator' if FishTrait.PREDATOR in fish.traits else fish.fish_type.name.lower(),
             FishTrait.SMART in fish.traits
         ]
-        self._dataframe.loc[self._dataframe.shape[0]] = data
+        self._data_raw.append(data)
 
     def show_statistics(self) -> None:
         if not self._settings.statistics:
             return
 
+        self._dataframe: pd.DataFrame = pd.DataFrame(
+            self._data_raw,
+            columns=['cycle', 'size', 'speed', 'eyesight', 'type', 'is_smart']
+        )
+        dtypes = {
+            'cycle': 'int32', 'size': 'int32', 'speed': 'int32', 'eyesight': 'int32', 'type': 'category',
+            'is_smart': 'bool'
+        }
+
+        self._dataframe = self._dataframe.astype(dtypes)
         self._draw_plot()
 
     def _draw_plot(self) -> None:
