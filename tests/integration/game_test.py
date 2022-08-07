@@ -21,6 +21,8 @@ class SimulationSettingsMock:
     screen_width = 1080
     fullscreen = False
     statistics = False
+    no_worms_from_heaven = False
+    empty_pond_setting = False
     get_user_settings = Mock()
 
 

@@ -26,6 +26,7 @@ def settings():
     s = SimulationSettings()
     s.pond_width = 5
     s.pond_height = 5
+    s.no_worms_from_heaven = False
     return s
 
 
