@@ -84,3 +84,6 @@ class GUI:
 
     def get_click_coor(self, click_pos: tuple[int, int]) -> tuple[int, int]:
         return self.calculator.get_click_coor(click_pos, self.vals)
+
+    def hide_screen(self) -> None:
+        self._screen = pygame.display.set_mode((0, 0), pygame.HIDDEN)
