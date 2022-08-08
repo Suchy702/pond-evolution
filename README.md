@@ -7,7 +7,7 @@
 
 It a crazy, amazing application about fish and evolution
 
-![fish](https://github.com/Suchy702/pond-evolution/blob/master/resources/demo/demo.gif)
+![fish](https://github.com/Suchy702/pond-evolution/blob/master/resources/demo/demo2.gif)
 
 ## Development
 
