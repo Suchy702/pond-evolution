@@ -151,7 +151,7 @@ If approproate settings is checked, at the end of simulation two graphs will be 
 The other one shows how fish's traits changed with respect to time, type of fish and trait:
 
 <p align="center">
-  <img src="https://github.com/Suchy702/pond-evolution/blob/master/resources/img/readme/traits.png" alt="traits" width="700px"/>
+  <img src="https://github.com/Suchy702/pond-evolution/blob/master/resources/readme/traits.png" alt="traits" width="700px"/>
 </p>
     
 ## Development
