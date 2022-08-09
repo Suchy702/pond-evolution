@@ -33,13 +33,48 @@ Upon start of the program user is greeted with the following window:
 
 Here one can tweak parameters of the simulation. The current options include:
 
-- Resolution - defines resolution of the simulation and window size (unless fullscreen mode is selected)
-- Full screen mode - defines whether or not program should be run in fullscreen mode. Program will be rendered in previously selected resolution and then scaled to fit user's screen
-- Show statistics - after simulation ends various graphs can be shown to represent how the number of fish and their traits varied with respect to time
-- Empty pond - by default simulation starts with randomly spawned fish and plants. This settings turns it off
-- No worms from heaven - by default worms fall from top to ocean ground. This settings removes worms completely.
+- **Resolution** - defines resolution of the simulation and window size (unless fullscreen mode is selected)
+- **Full screen mode** - defines whether or not program should be run in fullscreen mode. Program will be rendered in previously selected resolution and then scaled to fit user's screen
+- **Show statistics** - after simulation ends various graphs can be shown to represent how the number of fish and their traits varied with respect to time
+- **Empty pond** - by default simulation starts with randomly spawned fish and plants. This settings turns it off
+- **No worms from heaven** - by default worms fall from top to ocean ground. This settings removes worms completely.
 
-When "Run simulations" is clicked
+When "Run simulations" is clicked new window is opened. This is where the simulation happens.
+
+<p align="center">
+  <img src="https://github.com/Suchy702/pond-evolution/blob/master/resources/readme/main.png" alt="demo" width="720px"/>
+</p>
+
+Bottom of the screen contains User Panel which displays basic controls. Bottom right corner contains information about current cycle of evolution. 
+
+### Controls:
+1. movement - **arrows** move camera, **+/-** zooms in and out, **\<key c\>** centers camera 
+
+<p align="center">
+  <img src="https://github.com/Suchy702/pond-evolution/blob/master/resources/readme/movement.gif" alt="demo" width="500px"/>
+</p>
+
+2. object addition - **\<left click\>** can be used to place new objects into the simulation. Type of placed object can be changed with **\<key q\>**
+
+<p align="center">
+  <img src="https://github.com/Suchy702/pond-evolution/blob/master/resources/readme/add.gif" alt="demo" width="500px"/>
+</p>
+
+3. jump 100 evolution cycles - **\<key j\>** skips 100 cycles of evolution. It may take a few seconds...
+
+<p align="center">
+  <img src="https://github.com/Suchy702/pond-evolution/blob/master/resources/readme/jump.gif" alt="demo" width="500px"/>
+</p>
+
+4. speed - **\<key ,\>** slows down simulation and **\<key .\>** speeds it up
+
+<p align="center">
+  <img src="https://github.com/Suchy702/pond-evolution/blob/master/resources/readme/speed.gif" alt="demo" width="500px"/>
+</p>
+
+
+
+
 
 ## Development
 
