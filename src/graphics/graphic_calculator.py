@@ -4,9 +4,9 @@ from typing import cast
 from src.events.event import GraphicEvent
 from src.events.event_type import GraphicEventType
 from src.graphics.graphic_values_guard import GraphicValuesGuard
+from src.graphics.jit_graphic_calculator import JITGraphicCalculator
 from src.object.fish import Fish
 from src.simulation_settings import SimulationSettings
-from src.graphics.jit_graphic_calculator import JITGraphicCalculator
 
 
 class GraphicCalculator:
@@ -46,7 +46,7 @@ class GraphicCalculator:
         y = event.to_y * vals.cell_size + vals.y_offset
         return x, y
 
-    def match_size_for_fish(self, event: GraphicEvent, vals: GraphicValuesGuard) -> tuple[int, int]:
+    def match_size_for_fish(self, event: GraphicEvent, vals: GraphicValuesGuard) -> int:
         fish = cast(Fish, event.pond_object)
         return self.jit_calculator.match_size_for_fish_calculations(fish.size, vals.cell_size)  # type: ignore
 
@@ -55,9 +55,13 @@ class GraphicCalculator:
         x2, y2 = self._calc_end_point_in_animation(event, vals)
 
         if self.jit_calculator.is_not_linear_fun(x1, x2):
-            return self.jit_calculator.calc_pos_for_non_linear_fun(x1, y1, y2, event.step, event.total_steps)
+            return self.jit_calculator.calc_pos_for_non_linear_fun(  # type: ignore
+                x1, y1, y2, event.step, event.total_steps
+            )
 
-        return self.jit_calculator.calc_pos_for_linear_fun(x1, y1, x2, y2, event.step, event.total_steps)
+        return self.jit_calculator.calc_pos_for_linear_fun(  # type: ignore
+            x1, y1, x2, y2, event.step, event.total_steps
+        )
 
     @staticmethod
     def _find_pos_to_draw_when_stay(event: GraphicEvent, vals: GraphicValuesGuard) -> tuple[int, int]:
@@ -66,8 +70,7 @@ class GraphicCalculator:
         return x, y
 
     def reform_pos_to_be_in_center(self, x: int, y: int, vals: GraphicValuesGuard, size: int) -> tuple[int, int]:
-        return self.jit_calculator.reform_pos_to_be_in_center_of_cell(x, y, vals.cell_size, size)
-
+        return self.jit_calculator.reform_pos_to_be_in_center_of_cell(x, y, vals.cell_size, size)  # type: ignore
 
     def find_pos_to_draw(self, event: GraphicEvent, vals: GraphicValuesGuard) -> tuple[int, int]:
         if event.event_type == GraphicEventType.ANIM_MOVE:

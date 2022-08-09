@@ -1,6 +1,10 @@
 import pygame
-import src.constants as const
+from pygame import Rect
+from pygame.font import Font
+from pygame.surface import Surface
 
+import src.constants as const
+from src.constants import GRAY
 from src.constants import (
     NUM_OF_SQUARES_IN_PANEL,
     EMPTY_SQUARES,
@@ -11,19 +15,12 @@ from src.constants import (
     X_TEXT_CENTER_SQUARE_DIM_PART,
     Y_TEXT_CENTER_SQUARE_DIM_PART,
 )
-
-from pygame import Surface
-from pygame import Rect
-from pygame.font import Font
-from pygame.surface import SurfaceType  # type: ignore
-
-from src.constants import GRAY
 from src.graphics.graphic_values_guard import GraphicValuesGuard
+from src.graphics.image_handler.image_loader import ImageLoader
+from src.logic.engine import Engine
 from src.object.dummy_type import DummyType
 from src.object.pond_object import PondObject
 from src.simulation_settings import SimulationSettings
-from src.graphics.image_handler.image_loader import ImageLoader
-from src.logic.engine import Engine
 
 pygame.font.init()
 
@@ -74,7 +71,7 @@ class UI:
     def get_dummy(self) -> PondObject:
         return self._engine.get_dummy(self._adding_object_list[self._adding_object_idx])
 
-    def _get_dummy_img(self) -> Surface | SurfaceType:
+    def _get_dummy_img(self) -> Surface:
         return self._image_loader.get_object_image(self.get_dummy(), self._square_dim)
 
     def _get_rect(self, x: int) -> Rect:
