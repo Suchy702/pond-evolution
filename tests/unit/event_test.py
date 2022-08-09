@@ -14,7 +14,7 @@ def graphic_event():
 def test_graphic_event_copy(graphic_event):
     cp = graphic_event.copy()
     assert id(cp) != id(graphic_event)
-    for attr in GraphicEvent.attributes:
+    for attr in graphic_event.attributes:
         assert getattr(cp, attr) == getattr(graphic_event, attr)
 
 

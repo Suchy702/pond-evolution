@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from abc import ABC
-from typing import Optional, TypeVar, Generic, cast, ClassVar
+from typing import Optional, TypeVar, Generic, cast
 
 from overrides import overrides
 
@@ -13,10 +13,15 @@ T = TypeVar('T', bound=EventType)
 
 
 class Event(ABC, Generic[T]):
-    attributes: ClassVar[tuple[str, ...]] = ('event_type',)
-
     def __init__(self, event_type: T, **kwargs):
         self.event_type: T = event_type
+        self.attributes: list[str] = ['event_type']
+
+        self._get_attr_names()
+
+    def _get_attr_names(self) -> None:
+        for param in self.__init__.__code__.co_varnames[2:2 + self.__init__.__code__.co_kwonlyargcount]:  # type: ignore
+            self.attributes.append(param)
 
     def copy(self) -> Event:
         kwargs = {}
@@ -29,10 +34,6 @@ class Event(ABC, Generic[T]):
 
 
 class LogicEvent(Event[LogicEventType]):
-    attributes = (
-        'event_type', 'obj', 'pos'
-    )
-
     def __init__(self, event_type: LogicEventType, obj: PondObject, pos: Position):
         super().__init__(event_type)
         self.obj = obj
@@ -48,10 +49,6 @@ class LogicEvent(Event[LogicEventType]):
 
 
 class GraphicEvent(Event[GraphicEventType]):
-    attributes = (
-        'event_type', 'key', 'pond_object', 'x', 'y', 'from_x', 'from_y', 'to_x', 'to_y', 'step', 'total_steps'
-    )
-
     def __init__(self,
                  event_type: GraphicEventType, *,
                  key: Optional[str] = None,
@@ -106,10 +103,6 @@ class GameEvent(Event[GameEventType]):
 
 
 class ClickEvent(Event[ClickEventType]):
-    attributes = (
-        'event_type', 'pos'
-    )
-
     def __init__(self, event_type: ClickEventType, pos: tuple[int, int]):
         super().__init__(event_type)
         self.pos: tuple[int, int] = pos
