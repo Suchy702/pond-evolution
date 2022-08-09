@@ -30,7 +30,7 @@ class ClickingEventManager(EventManager):
         if not self._is_clicked_on_pond(event.pos[0], event.pos[1]):
             return
 
-        dummy = self._gui.ui.get_dummy()
+        dummy = self._gui.user_panel.get_dummy()
         click_coor = self._gui.get_click_coor(event.pos)
 
         if dummy.kind == ObjectKind.ALGA_MAKER and click_coor[1] != self._gui.settings.pond_height - 1:

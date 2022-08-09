@@ -7,7 +7,7 @@ from src.events.event_emitter import EventEmitter
 from src.graphics.graphic_calculator import GraphicCalculator
 from src.graphics.graphic_values_guard import GraphicValuesGuard
 from src.graphics.image_handler.image_loader import ImageLoader
-from src.graphics.ui import UI
+from src.graphics.user_panel import UserPanel
 from src.logic.engine import Engine
 from src.object.object_kind import ObjectKind
 from src.simulation_settings import SimulationSettings
@@ -26,12 +26,12 @@ class GUI:
 
         self._event_emitter = EventEmitter()
 
-        self.ui = UI(self.settings, self._screen, self.vals)
+        self.user_panel = UserPanel(self.settings, self._screen, self.vals)
 
-        self._image_loader = ImageLoader(self.ui.square_dim)
+        self._image_loader = ImageLoader(self.user_panel.square_dim)
 
-        self.ui.set_image_loader(self._image_loader)
-        self.ui.set_engine(engine)
+        self.user_panel.set_image_loader(self._image_loader)
+        self.user_panel.set_engine(engine)
 
     def draw_empty_frame(self) -> None:
         self.draw_pond_area()

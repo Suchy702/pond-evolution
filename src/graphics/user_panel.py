@@ -25,7 +25,7 @@ from src.simulation_settings import SimulationSettings
 pygame.font.init()
 
 
-class UI:
+class UserPanel:
     def __init__(self, settings: SimulationSettings, screen: Surface, vals: GraphicValuesGuard):
         self._settings: SimulationSettings = settings
         self._vals: GraphicValuesGuard = vals

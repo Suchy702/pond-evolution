@@ -66,7 +66,7 @@ class GraphicEventManager(EventManager):
         self._handle_static_events()
         self._handle_animation_events()
         self._animation_speed_changed = False
-        self._gui.ui.draw()
+        self._gui.user_panel.draw()
         pygame.display.update()
 
     def is_too_small_time_diff_between_anim_changes(self) -> bool:
@@ -101,7 +101,7 @@ class GraphicEventManager(EventManager):
             case ".":
                 self.change_animation_speed(-ANIMATION_SPEED_CHANGE)
             case "q":
-                self._gui.ui.next_add_object()
+                self._gui.user_panel.next_add_object()
 
     @staticmethod
     def _add_event_with_next_step(event: GraphicEvent) -> None:
