@@ -5,7 +5,7 @@ from src.constants import LIGHT_BLUE
 from src.events.event import GraphicEvent
 from src.events.event_emitter import EventEmitter
 from src.graphics.graphic_calculator import GraphicCalculator
-from src.graphics.graphic_values_guard import GraphicValuesGuard, clip
+from src.graphics.graphic_values_guard import GraphicValuesGuard
 from src.graphics.image_handler.image_loader import ImageLoader
 from src.graphics.ui import UI
 from src.logic.engine import Engine
@@ -18,7 +18,7 @@ class GUI:
     def __init__(self, settings: SimulationSettings, engine: Engine):
         self.settings: SimulationSettings = settings
         self.vals: GraphicValuesGuard = GraphicValuesGuard(settings)
-        self.calculator: GraphicCalculator = GraphicCalculator(settings)
+        self.calcus: GraphicCalculator = GraphicCalculator(settings)
 
         screen_flags = pygame.SCALED | pygame.FULLSCREEN if self.settings.fullscreen else 0
         screen_resolution = [self.settings.screen_width, self.settings.screen_height]
@@ -27,7 +27,7 @@ class GUI:
 
         self._event_emitter = EventEmitter()
 
-        self.ui = UI(self.settings, self._screen, self.vals)  # type: ignore
+        self.ui = UI(self.settings, self._screen, self.vals)
 
         self._image_loader = ImageLoader(self.ui.square_dim)
 
@@ -49,15 +49,15 @@ class GUI:
         return x_in and y_in
 
     def draw_anim_event(self, event: GraphicEvent) -> None:
-        x, y = self.calculator.find_pos_to_draw(event, self.vals)
+        x, y = self.calcus.find_pos_to_draw(event, self.vals)
         if self._is_visible_now(x, y):
             self.draw_object(event, x, y)
 
     def center_view(self) -> None:
-        self.vals.x_offset, self.vals.y_offset = self.calculator.calc_center_view(self.vals)
+        self.vals.x_offset, self.vals.y_offset = self.calcus.calc_center_view(self.vals)
 
     def zoom(self, change: int) -> None:
-        self.calculator.calc_zoom(change, self.vals)
+        self.calcus.calc_zoom(change, self.vals)
 
     def is_animation_finished(self) -> bool:
         return not self._event_emitter.is_animation_event_present()
@@ -75,13 +75,13 @@ class GUI:
         return image
 
     def draw_object(self, event: GraphicEvent, x: int, y: int) -> None:
-        size = self.calculator.match_size_for_fish(event, self.vals) if self._is_obj_fish(event) else self.vals.cell_size
+        size = self.calcus.match_size_for_fish(event, self.vals) if self._is_obj_fish(event) else self.vals.cell_size
         image = self._get_reformed_image(event, size)
-        x, y = self.calculator.reform_pos_to_be_in_center(x, y, self.vals, size)
+        x, y = self.calcus.reform_pos_to_be_in_center(x, y, self.vals, size)
         self._screen.blit(image, (x, y))
 
     def get_click_coor(self, click_pos: tuple[int, int]) -> tuple[int, int]:
-        return self.calculator.get_click_coor(click_pos, self.vals)
+        return self.calcus.get_click_coor(click_pos, self.vals)
 
     def hide_screen(self) -> None:
         self._screen = pygame.display.set_mode((0, 0), pygame.HIDDEN)

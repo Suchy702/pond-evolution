@@ -1,4 +1,4 @@
-from math import ceil, copysign
+from math import copysign
 from typing import cast
 
 from src.events.event import GraphicEvent
@@ -12,21 +12,12 @@ from src.graphics.jit_graphic_calculator import JITGraphicCalculator
 class GraphicCalculator:
     def __init__(self, settings: SimulationSettings):
         self._settings: SimulationSettings = settings
-        self.jit_calculator: JITGraphicCalculator = JITGraphicCalculator()
-
-    def get_visible_gird_x_coordinates(self, vals: GraphicValuesGuard) -> tuple[int, int]:
-        x_min = int(ceil(-vals.x_offset / vals.cell_size))
-        x_max = (self._settings.screen_pond_width - vals.cell_size - vals.x_offset) // vals.cell_size
-        return x_min, x_max
-
-    def get_visible_grid_y_coordinates(self, vals: GraphicValuesGuard) -> tuple[int, int]:
-        y_min = int(ceil(-vals.y_offset / vals.cell_size))
-        y_max = (self._settings.screen_pond_height - vals.cell_size - vals.y_offset) // vals.cell_size
-        return y_min, y_max
+        self.jit_calc: JITGraphicCalculator = JITGraphicCalculator()
 
     def get_visible_grid_coordinates(self, vals) -> tuple[int, int, int, int]:
-        x_min, x_max = self.get_visible_gird_x_coordinates(vals)
-        y_min, y_max = self.get_visible_grid_y_coordinates(vals)
+        cell_size, x_off, y_off = vals.cell_size, vals.x_offset, vals.y_offset
+        x_min, x_max = self.jit_calc.get_visible_gird_x_coor(x_off, cell_size, self._settings.screen_pond_width)
+        y_min, y_max = self.jit_calc.get_visible_grid_y_coor(y_off, cell_size, self._settings.screen_pond_height)
         return x_min, x_max, y_min, y_max
 
     def calc_center_view(self, vals: GraphicValuesGuard) -> tuple[int, int]:
@@ -34,46 +25,28 @@ class GraphicCalculator:
         new_y_offset = int(self._settings.screen_pond_height / 2 - self._settings.pond_height * vals.cell_size / 2)
         return new_x_offset, new_y_offset
 
-    @staticmethod
-    def _calc_begin_point_in_animation(event: GraphicEvent, vals: GraphicValuesGuard) -> tuple[int, int]:
-        x = event.from_x * vals.cell_size + vals.x_offset
-        y = event.from_y * vals.cell_size + vals.y_offset
-        return x, y
-
-    @staticmethod
-    def _calc_end_point_in_animation(event: GraphicEvent, vals: GraphicValuesGuard) -> tuple[int, int]:
-        x = event.to_x * vals.cell_size + vals.x_offset
-        y = event.to_y * vals.cell_size + vals.y_offset
-        return x, y
-
-    def match_size_for_fish(self, event: GraphicEvent, vals: GraphicValuesGuard) -> tuple[int, int]:
+    def match_size_for_fish(self, event: GraphicEvent, vals: GraphicValuesGuard) -> int:
         fish = cast(Fish, event.pond_object)
-        return self.jit_calculator.match_size_for_fish_calculations(fish.size, vals.cell_size)  # type: ignore
+        return self.jit_calc.match_size_for_fish_calculations(fish.size, vals.cell_size)
 
     def _find_pos_to_draw_when_move(self, event: GraphicEvent, vals: GraphicValuesGuard) -> tuple[int, int]:
-        x1, y1 = self._calc_begin_point_in_animation(event, vals)
-        x2, y2 = self._calc_end_point_in_animation(event, vals)
+        cell_size, x_off, y_off = vals.cell_size, vals.x_offset, vals.y_offset
+        x1, y1 = self.jit_calc.calc_begin_point_of_animation(event.from_x, event.from_y, cell_size, x_off, y_off)
+        x2, y2 = self.jit_calc.calc_end_point_of_animation(event.to_x, event.to_y, cell_size, x_off, y_off)
 
-        if self.jit_calculator.is_not_linear_fun(x1, x2):
-            return self.jit_calculator.calc_pos_for_non_linear_fun(x1, y1, y2, event.step, event.total_steps)
+        if self.jit_calc.is_not_linear_fun(x1, x2):
+            return self.jit_calc.calc_pos_for_non_linear_fun(x1, y1, y2, event.step, event.total_steps)
 
-        return self.jit_calculator.calc_pos_for_linear_fun(x1, y1, x2, y2, event.step, event.total_steps)
-
-    @staticmethod
-    def _find_pos_to_draw_when_stay(event: GraphicEvent, vals: GraphicValuesGuard) -> tuple[int, int]:
-        x = event.x * vals.cell_size + vals.x_offset
-        y = event.y * vals.cell_size + vals.y_offset
-        return x, y
+        return self.jit_calc.calc_pos_for_linear_fun(x1, y1, x2, y2, event.step, event.total_steps)
 
     def reform_pos_to_be_in_center(self, x: int, y: int, vals: GraphicValuesGuard, size: int) -> tuple[int, int]:
-        return self.jit_calculator.reform_pos_to_be_in_center_of_cell(x, y, vals.cell_size, size)
-
+        return self.jit_calc.reform_pos_to_be_in_center_of_cell(x, y, vals.cell_size, size)
 
     def find_pos_to_draw(self, event: GraphicEvent, vals: GraphicValuesGuard) -> tuple[int, int]:
         if event.event_type == GraphicEventType.ANIM_MOVE:
             return self._find_pos_to_draw_when_move(event, vals)
         else:
-            return self._find_pos_to_draw_when_stay(event, vals)
+            return self.jit_calc.find_pos_to_draw_stay(event.x, event.y, vals.cell_size, vals.x_offset, vals.y_offset)
 
     def get_click_coor(self, click_pos: tuple[int, int], vals: GraphicValuesGuard) -> tuple[int, int]:
         x_min, x_max, y_min, y_max = self.get_visible_grid_coordinates(vals)
