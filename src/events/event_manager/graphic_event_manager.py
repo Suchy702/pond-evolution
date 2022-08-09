@@ -45,6 +45,15 @@ class GraphicEventManager(EventManager):
     def _is_only_new_object_which_shouldnt_be_shown(events: list[GraphicEvent]) -> bool:
         return len([event for event in events if event.event_type != GraphicEventType.ANIM_NEW]) == 0
 
+    def _set_max_anim_step(self, cp_anim_events: list[GraphicEvent]) -> None:
+        self._max_anim_step = -1
+        self._max_anim_step = max([event.step for event in cp_anim_events])
+
+    def _draw_animations_events(self, cp_anim_events: list[GraphicEvent]) -> None:
+        self._gui.draw_empty_frame()
+        for event in cp_anim_events:
+            self._handle_animation_event(event)
+
     def _handle_animation_events(self) -> None:
         cp_anim_events = self._animation_events.copy()
         self._animation_events.clear()
@@ -52,15 +61,12 @@ class GraphicEventManager(EventManager):
         if len(cp_anim_events) == 0:
             return
 
-        self._max_anim_step = -1
-        self._max_anim_step = max([event.step for event in cp_anim_events])
+        self._set_max_anim_step(cp_anim_events)
 
         if self._is_only_new_object_which_shouldnt_be_shown(cp_anim_events):
             return
 
-        self._gui.draw_empty_frame()
-        for event in cp_anim_events:
-            self._handle_animation_event(event)
+        self._draw_animations_events(cp_anim_events)
 
     def handle_events(self) -> None:
         self._handle_static_events()
