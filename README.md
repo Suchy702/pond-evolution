@@ -25,6 +25,22 @@ To start the program executre **main.py** file. E.g you can run this command fro
 
 ## Usage
 
+Upon start of the program user is greeted with the following window:
+
+<p align="center">
+  <img src="https://github.com/Suchy702/pond-evolution/blob/master/resources/readme/settings.png" alt="settings"/>
+</p>
+
+Here one can tweak parameters of the simulation. The current options include:
+
+- Resolution - defines resolution of the simulation and window size (unless fullscreen mode is selected)
+- Full screen mode - defines whether or not program should be run in fullscreen mode. Program will be rendered in previously selected resolution and then scaled to fit user's screen
+- Show statistics - after simulation ends various graphs can be shown to represent how the number of fish and their traits varied with respect to time
+- Empty pond - by default simulation starts with randomly spawned fish and plants. This settings turns it off
+- No worms from heaven - by default worms fall from top to ocean ground. This settings removes worms completely.
+
+When "Run simulations" is clicked
+
 ## Development
 
 Project is being developed using Pycharm IDE and python 3.10 To create development environment for Pycharm do the following steps:
