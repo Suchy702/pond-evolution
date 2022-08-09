@@ -1,37 +1,35 @@
-from typing import cast
-
 import pygame
 from pygame.surface import Surface
 
-from src.constants import LIGHT_BLUE, FISH_MAX_SIZE, FISH_MIN_SIZE, CELL_MIN_PX_SIZE, CELL_MAX_PX_SIZE
+from src.constants import LIGHT_BLUE
 from src.events.event import GraphicEvent
 from src.events.event_emitter import EventEmitter
 from src.graphics.graphic_calculator import GraphicCalculator
 from src.graphics.graphic_values_guard import GraphicValuesGuard, clip
 from src.graphics.image_handler.image_loader import ImageLoader
 from src.graphics.ui import UI
-from src.object.fish import Fish
+from src.logic.engine import Engine
+
 from src.object.object_kind import ObjectKind
 from src.simulation_settings import SimulationSettings
 
 
 class GUI:
-    def __init__(self, settings: SimulationSettings, engine):
+    def __init__(self, settings: SimulationSettings, engine: Engine):
         self.settings: SimulationSettings = settings
-        self.vals = GraphicValuesGuard(settings)
-        self.calculator = GraphicCalculator(settings)
+        self.vals: GraphicValuesGuard = GraphicValuesGuard(settings)
+        self.calculator: GraphicCalculator = GraphicCalculator(settings)
 
         screen_flags = pygame.SCALED | pygame.FULLSCREEN if self.settings.fullscreen else 0
-        self._screen: Surface = pygame.display.set_mode(
-            [self.settings.screen_width, self.settings.screen_height], flags=screen_flags, vsync=1
-        )
+        screen_resolution = [self.settings.screen_width, self.settings.screen_height]
+        self._screen: Surface = pygame.display.set_mode(screen_resolution, flags=screen_flags, vsync=1)
         self.center_view()
 
         self._event_emitter = EventEmitter()
 
-        self.ui = UI(self.settings, self._screen, self.vals)
+        self.ui = UI(self.settings, self._screen, self.vals)  # type: ignore
 
-        self._image_loader = ImageLoader(self.ui._square_dim)
+        self._image_loader = ImageLoader(self.ui.square_dim)
 
         self.ui.set_image_loader(self._image_loader)
         self.ui.set_engine(engine)
@@ -64,22 +62,22 @@ class GUI:
     def is_animation_finished(self) -> bool:
         return not self._event_emitter.is_animation_event_present()
 
-    def draw_object(self, event: GraphicEvent, x: int, y: int) -> None:
-        size = self.vals.cell_size
-        if event.pond_object.kind == ObjectKind.FISH:
-            fish = cast(Fish, event.pond_object)
-            size = int(fish.size / ((FISH_MAX_SIZE + FISH_MIN_SIZE) // 2) * self.vals.cell_size)
-            size = clip(size, CELL_MIN_PX_SIZE, CELL_MAX_PX_SIZE)
-        image = self._image_loader.get_object_image(event.pond_object, size)
+    @staticmethod
+    def _is_obj_fish(event: GraphicEvent) -> bool:
+        return event.pond_object.kind == ObjectKind.FISH
 
+    def _get_reformed_image(self, event: GraphicEvent, size: int) -> Surface:
+        image = self._image_loader.get_object_image(event.pond_object, size)
         if event.is_flipped:
             image = pygame.transform.flip(image, True, False)
         if event.rotate is not None:
             image = pygame.transform.rotate(image, event.rotate)
+        return image
 
-        x += (self.vals.cell_size - size) // 2
-        y += (self.vals.cell_size - size) // 2
-
+    def draw_object(self, event: GraphicEvent, x: int, y: int) -> None:
+        size = self.calculator.match_size_for_fish(event, self.vals) if self._is_obj_fish(event) else self.vals.cell_size
+        image = self._get_reformed_image(event, size)
+        x, y = self.calculator.reform_pos_to_be_in_center(x, y, self.vals, size)
         self._screen.blit(image, (x, y))
 
     def get_click_coor(self, click_pos: tuple[int, int]) -> tuple[int, int]:

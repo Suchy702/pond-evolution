@@ -1,7 +1,7 @@
 import pygame
 import src.constants as const
 
-from src.constants import (  # type: ignore
+from src.constants import (
     NUM_OF_SQUARES_IN_PANEL,
     EMPTY_SQUARES,
     BLACK,
@@ -34,7 +34,7 @@ class UI:
         self._vals: GraphicValuesGuard = vals
         self._screen: Surface = screen
 
-        # TODO: Co z tym zrobic?
+        # TODO: Co z tym zrobic? Wgl czy UI moze miec Engine? wydaje mi sie ze to moze miec tylko game i event_manager
         self._image_loader: ImageLoader = None
         self._engine: Engine = None
 
@@ -49,7 +49,11 @@ class UI:
         self._adding_object_list: list[DummyType] = list(DummyType)
         self._adding_object_idx: int = 0
 
-        self._font: Font = pygame.font.SysFont("Comic Sans MS", int(self._square_dim*TEXT_SIZE_SQUARE_DIM_PART))
+        self._font: Font = pygame.font.SysFont("Comic Sans MS", int(self._square_dim * TEXT_SIZE_SQUARE_DIM_PART))
+
+    @property
+    def square_dim(self) -> int:
+        return self._square_dim
 
     def set_engine(self, engine: Engine) -> None:
         self._engine = engine
@@ -87,8 +91,8 @@ class UI:
         self._screen.blit(self._image_loader.get_ui_image(name), self._get_rect(x))
 
     def _calc_text_rendering_pos(self, x: int) -> tuple[int, int]:
-        correct = (len(str(self._engine.cycle_count)) - 1) * self._square_dim*TEXT_CENTER_CORRECT_SQUARE_DIM_PART
-        x_pos = x + int(self._square_dim*X_TEXT_CENTER_SQUARE_DIM_PART - correct)
+        correct = (len(str(self._engine.cycle_count)) - 1) * self._square_dim * TEXT_CENTER_CORRECT_SQUARE_DIM_PART
+        x_pos = x + int(self._square_dim * X_TEXT_CENTER_SQUARE_DIM_PART - correct)
         y_pos = self._settings.screen_pond_height + int(self._ui_height*Y_TEXT_CENTER_SQUARE_DIM_PART)
         return x_pos, y_pos
 
@@ -113,6 +117,6 @@ class UI:
     def draw(self) -> None:
         self._draw_empty_panel()
 
-        stop = self._num_of_squares*(self._break+self._square_dim)
+        stop = self._num_of_squares*(self._break + self._square_dim)
         for square_idx, x in zip(range(self._num_of_squares), range(self._edge, stop, self._break + self._square_dim)):
             self._choose_what_to_draw(square_idx, x)

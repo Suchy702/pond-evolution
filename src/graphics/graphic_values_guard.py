@@ -12,7 +12,7 @@ def clip(val: int, a: int, b: int) -> int:
 
 class GraphicValuesGuard:
     def __init__(self, settings: SimulationSettings):
-        self.settings = settings
+        self._settings = settings
         self._cell_size: int = CELL_MIN_PX_SIZE  # length of cell's side in px. Cell is a square
         self._animation_speed: int = START_ANIMATION_FPS
         self._x_offset: int = 0
@@ -24,7 +24,7 @@ class GraphicValuesGuard:
 
     @x_offset.setter
     def x_offset(self, val: int) -> None:
-        x_offset_limit = -(self.settings.pond_width * self._cell_size - self.settings.screen_pond_width)
+        x_offset_limit = -(self._settings.pond_width * self._cell_size - self._settings.screen_pond_width)
         self._x_offset = clip(val, 0, x_offset_limit)
 
     @property
@@ -33,7 +33,7 @@ class GraphicValuesGuard:
 
     @y_offset.setter
     def y_offset(self, val: int) -> None:
-        y_offset_limit = -(self.settings.pond_height * self._cell_size - self.settings.screen_pond_height)
+        y_offset_limit = -(self._settings.pond_height * self._cell_size - self._settings.screen_pond_height)
         self._y_offset = clip(val, 0, y_offset_limit)
 
     @property
