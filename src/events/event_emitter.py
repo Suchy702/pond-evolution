@@ -3,7 +3,6 @@ from __future__ import annotations
 from typing import Optional, TYPE_CHECKING, Sequence
 
 import pygame
-
 from pygame.locals import (  # type: ignore
     K_UP,
     K_DOWN,
@@ -21,10 +20,10 @@ from pygame.locals import (  # type: ignore
     MOUSEBUTTONDOWN,
 )
 
+from src.constants import LEFT_MOUSE_BUTTON
 from src.events.event import Event, GameEvent, LogicEvent, GraphicEvent, ClickEvent
 from src.events.event_type import GameEventType, GraphicEventType, ClickEventType
 from src.singleton import Singleton
-from src.constants import LEFT_MOUSE_BUTTON
 
 if TYPE_CHECKING:
     from src.events.event_manager.game_event_manager import GameEventManager
