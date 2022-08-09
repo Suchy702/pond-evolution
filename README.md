@@ -114,7 +114,7 @@ There are four types of of objects with fish being the only inteligent species:
 
     Intelligent species that evolves with each new generation.
     Fish have traits defining their size, speed and eyesight.
-    One fish can eat another if it is bigger than it.
+    Predator fish can eat another if it is bigger than the other one.
     Each fish has limited eyesight. It sees only things inside circle
     of given radius (manhattan metric circle).
     Fish will try to move to the location of nearest food, but only if
@@ -132,6 +132,13 @@ There are four types of of objects with fish being the only inteligent species:
       but requires more food to live and reproduce
     - eyesight - the higher the eyesight the bigger the radius in which
       fish sees things
+      
+    Types of fish:
+     
+    - 🟡 omnivore - eats alae and worms
+    - 🟢 herbivore - eats only algae
+    - 🟣 carnivore - eats only worms
+    - 🔴 predator - eats only other fish
     
 
 
