@@ -45,23 +45,34 @@ class Game:
     def _user_close_program(self):
         return self._settings.screen_height is None
 
+    def _end_game_actions(self):
+        self._gui.hide_screen()
+        self._statistics.show_statistics()
+
+    def _skipped_game(self):
+        self._event_emitter.clear_gui_events()
+        self._event_emitter.handle_events()
+        self._engine.cycle()
+        self._statistics.make_snapshot()
+        self.skip -= 1
+
+    def _normal_game(self):
+        if self._gui.is_animation_finished():
+            self._engine.cycle()
+            self._statistics.make_snapshot()
+
+        self._event_emitter.handle_events()
+
+    def _game_type_decision(self):
+        if self.skip:
+            self._skipped_game()
+        else:
+            self._normal_game()
+
     def run(self) -> None:
         clock = pygame.time.Clock()
         while self.running:
             clock.tick(FPS)
+            self._game_type_decision()
+        self._end_game_actions()
 
-            if self.skip:
-                self._event_emitter.clear_gui_events()
-                self._event_emitter.handle_events()
-                self._engine.cycle()
-                self._statistics.make_snapshot()
-                self.skip -= 1
-            else:
-                if self._gui.is_animation_finished():
-                    self._engine.cycle()
-                    self._statistics.make_snapshot()
-
-                self._event_emitter.handle_events()
-
-        self._gui.hide_screen()
-        self._statistics.show_statistics()
