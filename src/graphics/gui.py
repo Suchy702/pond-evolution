@@ -31,7 +31,7 @@ class GUI:
 
         self.ui = UI(self.settings, self._screen, self.vals)
 
-        self._image_loader = ImageLoader(self.ui.square_dim)
+        self._image_loader = ImageLoader(self.ui._square_dim)
 
         self.ui.set_image_loader(self._image_loader)
         self.ui.set_engine(engine)
