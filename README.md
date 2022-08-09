@@ -47,7 +47,7 @@ When "Run simulations" is clicked new window is opened. This is where the simula
 
 Bottom of the screen contains User Panel which displays basic controls. Bottom right corner contains information about current cycle of evolution. 
 
-### Controls:
+### Controls
 1. movement - **arrows** move camera, **+/-** zooms in and out, **\<key c\>** centers camera 
 
 <p align="center">
@@ -72,8 +72,48 @@ Bottom of the screen contains User Panel which displays basic controls. Bottom r
   <img src="https://github.com/Suchy702/pond-evolution/blob/master/resources/readme/speed.gif" alt="demo" width="500px"/>
 </p>
 
+### Evolution
 
+There are four types of of objects with fish being the only inteligent species:
 
+1. **Alga Maker**
+
+<p align="center">
+  <img src="https://github.com/Suchy702/pond-evolution/blob/master/resources/img/seaweed.svg" alt="demo" width="50px"/>
+</p>
+
+    This plant is forever stuck to the bottom of the ocean. Occasionally spawns algae.
+
+2. **Alga**
+
+<p align="center">
+  <img src="https://github.com/Suchy702/pond-evolution/blob/master/resources/img/alga.svg" alt="demo" width="50px"/>
+</p>
+
+    Produced from Alga Makers. Slowly floats to the top in straight line. Can be eaten by herbivores.
+
+3. **Worm**
+
+<p align="center">
+  <img src="https://github.com/Suchy702/pond-evolution/blob/master/resources/img/worm.svg" alt="demo" width="50px"/>
+</p>
+
+    Randomly dropped from heavens. Slowly floats to the bottom in zigzag manner. Can be eaten by carnivores.
+
+3. **Fish**
+
+<p align="center">
+  <img src="https://github.com/Suchy702/pond-evolution/blob/master/resources/img/omnivore_fish.svg" alt="demo" width="50px"/>
+  <img src="https://github.com/Suchy702/pond-evolution/blob/master/resources/img/herbivore_fish.svg" alt="demo" width="50px"/>
+  <img src="https://github.com/Suchy702/pond-evolution/blob/master/resources/img/carnivore_fish.svg" alt="demo" width="50px"/>
+  <img src="https://github.com/Suchy702/pond-evolution/blob/master/resources/img/predator_fish.svg" alt="demo" width="50px"/>
+</p>
+
+    Intelligent species that evolves with each new generation. Fish have traits defining their size, speed and eyesight. One fish can eat another if it is bigget than it.
+    
+    - size - the bigger the fish the harder it is for other fish to eat it, but requires more food to live and reproduce
+    - speed - the higher the speed the further fish can move in one go, but requires more food to live and reproduce
+    - eyesight - the higher the eyesight the 
 
 
 ## Development
