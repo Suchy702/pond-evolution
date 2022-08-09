@@ -58,7 +58,6 @@ class GraphicCalculator:
         return x_min + x_cell_add, y_min + y_cell_add
 
     # Magic function
-    # TODO Wez to ogarnij bo ja nie wiem co tu sie dzieje xD
     def calc_zoom(self, change: int, vals: GraphicValuesGuard) -> None:
         old_cell_size = vals.cell_size
         vals.cell_size += change
@@ -87,6 +86,7 @@ class GraphicCalculator:
             abs(screen_center_x - pond_center_x) / old_cell_size,
             self._settings.pond_width / 2
         ) * copysign(1, screen_center_x - pond_center_x)
+
         horizontal_cells = min(
             abs(screen_center_y - pond_center_y) / old_cell_size,
             self._settings.screen_pond_height / 2

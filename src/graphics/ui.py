@@ -31,7 +31,6 @@ class UI:
         self._vals: GraphicValuesGuard = vals
         self._screen: Surface = screen
 
-        # TODO: Co z tym zrobic? Wgl czy UI moze miec Engine? wydaje mi sie ze to moze miec tylko game i event_manager
         self._image_loader: ImageLoader = None
         self._engine: Engine = None
 
