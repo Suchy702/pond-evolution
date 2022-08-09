@@ -42,7 +42,7 @@ Here one can tweak parameters of the simulation. The current options include:
 When "Run simulations" is clicked new window is opened. This is where the simulation happens.
 
 <p align="center">
-  <img src="https://github.com/Suchy702/pond-evolution/blob/master/resources/readme/main.png" alt="demo" width="720px"/>
+  <img src="https://github.com/Suchy702/pond-evolution/blob/master/resources/readme/main.png" alt="main" width="720px"/>
 </p>
 
 Bottom of the screen contains User Panel which displays basic controls. Bottom right corner contains information about current cycle of evolution. 
@@ -51,25 +51,25 @@ Bottom of the screen contains User Panel which displays basic controls. Bottom r
 1. movement - **arrows** move camera, **+/-** zooms in and out, **\<key c\>** centers camera 
 
 <p align="center">
-  <img src="https://github.com/Suchy702/pond-evolution/blob/master/resources/readme/movement.gif" alt="demo" width="500px"/>
+  <img src="https://github.com/Suchy702/pond-evolution/blob/master/resources/readme/movement.gif" alt="move" width="500px"/>
 </p>
 
 2. object addition - **\<left click\>** can be used to place new objects into the simulation. Type of placed object can be changed with **\<key q\>**
 
 <p align="center">
-  <img src="https://github.com/Suchy702/pond-evolution/blob/master/resources/readme/add.gif" alt="demo" width="500px"/>
+  <img src="https://github.com/Suchy702/pond-evolution/blob/master/resources/readme/add.gif" alt="add" width="500px"/>
 </p>
 
 3. jump 100 evolution cycles - **\<key j\>** skips 100 cycles of evolution. It may take a few seconds...
 
 <p align="center">
-  <img src="https://github.com/Suchy702/pond-evolution/blob/master/resources/readme/jump.gif" alt="demo" width="500px"/>
+  <img src="https://github.com/Suchy702/pond-evolution/blob/master/resources/readme/jump.gif" alt="jump" width="500px"/>
 </p>
 
 4. speed - **\<key ,\>** slows down simulation and **\<key .\>** speeds it up
 
 <p align="center">
-  <img src="https://github.com/Suchy702/pond-evolution/blob/master/resources/readme/speed.gif" alt="demo" width="500px"/>
+  <img src="https://github.com/Suchy702/pond-evolution/blob/master/resources/readme/speed.gif" alt="speed" width="500px"/>
 </p>
 
 ### Evolution
@@ -79,7 +79,7 @@ There are four types of of objects with fish being the only inteligent species:
 1. **Alga Maker**
 
 <p align="center">
-  <img src="https://github.com/Suchy702/pond-evolution/blob/master/resources/img/seaweed.svg" alt="demo" width="50px"/>
+  <img src="https://github.com/Suchy702/pond-evolution/blob/master/resources/img/seaweed.svg" alt="seaweed" width="50px"/>
 </p>
 
     This plant is forever stuck to the bottom of the ocean.
@@ -88,7 +88,7 @@ There are four types of of objects with fish being the only inteligent species:
 2. **Alga**
 
 <p align="center">
-  <img src="https://github.com/Suchy702/pond-evolution/blob/master/resources/img/alga.svg" alt="demo" width="50px"/>
+  <img src="https://github.com/Suchy702/pond-evolution/blob/master/resources/img/alga.svg" alt="alga" width="50px"/>
 </p>
 
     Produced from Alga Makers. Slowly floats to the top in straight line.
@@ -97,7 +97,7 @@ There are four types of of objects with fish being the only inteligent species:
 3. **Worm**
 
 <p align="center">
-  <img src="https://github.com/Suchy702/pond-evolution/blob/master/resources/img/worm.svg" alt="demo" width="50px"/>
+  <img src="https://github.com/Suchy702/pond-evolution/blob/master/resources/img/worm.svg" alt="worm" width="50px"/>
 </p>
 
     Randomly dropped from heavens. Slowly floats to the bottom in zigzag manner.
@@ -106,10 +106,10 @@ There are four types of of objects with fish being the only inteligent species:
 3. **Fish**
 
 <p align="center">
-  <img src="https://github.com/Suchy702/pond-evolution/blob/master/resources/img/omnivore_fish.svg" alt="demo" width="50px"/>
-  <img src="https://github.com/Suchy702/pond-evolution/blob/master/resources/img/herbivore_fish.svg" alt="demo" width="50px"/>
-  <img src="https://github.com/Suchy702/pond-evolution/blob/master/resources/img/carnivore_fish.svg" alt="demo" width="50px"/>
-  <img src="https://github.com/Suchy702/pond-evolution/blob/master/resources/img/predator_fish.svg" alt="demo" width="50px"/>
+  <img src="https://github.com/Suchy702/pond-evolution/blob/master/resources/img/omnivore_fish.svg" alt="f1" width="50px"/>
+  <img src="https://github.com/Suchy702/pond-evolution/blob/master/resources/img/herbivore_fish.svg" alt="f2" width="50px"/>
+  <img src="https://github.com/Suchy702/pond-evolution/blob/master/resources/img/carnivore_fish.svg" alt="f3" width="50px"/>
+  <img src="https://github.com/Suchy702/pond-evolution/blob/master/resources/img/predator_fish.svg" alt="f4" width="50px"/>
 </p>
 
     Intelligent species that evolves with each new generation.
@@ -140,8 +140,20 @@ There are four types of of objects with fish being the only inteligent species:
     - 🟣 carnivore - eats only worms
     - 🔴 predator - eats only other fish
     
+### Statistics
 
+If approproate settings is checked, at the end of simulation two graphs will be shown. First one represents change in population of fish by their type:
 
+<p align="center">
+  <img src="https://github.com/Suchy702/pond-evolution/blob/master/resources/readme/population.png" alt="population" width="700px"/>
+</p>
+
+The other one shows how fish's traits changed with respect to time, type of fish and trait:
+
+<p align="center">
+  <img src="https://github.com/Suchy702/pond-evolution/blob/master/resources/img/readme/traits.png" alt="traits" width="700px"/>
+</p>
+    
 ## Development
 
 Project is being developed using Pycharm IDE and python 3.10 To create development environment for Pycharm do the following steps:
