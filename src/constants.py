@@ -7,9 +7,9 @@ CELL_MAX_PX_SIZE: int = 80
 
 # Animation
 START_ANIMATION_FPS: int = 40
-MIN_ANIMATION_FPS = 5
-MAX_ANIMATION_FPS = 60
-ANIMATION_SPEED_CHANGE = 3
+MIN_ANIMATION_FPS: int = 5
+MAX_ANIMATION_FPS: int = 60
+ANIMATION_SPEED_CHANGE: int = 3
 
 # Colors
 BLACK: tuple[int, int, int] = (0, 0, 0)
@@ -17,8 +17,8 @@ LIGHT_BLUE: tuple[int, int, int] = (138, 219, 239)
 GRAY: tuple[int, int, int] = (220, 220, 220)
 
 # Events
-SCREEN_MOVE_CHANGE = 50
-SCREEN_ZOOM_CHANGE = 5
+SCREEN_MOVE_CHANGE: int = 50
+SCREEN_ZOOM_CHANGE: int = 5
 
 # Algae
 ALGA_SURFACING_STEPS: int = 15
