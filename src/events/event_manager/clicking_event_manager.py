@@ -28,17 +28,12 @@ class ClickingEventManager(EventManager):
         self._events.append(event)
 
     def _emit_add_event(self, dummy: PondObject, click_coor: tuple[int, int]) -> None:
-        self.event_emitter.emit_event(
-            LogicEvent(LogicEventType.ADD, dummy, Position(click_coor[1], click_coor[0]))
-        )
+        event = LogicEvent(LogicEventType.ADD, dummy, Position(click_coor[1], click_coor[0]))
+        self.event_emitter.emit_event(event)
 
     def _emit_anim_new_event(self, dummy: PondObject, click_coor: tuple[int, int]) -> None:
-        self.event_emitter.emit_event(
-            GraphicEvent(
-                GraphicEventType.ANIM_NEW, pond_object=dummy,
-                x=click_coor[0], y=click_coor[1]
-            )
-        )
+        event = GraphicEvent(GraphicEventType.ANIM_NEW, pond_object=dummy, x=click_coor[0], y=click_coor[1])
+        self.event_emitter.emit_event(event)
 
     @staticmethod
     def _is_alg(dummy: PondObject) -> bool:

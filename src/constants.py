@@ -65,3 +65,6 @@ EMPTY_SQUARES: set[int] = {2, 6, 9}
 
 # Settings
 SCREEN_DIMENSIONS = ('1920x1080', '1080x720', '720x480')
+
+# Event Emitter
+LEFT_MOUSE_BUTTON = 1

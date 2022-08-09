@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from typing import cast
 
 from src.events.event import Event
 

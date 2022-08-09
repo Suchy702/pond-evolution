@@ -13,7 +13,6 @@ T = TypeVar('T', bound=EventType)
 
 
 class Event(ABC, Generic[T]):
-    # TODO: moze atrybuty brac automatycznie z parametrow konstruktora zamiast wypisywac tutaj?
     attributes: ClassVar[tuple[str, ...]] = ('event_type',)
 
     def __init__(self, event_type: T, **kwargs):

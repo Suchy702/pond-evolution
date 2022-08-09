@@ -24,14 +24,13 @@ from pygame.locals import (  # type: ignore
 from src.events.event import Event, GameEvent, LogicEvent, GraphicEvent, ClickEvent
 from src.events.event_type import GameEventType, GraphicEventType, ClickEventType
 from src.singleton import Singleton
+from src.constants import LEFT_MOUSE_BUTTON
 
 if TYPE_CHECKING:
     from src.events.event_manager.game_event_manager import GameEventManager
     from src.events.event_manager.graphic_event_manager import GraphicEventManager
     from src.events.event_manager.logic_event_manager import LogicEventManager
     from src.events.event_manager.clicking_event_manager import ClickingEventManager
-
-LEFT_MOUSE_BUTTON = 1
 
 
 class EventEmitter(metaclass=Singleton):
@@ -65,8 +64,6 @@ class EventEmitter(metaclass=Singleton):
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == LEFT_MOUSE_BUTTON:
                 self.emit_event(ClickEvent(ClickEventType.LEFT_CLICK, pygame.mouse.get_pos()))
-            else:
-                self.emit_event(ClickEvent(ClickEventType.RIGHT_CLICK, pygame.mouse.get_pos()))
 
     def _emit_pygame_non_key_events(self, event_list: list[pygame.event.Event]) -> None:
         for event in event_list:
