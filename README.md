@@ -5,7 +5,7 @@
 ![issues](https://img.shields.io/github/issues-raw/Suchy702/pond-evolution)
 ![build](https://img.shields.io/github/workflow/status/Suchy702/pond-evolution/test_pond_evolution/master)
 
-It a crazy, amazing application about fish and evolution
+A simple yet estetic program that simulates wild life deep beneath the ocean floor. Inspired by [Primer's](https://www.youtube.com/c/PrimerLearning) simulation and reinforced learning visualisations, but with more emphasis on interaction with user. The idea is simple: user defines parameters of the simulation, adds creatures and objects using simple GUI, and observes how the life, he created, evolves.
 
 <p align="center">
   <img src="https://github.com/Suchy702/pond-evolution/blob/master/resources/demo/demo3.gif" alt="demo" width="720px"/>
