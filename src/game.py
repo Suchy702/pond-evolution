@@ -75,4 +75,3 @@ class Game:
             clock.tick(FPS)
             self._game_type_decision()
         self._end_game_actions()
-
