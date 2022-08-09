@@ -17,7 +17,7 @@ class FishType(Enum):
     OMNIVORE = auto()
 
     @staticmethod
-    def get_random():
+    def get_random() -> FishType:
         return random.choice(list(FishType))
 
     @staticmethod

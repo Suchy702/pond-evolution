@@ -33,7 +33,7 @@ class PondObject(ABC):
         return self._id
 
     @id.setter
-    def id(self, id_):
+    def id(self, id_: int):
         if self._id != -1:
             raise Exception("ID already set!")
         self._id = id_

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import random
 from enum import Enum, auto, unique
 
@@ -9,7 +11,7 @@ class FishTrait(Enum):
     SMART = auto()
 
     @staticmethod
-    def get_random():
+    def get_random() -> FishTrait:
         return random.choice(list(FishTrait))
 
     def __str__(self):
