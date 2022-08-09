@@ -76,7 +76,6 @@ class EventEmitter(metaclass=Singleton):
                     self.emit_event(GraphicEvent(GraphicEventType.KEY_PRESSED, key="q"))
 
     def _emit_pygame_key_game_events(self, keys: Sequence[bool]) -> None:
-        print(type(keys))
         if keys[K_e]:
             self.emit_event(GameEvent(GameEventType.QUIT))
         if keys[K_j]:
