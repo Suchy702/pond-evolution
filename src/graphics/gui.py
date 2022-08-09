@@ -9,7 +9,6 @@ from src.graphics.graphic_values_guard import GraphicValuesGuard
 from src.graphics.image_handler.image_loader import ImageLoader
 from src.graphics.ui import UI
 from src.logic.engine import Engine
-
 from src.object.object_kind import ObjectKind
 from src.simulation_settings import SimulationSettings
 
