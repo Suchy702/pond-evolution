@@ -82,7 +82,8 @@ There are four types of of objects with fish being the only inteligent species:
   <img src="https://github.com/Suchy702/pond-evolution/blob/master/resources/img/seaweed.svg" alt="demo" width="50px"/>
 </p>
 
-    This plant is forever stuck to the bottom of the ocean. Occasionally spawns algae.
+    This plant is forever stuck to the bottom of the ocean.
+    Occasionally spawns algae.
 
 2. **Alga**
 
@@ -90,7 +91,8 @@ There are four types of of objects with fish being the only inteligent species:
   <img src="https://github.com/Suchy702/pond-evolution/blob/master/resources/img/alga.svg" alt="demo" width="50px"/>
 </p>
 
-    Produced from Alga Makers. Slowly floats to the top in straight line. Can be eaten by herbivores.
+    Produced from Alga Makers. Slowly floats to the top in straight line.
+    Can be eaten by herbivores.
 
 3. **Worm**
 
@@ -98,7 +100,8 @@ There are four types of of objects with fish being the only inteligent species:
   <img src="https://github.com/Suchy702/pond-evolution/blob/master/resources/img/worm.svg" alt="demo" width="50px"/>
 </p>
 
-    Randomly dropped from heavens. Slowly floats to the bottom in zigzag manner. Can be eaten by carnivores.
+    Randomly dropped from heavens. Slowly floats to the bottom in zigzag manner.
+    Can be eaten by carnivores.
 
 3. **Fish**
 
@@ -109,11 +112,27 @@ There are four types of of objects with fish being the only inteligent species:
   <img src="https://github.com/Suchy702/pond-evolution/blob/master/resources/img/predator_fish.svg" alt="demo" width="50px"/>
 </p>
 
-    Intelligent species that evolves with each new generation. Fish have traits defining their size, speed and eyesight. One fish can eat another if it is bigget than it.
+    Intelligent species that evolves with each new generation.
+    Fish have traits defining their size, speed and eyesight.
+    One fish can eat another if it is bigger than it.
+    Each fish has limited eyesight. It sees only things inside circle
+    of given radius (manhattan metric circle).
+    Fish will try to move to the location of nearest food, but only if
+    the spot with food is not occupied by too many fish
+    (they are introverted and prefer to keep themselves to themselves).
+    If fish notices a predator, then it tries to run away.
+    If fish ate enough food it will reproduce and then die.
+    Newborn fish have traits of their parents with small random changes.
     
-    - size - the bigger the fish the harder it is for other fish to eat it, but requires more food to live and reproduce
-    - speed - the higher the speed the further fish can move in one go, but requires more food to live and reproduce
-    - eyesight - the higher the eyesight the 
+    Traits:
+    
+    - size - the bigger the fish the harder it is for other fish to eat it,
+      but requires more food to live and reproduce
+    - speed - the higher the speed the further fish can move in one go,
+      but requires more food to live and reproduce
+    - eyesight - the higher the eyesight the bigger the radius in which
+      fish sees things
+    
 
 
 ## Development
