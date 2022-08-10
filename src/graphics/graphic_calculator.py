@@ -57,6 +57,14 @@ class GraphicCalculator:
 
         return x_min + x_cell_add, y_min + y_cell_add
 
+    @staticmethod
+    def is_flipped(event: GraphicEvent):
+        return event.from_x <= event.to_x
+
+    def get_rotate_angle(self, event: GraphicEvent):
+        x, y = event.to_x - event.from_x, event.to_y - event.from_y
+        return self.jit_calc.get_rotation_angle(x, y)
+
     # Magic function
     def calc_zoom(self, change: int, vals: GraphicValuesGuard) -> None:
         old_cell_size = vals.cell_size

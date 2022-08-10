@@ -115,10 +115,18 @@ class GraphicEventManager(EventManager):
             event.step += 1
             event_emitter.emit_event(event)
 
+    def _initialize_rotate_angle(self, event: GraphicEvent) -> None:
+        if not self._gui.is_obj_fish(event) or event.event_type == GraphicEventType.ANIM_STAY:
+            return None
+
+        event.is_flipped = self._gui.calcus.is_flipped(event)
+        event.rotate = self._gui.calcus.get_rotate_angle(event)
+
     def _set_event_total_step(self, event: GraphicEvent) -> None:
         if event.total_steps is None:
             event.total_steps = self._gui.vals.animation_speed
             event.step = self._max_anim_step
+            self._initialize_rotate_angle(event)
 
     def _customize_total_steps_to_anim_speed(self, event: GraphicEvent) -> None:
         percentage = event.step / event.total_steps

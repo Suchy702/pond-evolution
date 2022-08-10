@@ -92,8 +92,6 @@ class FishHandler(PondObjectHandlerHomogeneous):
                     GraphicEventType.ANIM_MOVE, pond_object=fish,
                     from_x=fish.pos.x, from_y=fish.pos.y,
                     to_x=n_pos.x, to_y=n_pos.y,
-                    is_flipped=fish.pos.x <= n_pos.x,
-                    rotate=self._get_rotation_angle(n_pos.x - fish.pos.x, fish.pos.y - n_pos.y)
                 )
             )
             fish.spoil_vitality()
@@ -103,19 +101,6 @@ class FishHandler(PondObjectHandlerHomogeneous):
         n_pos = self._pond.trim_position(Position(y, x))
         n_pos.y = min(n_pos.y, self._pond.height-2)
         return n_pos
-
-    @staticmethod
-    def _get_rotation_angle(x: int, y: int) -> Optional[float]:
-        if math.isclose(x, 0) and math.isclose(y, 0):
-            return None
-
-        degree = math.atan2(y, x) * 180 / math.pi
-
-        if -90 <= degree <= 90:
-            return degree
-        elif 90 < degree < 180:
-            return degree - 180
-        return degree + 180
 
     def breed_fish(self, fish: Fish) -> None:
         self.add_all(fish.birth_fish())

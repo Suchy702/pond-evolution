@@ -62,7 +62,7 @@ class GUI:
         return not self._event_emitter.is_animation_event_present()
 
     @staticmethod
-    def _is_obj_fish(event: GraphicEvent) -> bool:
+    def is_obj_fish(event: GraphicEvent) -> bool:
         return event.pond_object.kind == ObjectKind.FISH
 
     def _get_reformed_image(self, event: GraphicEvent, size: int) -> Surface:
@@ -70,11 +70,11 @@ class GUI:
         if event.is_flipped:
             image = pygame.transform.flip(image, True, False)
         if event.rotate is not None:
-            image = pygame.transform.rotate(image, event.rotate)
+            image = pygame.transform.rotate(image, -event.rotate)
         return image
 
     def draw_object(self, event: GraphicEvent, x: int, y: int) -> None:
-        size = self.calcus.match_size_for_fish(event, self.vals) if self._is_obj_fish(event) else self.vals.cell_size
+        size = self.calcus.match_size_for_fish(event, self.vals) if self.is_obj_fish(event) else self.vals.cell_size
         image = self._get_reformed_image(event, size)
         x, y = self.calcus.reform_pos_to_be_in_center(x, y, self.vals, size)
         self._screen.blit(image, (x, y))

@@ -1,4 +1,6 @@
+import math
 from math import ceil
+from typing import Optional
 
 from numba import jit
 from src.constants import FISH_MAX_SIZE, FISH_MIN_SIZE, CELL_MAX_PX_SIZE, CELL_MIN_PX_SIZE
@@ -79,3 +81,17 @@ class JITGraphicCalculator:
         y_min = int(ceil(-y_off / cell_size))
         y_max = (screen_pond_height - cell_size - y_off) // cell_size
         return y_min, y_max
+
+    @staticmethod
+    @jit(nopython=True)
+    def get_rotation_angle(x: int, y: int) -> Optional[float]:
+        if x == 0 and y == 0:
+            return None
+
+        degree = math.atan2(y, x) * 180 / math.pi
+
+        if -90 <= degree <= 90:
+            return degree
+        elif 90 < degree < 180:
+            return degree - 180
+        return degree + 180
