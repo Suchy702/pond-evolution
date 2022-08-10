@@ -70,7 +70,7 @@ class GUI:
         if event.is_flipped:
             image = pygame.transform.flip(image, True, False)
         if event.rotate is not None:
-            image = pygame.transform.rotate(image, -event.rotate)
+            image = pygame.transform.rotate(image, event.rotate)
         return image
 
     def draw_object(self, event: GraphicEvent, x: int, y: int) -> None:

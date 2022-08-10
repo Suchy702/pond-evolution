@@ -4,9 +4,9 @@ from typing import cast
 from src.events.event import GraphicEvent
 from src.events.event_type import GraphicEventType
 from src.graphics.graphic_values_guard import GraphicValuesGuard
+from src.graphics.jit_graphic_calculator import JITGraphicCalculator
 from src.object.fish import Fish
 from src.simulation_settings import SimulationSettings
-from src.graphics.jit_graphic_calculator import JITGraphicCalculator
 
 
 class GraphicCalculator:
@@ -62,7 +62,7 @@ class GraphicCalculator:
         return event.from_x <= event.to_x
 
     def get_rotate_angle(self, event: GraphicEvent):
-        x, y = event.to_x - event.from_x, event.to_y - event.from_y
+        x, y = event.to_x - event.from_x, event.from_y - event.to_y
         return self.jit_calc.get_rotation_angle(x, y)
 
     # Magic function
