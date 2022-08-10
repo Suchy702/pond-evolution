@@ -1,18 +1,21 @@
 import functools
 import itertools
-import math
 from random import randint, random
-from typing import cast, Generator, Optional
+from typing import cast, Generator
 
 from overrides import overrides
 
-from src.constants import FISH_MIN_SPEED, FISH_MAX_SPEED, FISH_MIN_SIZE, FISH_MAX_SIZE
+from src.constants import (
+    FISH_MIN_SPEED,
+    FISH_MAX_SPEED,
+    FISH_MIN_SIZE,
+    FISH_MAX_SIZE,
+    CHANCE_TO_BE_SMART,
+    CHANCE_TO_BE_PREDATOR,
+)
 from src.decision.decision import Decision
 from src.decision.decision_set import DecisionSet
 from src.decision.decision_type import DecisionType
-from src.events.event import GraphicEvent
-from src.events.event_emitter import EventEmitter
-from src.events.event_type import GraphicEventType
 from src.object.fish import Fish
 from src.object.fish_trait import FishTrait
 from src.object.fish_type import FishType
@@ -23,8 +26,6 @@ from src.pond.pond_viewer import PondViewer
 from src.position import Position
 from src.simulation_settings import SimulationSettings
 
-event_emitter = EventEmitter()
-
 
 class FishHandler(PondObjectHandlerHomogeneous):
     def __init__(self, settings: SimulationSettings):
@@ -34,21 +35,40 @@ class FishHandler(PondObjectHandlerHomogeneous):
     def fishes(self) -> list[Fish]:
         return [cast(Fish, fish) for fish in self.objects]
 
-    @overrides
-    def create_random_single(self) -> PondObject:
+    @staticmethod
+    def _add_predator_trait(fish: Fish) -> None:
+        fish.traits.add(FishTrait.PREDATOR)
+        fish.fish_type = FishType.CARNIVORE
+        fish.eyesight -= 5
+        fish.speed += 5
+        fish.size += 5
+
+    @staticmethod
+    def _is_getting_smart_trait() -> bool:
+        return random() < CHANCE_TO_BE_SMART
+
+    @staticmethod
+    def _is_getting_predator_trait() -> bool:
+        return random() < CHANCE_TO_BE_PREDATOR
+
+    def _create_basic_random_fish(self) -> Fish:
         speed = randint(FISH_MIN_SPEED, FISH_MAX_SPEED)
         size = randint(FISH_MIN_SIZE, FISH_MAX_SIZE)
         eyesight = randint(2, self._pond.height // 2) + 5
-        fish = Fish(speed, size, eyesight, self._pond.random_position())
-        fish.fish_type = FishType.get_random()
-        if random() < 0.7:
+        return Fish(speed, size, eyesight, self._pond.random_position())
+
+    def _add_advanced_traits(self, fish) -> None:
+        if self._is_getting_smart_trait():
             fish.traits.add(FishTrait.SMART)
-        if random() < 0.2:
-            fish.traits.add(FishTrait.PREDATOR)
-            fish.fish_type = FishType.CARNIVORE
-            fish.eyesight -= 5
-            fish.speed += 5
-            fish.size += 5
+
+        if self._is_getting_predator_trait():
+            self._add_predator_trait(fish)
+
+    @overrides
+    def create_random_single(self) -> PondObject:
+        fish = self._create_basic_random_fish()
+        fish.fish_type = FishType.get_random()
+        self._add_advanced_traits(fish)
         return fish
 
     @overrides
@@ -70,32 +90,17 @@ class FishHandler(PondObjectHandlerHomogeneous):
         for decision in decisions[DecisionType.MOVE, ObjectKind.FISH]:
             self.move_fish(decision)
         for decision in decisions[DecisionType.STAY, ObjectKind.FISH]:
-            self.move_fish(decision, True)
+            self.event_emitter.emit_anim_stay_event(decision)
         for decision in decisions[DecisionType.REPRODUCE, ObjectKind.FISH]:
             fish = cast(Fish, decision.pond_object)
             self.breed_fish(fish)
 
-    def move_fish(self, decision: Decision, stay=False) -> None:
+    def move_fish(self, decision: Decision) -> None:
         fish = cast(Fish, decision.pond_object)
-
-        if stay:
-            event_emitter.emit_event(
-                GraphicEvent(
-                    GraphicEventType.ANIM_STAY, pond_object=decision.pond_object,
-                    x=decision.pond_object.pos.x, y=decision.pond_object.pos.y
-                )
-            )
-        else:
-            n_pos = self._special_trim(decision.to_x, decision.to_y)
-            event_emitter.emit_event(
-                GraphicEvent(
-                    GraphicEventType.ANIM_MOVE, pond_object=fish,
-                    from_x=fish.pos.x, from_y=fish.pos.y,
-                    to_x=n_pos.x, to_y=n_pos.y,
-                )
-            )
-            fish.spoil_vitality()
-            self._pond.change_position(fish, n_pos)
+        n_pos = self._special_trim(decision.to_x, decision.to_y)
+        self.event_emitter.emit_anim_move_event(decision, n_pos)
+        fish.spoil_vitality()
+        self._pond.change_position(fish, n_pos)
 
     def _special_trim(self, x, y):
         n_pos = self._pond.trim_position(Position(y, x))

@@ -115,8 +115,13 @@ class GraphicEventManager(EventManager):
             event.step += 1
             event_emitter.emit_event(event)
 
+    def _no_need_to_set_rotate_angle(self, event: GraphicEvent) -> bool:
+        is_anim_stay = event.event_type == GraphicEventType.ANIM_STAY
+        is_anim_new = event.event_type == GraphicEventType.ANIM_NEW
+        return (not self._gui.is_obj_fish(event)) or is_anim_stay or is_anim_new
+
     def _initialize_rotate_angle(self, event: GraphicEvent) -> None:
-        if not self._gui.is_obj_fish(event) or event.event_type == GraphicEventType.ANIM_STAY:
+        if self._no_need_to_set_rotate_angle(event):
             return None
 
         event.is_flipped = self._gui.calcus.is_flipped(event)
