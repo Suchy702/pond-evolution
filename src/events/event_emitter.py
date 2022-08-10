@@ -21,8 +21,10 @@ from pygame.locals import (  # type: ignore
 )
 
 from src.constants import LEFT_MOUSE_BUTTON
+from src.decision.decision import Decision
 from src.events.event import Event, GameEvent, LogicEvent, GraphicEvent, ClickEvent
 from src.events.event_type import GameEventType, GraphicEventType, ClickEventType
+from src.position import Position
 from src.singleton import Singleton
 
 if TYPE_CHECKING:
@@ -103,3 +105,15 @@ class EventEmitter(metaclass=Singleton):
     def clear_gui_events(self) -> None:
         self.graphic_event_manager.clear()
         self.clicking_event_manager.clear()
+
+    def emit_anim_move_event(self, decision: Decision, n_pos: Position) -> None:
+        self.emit_event(
+            GraphicEvent(
+                GraphicEventType.ANIM_MOVE, pond_object=decision.pond_object,
+                from_x=decision.pond_object.pos.x, from_y=decision.pond_object.pos.y,
+                to_x=n_pos.x, to_y=n_pos.y
+            )
+        )
+
+    def emit_anim_stay_event(self, decision: Decision, x: int, y: int) -> None:
+        self.emit_event(GraphicEvent(GraphicEventType.ANIM_STAY, pond_object=decision.pond_object, x=x, y=y))

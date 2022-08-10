@@ -11,11 +11,14 @@ from src.pond.pond_object_database import PondObjectDatabase
 from src.pond.pond_viewer import PondViewer
 from src.position import Position
 from src.simulation_settings import SimulationSettings
+from src.events.event_emitter import EventEmitter
+
+event_emitter = EventEmitter()
 
 
 class PondObjectHandler(ABC):
     def __init__(self, settings: SimulationSettings):
-        pass
+        self.settings: SimulationSettings = settings
 
     @abstractmethod
     def add_random(self, amount: int) -> None:
@@ -57,6 +60,7 @@ class PondObjectHandlerHomogeneous(PondObjectHandler):
         super().__init__(settings)
         self._pond: Pond = Pond(settings)
         self._object_database: PondObjectDatabase = PondObjectDatabase()
+        self.event_emitter = event_emitter
 
     @property  # type: ignore
     @overrides
@@ -81,11 +85,11 @@ class PondObjectHandlerHomogeneous(PondObjectHandler):
         self._object_database.remove(obj)
         self._pond.remove(obj)
 
-    def add_all(self, objects: Iterable[PondObject]):
+    def add_all(self, objects: Iterable[PondObject]) -> None:
         for obj in objects:
             self.add(obj)
 
-    def remove_all(self, objects: Iterable[PondObject]):
+    def remove_all(self, objects: Iterable[PondObject]) -> None:
         for obj in objects:
             self.remove(obj)
 
@@ -109,7 +113,7 @@ class PondObjectHandlerHomogeneous(PondObjectHandler):
         return sum([obj.energy_val for obj in self.get_spot_obj(pos)])
 
     # Wyrazenie listowe zeby zapobiec przekazaniu dalej referencji, co zmienialoby rozmiar setu podczas iteracji
-    def remove_at_spot(self, pos: Position):
+    def remove_at_spot(self, pos: Position) -> None:
         self.remove_all(list(self._pond.get_spot(pos)))
 
     def is_sth_at_pos(self, pos) -> bool:

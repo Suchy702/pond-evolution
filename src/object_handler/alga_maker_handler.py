@@ -5,17 +5,12 @@ from overrides import overrides
 from src.decision.decision import Decision
 from src.decision.decision_set import DecisionSet
 from src.decision.decision_type import DecisionType
-from src.events.event import GraphicEvent
-from src.events.event_emitter import EventEmitter
-from src.events.event_type import GraphicEventType
 from src.object.alga import Alga
 from src.object.alga_maker import AlgaMaker
 from src.object.object_kind import ObjectKind
 from src.object.pond_object import PondObject
 from src.object_handler.pond_object_handler import PondObjectHandlerHomogeneous
 from src.simulation_settings import SimulationSettings
-
-event_emitter = EventEmitter()
 
 
 class AlgaMakerHandler(PondObjectHandlerHomogeneous):
@@ -31,12 +26,7 @@ class AlgaMakerHandler(PondObjectHandlerHomogeneous):
             self.move_alga_maker(decision)
 
     def move_alga_maker(self, decision: Decision) -> None:
-        event_emitter.emit_event(
-            GraphicEvent(
-                GraphicEventType.ANIM_STAY, pond_object=decision.pond_object,
-                x=decision.pond_object.pos.x, y=decision.pond_object.pos.y
-            )
-        )
+        self.event_emitter.emit_anim_stay_event(decision, decision.pond_object.pos.x, decision.pond_object.pos.y)
 
     @overrides
     def create_random_single(self) -> PondObject:
