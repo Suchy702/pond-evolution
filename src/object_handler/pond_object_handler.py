@@ -60,7 +60,7 @@ class PondObjectHandlerHomogeneous(PondObjectHandler):
         super().__init__(settings)
         self._pond: Pond = Pond(settings)
         self._object_database: PondObjectDatabase = PondObjectDatabase()
-        self.event_emitter = event_emitter
+        self.event_emitter: EventEmitter = event_emitter
 
     @property  # type: ignore
     @overrides

@@ -115,5 +115,6 @@ class EventEmitter(metaclass=Singleton):
             )
         )
 
-    def emit_anim_stay_event(self, decision: Decision, x: int, y: int) -> None:
+    def emit_anim_stay_event(self, decision: Decision) -> None:
+        x, y = decision.pond_object.pos.x, decision.pond_object.pos.y
         self.emit_event(GraphicEvent(GraphicEventType.ANIM_STAY, pond_object=decision.pond_object, x=x, y=y))

@@ -26,7 +26,7 @@ class AlgaMakerHandler(PondObjectHandlerHomogeneous):
             self.move_alga_maker(decision)
 
     def move_alga_maker(self, decision: Decision) -> None:
-        self.event_emitter.emit_anim_stay_event(decision, decision.pond_object.pos.x, decision.pond_object.pos.y)
+        self.event_emitter.emit_anim_stay_event(decision)
 
     @overrides
     def create_random_single(self) -> PondObject:
