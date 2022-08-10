@@ -21,7 +21,7 @@ class Engine:
     def all_objects(self) -> list[PondObject]:
         return self._interactor.all_objects
 
-    def objects_by_type(self, obj_type: ObjectKind):
+    def objects_by_type(self, obj_type: ObjectKind) -> list[PondObject]:
         return self._interactor.objects_by_type(obj_type)
 
     @property

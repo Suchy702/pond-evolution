@@ -17,12 +17,11 @@ if TYPE_CHECKING:
 
 class AlgaMakerAI(AI["AlgaMaker"]):
     def _movement_decision(self) -> Decision:
-        return Decision(
-            DecisionType.STAY, pond_object=self.pond_object, to_x=self.pond_object.pos.x, to_y=self.pond_object.pos.y
-        )
+        to_x, to_y = self.pond_object.pos.x, self.pond_object.pos.y
+        return Decision(DecisionType.STAY, pond_object=self.pond_object, to_x=to_x, to_y=to_y)
 
     def _reproduce_decision(self) -> Optional[Decision]:
-        if random() < CHANCE_TO_PRODUCE_ALGAE / 100:
+        if random() < CHANCE_TO_PRODUCE_ALGAE:
             return Decision(DecisionType.REPRODUCE, pond_object=self.pond_object)
         return None
 

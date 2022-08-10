@@ -19,10 +19,9 @@ if TYPE_CHECKING:
 
 class WormAI(AI["Worm"]):
     def _find_pos_to_move(self) -> Position:
-        return self.pond_object.pos.changed(
-            self.pond_object.falling_speed,
-            randint(-self.pond_object.bounce_ratio, self.pond_object.bounce_ratio)
-        )
+        y = self.pond_object.falling_speed
+        x = randint(-self.pond_object.bounce_ratio, self.pond_object.bounce_ratio)
+        return self.pond_object.pos.changed(y, x)
 
     def _movement_decision(self) -> Decision:
         pos_to_move = self._find_pos_to_move()
@@ -30,7 +29,7 @@ class WormAI(AI["Worm"]):
 
     @staticmethod
     def _reproduce_decision() -> Optional[Decision]:
-        if random() < CHANCE_TO_PRODUCE_WORMS / 100:
+        if random() < CHANCE_TO_PRODUCE_WORMS:
             return Decision(DecisionType.REPRODUCE, kind=ObjectKind.WORM)
         return None
 
