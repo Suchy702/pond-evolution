@@ -47,9 +47,7 @@ class PondViewer:
             if new_list:
                 yield new_list
 
-    def _get_visible_objects(
-            self, pos: Position, eyesight: int, obj_filter: Callable[[PondObject], bool], negate: bool = False
-    ) -> Generator[list[PondObject], None, None]:
+    def _get_visible_objects(self, pos: Position, eyesight: int, obj_filter: Callable[[PondObject], bool], negate: bool = False) -> Generator[list[PondObject], None, None]:
         """Returns visible objects grouped by distance from `pos`. Groups are sorted in ascending order of distance"""
         offset = [(0, 1), (1, 0), (0, -1), (-1, 0)]
 
@@ -130,8 +128,7 @@ class PondViewer:
         """Returns intersection of segment [a1, a2] with [b1, b2]"""
         return max(a1, b1), min(a2, b2)
 
-    def _get_spot_objects(self, pos: Position, obj_filter: Callable[[PondObject], bool], negate: bool) -> list[
-        PondObject]:
+    def _get_spot_objects(self, pos: Position, obj_filter: Callable[[PondObject], bool], negate: bool) -> list[PondObject]:
         objects = []
         for pond in self.ponds:
             for obj in pond.get_spot(pos):
