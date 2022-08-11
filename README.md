@@ -15,7 +15,7 @@ A simple yet estetic program that simulates wild life deep beneath the ocean flo
 
 Make sure you have Python 3.10 or newer. Run the following command from **pond-evolution** directory:
 
-```pip install -r ./config/requirements.txt```
+```pip install -r requirements.txt```
 
 ## Running
 
@@ -158,7 +158,7 @@ The other one shows how fish's traits changed with respect to time, type of fish
 
 Project is being developed using Pycharm IDE and python 3.10 To create development environment for Pycharm do the following steps:
 1. clone this github repo
-2. run command  ```./config/configure_env.sh``` from **pond-evolution** directory which will create local virtual environment for python and store it in **venv** subdirectory
+2. run command  ```./configure_env.sh``` from **pond-evolution** directory which will create local virtual environment for python and store it in **venv** subdirectory
 3. run command  ```source ./venv/bin/activate``` from **pond-evolution** to activate virtual environment
 4. open this project in Pycharm, go to "Add python interpreter" and then in section "Exisitng environment" set path so that it points to **venv** directory
 5. install mypy plugin for Pycharm
