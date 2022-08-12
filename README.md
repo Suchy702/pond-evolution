@@ -7,11 +7,11 @@
     ╚═╝░░░░░░╚════╝░╚═╝░░╚══╝╚═════╝░  ╚══════╝░░░╚═╝░░░░╚════╝░╚══════╝░╚═════╝░░░░╚═╝░░░╚═╝░╚════╝░╚═╝░░╚══╝
 
 
-![license](https://img.shields.io/github/license/Suchy702/pond-evolution.svg)
-![status](https://img.shields.io/badge/status-development-yellow)
-![python](https://img.shields.io/badge/python-3.10-blue)
-![issues](https://img.shields.io/github/issues-raw/Suchy702/pond-evolution)
-![build](https://img.shields.io/github/workflow/status/Suchy702/pond-evolution/test_pond_evolution/master)
+![license](https://img.shields.io/github/license/Suchy702/pond-evolution?colorA=192330&colorB=c70039&style=for-the-badge)
+![status](https://img.shields.io/badge/status-development-yellow?colorA=192330&colorB=e9da2c&style=for-the-badge)
+![python](https://img.shields.io/badge/python-3.10-blue?colorA=192330&colorB=309cdd&style=for-the-badge)
+![issues](https://img.shields.io/github/issues-raw/Suchy702/pond-evolution?colorA=192330&style=for-the-badge)
+![build](https://img.shields.io/github/workflow/status/Suchy702/pond-evolution/test_pond_evolution/master?colorA=192330&style=for-the-badge)
 
 A simple yet estetic program that simulates wild life deep beneath the ocean floor. Inspired by [Primer's](https://www.youtube.com/c/PrimerLearning) simulation and reinforced learning visualisations, but with more emphasis on interaction with user. The idea is simple: user defines parameters of the simulation, adds creatures and objects using simple GUI, and observes how the life, he created, evolves.
 
