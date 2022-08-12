@@ -32,7 +32,7 @@ Make sure you have Python 3.10 or newer. Run the following command from **pond-e
 
 ## Running
 
-To start the program executre **main.py** file. E.g you can run this command from **pond-evolution** directory:
+To start the program execute **main.py** file. E.g you can run this command from **pond-evolution** directory:
 
 ```python main.py```
 
