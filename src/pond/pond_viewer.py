@@ -27,9 +27,9 @@ class PondViewer:
             self.add_pond(pond)
 
     def get_visible_objects(self, pos: Position, eyesight: int) -> Generator[list[PondObject], None, None]:
-        yield from self._get_visible_objects(pos, eyesight, lambda obj: True)
+        yield from self._get_visible_objects(pos, eyesight, lambda _: True)
 
-    def get_visible_object_by_type(
+    def get_visible_objects_by_type(
             self, pos: Position, eyesight: int, obj_type: list[ObjectKind], negate: bool = False
     ) -> Generator[list[PondObject], None, None]:
         yield from self._get_visible_objects(pos, eyesight, lambda obj: obj.kind in obj_type, negate)
@@ -37,7 +37,7 @@ class PondViewer:
     def get_visible_object_by_trait(
             self, pos: Position, eyesight: int, traits: list[FishTrait], negate: bool = False
     ) -> Generator[list[Fish], None, None]:
-        for fish_layer in self.get_visible_object_by_type(pos, eyesight, [ObjectKind.FISH], False):
+        for fish_layer in self.get_visible_objects_by_type(pos, eyesight, [ObjectKind.FISH], False):
             new_list = []
             for fish in fish_layer:
                 fish = cast("Fish", fish)
@@ -47,46 +47,72 @@ class PondViewer:
             if new_list:
                 yield new_list
 
-    def _get_visible_objects(self, pos: Position, eyesight: int, obj_filter: Callable[[PondObject], bool], negate: bool = False) -> Generator[list[PondObject], None, None]:
+    def _get_visible_objects(
+            self, pos: Position, eyesight: int, obj_filter: Callable[[PondObject], bool], negate: bool = False
+    ) -> Generator[list[PondObject], None, None]:
         """Returns visible objects grouped by distance from `pos`. Groups are sorted in ascending order of distance"""
-        offset = [(0, 1), (1, 0), (0, -1), (-1, 0)]
 
         for radius in range(eyesight):
-            objects = []
-            if radius == 0:
-                yield self._get_spot_objects(pos, obj_filter, negate)
-                continue
-
-            for (off_x, off_y) in offset:
-                point = Position(pos.y + off_y * radius, pos.x + off_x * radius)
-                if 0 <= point.x < self.pond_width and 0 <= point.y < self.pond_height:
-                    objects.extend(self._get_spot_objects(point, obj_filter, negate))
-
-            if radius == 1:
-                if objects:
-                    yield objects
-                continue
-
-            for dummy_p1, dummy_p2 in itertools.pairwise(offset + [(0, 1)]):
-                x_change = dummy_p2[0] - dummy_p1[0]
-                y_change = dummy_p2[1] - dummy_p1[1]
-                p1 = Position(pos.y + dummy_p1[1] * radius + y_change, pos.x + dummy_p1[0] * radius + x_change)
-                p2 = Position(pos.y + dummy_p2[1] * radius - y_change, pos.x + dummy_p2[0] * radius - x_change)
-
-                (first_idx, last_idx) = self._get_intersection_indices(p1, p2)
-
-                if first_idx is None:
-                    continue
-
-                for i in range(first_idx, last_idx + 1):
-                    objects.extend(self._get_spot_objects(
-                        Position(p1.y + y_change * i, p1.x + x_change * i),
-                        obj_filter,
-                        negate
-                    ))
-
+            objects = self._get_objects_at_radius(radius, pos, obj_filter, negate)
             if objects:
                 yield objects
+
+    def _get_objects_at_radius(
+            self, radius: int, pos: Position, obj_filter: Callable[[PondObject], bool], negate: bool = False
+    ) -> list[PondObject]:
+        offset = [(0, 1), (1, 0), (0, -1), (-1, 0)]
+        objects = []
+
+        if radius == 0:
+            return self._get_spot_objects(pos, obj_filter, negate)
+
+        objects.extend(self._get_corner_objects(offset, radius, pos, obj_filter, negate))
+
+        if radius == 1:
+            return objects
+
+        objects.extend(self._get_edge_objects(offset, radius, pos, obj_filter, negate))
+
+        return objects
+
+    def _get_corner_objects(
+            self, offset: list[tuple[int, int]], radius: int, pos: Position, obj_filter: Callable[[PondObject], bool],
+            negate: bool = False
+    ) -> list[PondObject]:
+        objects = []
+
+        for (off_x, off_y) in offset:
+            point = Position(pos.y + off_y * radius, pos.x + off_x * radius)
+            if 0 <= point.x < self.pond_width and 0 <= point.y < self.pond_height:
+                objects.extend(self._get_spot_objects(point, obj_filter, negate))
+
+        return objects
+
+    def _get_edge_objects(
+            self, offset: list[tuple[int, int]], radius: int, pos: Position, obj_filter: Callable[[PondObject], bool],
+            negate: bool = False
+    ) -> list[PondObject]:
+        objects = []
+
+        for dummy_p1, dummy_p2 in itertools.pairwise(offset + [(0, 1)]):
+            x_change = dummy_p2[0] - dummy_p1[0]
+            y_change = dummy_p2[1] - dummy_p1[1]
+            p1 = Position(pos.y + dummy_p1[1] * radius + y_change, pos.x + dummy_p1[0] * radius + x_change)
+            p2 = Position(pos.y + dummy_p2[1] * radius - y_change, pos.x + dummy_p2[0] * radius - x_change)
+
+            (first_idx, last_idx) = self._get_intersection_indices(p1, p2)
+
+            if first_idx is None:
+                continue
+
+            for i in range(first_idx, last_idx + 1):
+                objects.extend(self._get_spot_objects(
+                    Position(p1.y + y_change * i, p1.x + x_change * i),
+                    obj_filter,
+                    negate
+                ))
+
+        return objects
 
     def _get_intersection_indices(self, p1, p2) -> tuple[Optional[int], Optional[int]]:
         x_swapped, y_swapped = False, False
@@ -128,7 +154,9 @@ class PondViewer:
         """Returns intersection of segment [a1, a2] with [b1, b2]"""
         return max(a1, b1), min(a2, b2)
 
-    def _get_spot_objects(self, pos: Position, obj_filter: Callable[[PondObject], bool], negate: bool) -> list[PondObject]:
+    def _get_spot_objects(
+            self, pos: Position, obj_filter: Callable[[PondObject], bool], negate: bool
+    ) -> list[PondObject]:
         objects = []
         for pond in self.ponds:
             for obj in pond.get_spot(pos):

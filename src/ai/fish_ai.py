@@ -40,7 +40,7 @@ class FishAI(AI["Fish"]):
 
         cnt_fish = 0
         fish_layers = list(
-            pond_viewer.get_visible_object_by_type(self.pond_object.pos, self.pond_object.eyesight, [ObjectKind.FISH])
+            pond_viewer.get_visible_objects_by_type(self.pond_object.pos, self.pond_object.eyesight, [ObjectKind.FISH])
         )
         fish_layers = cast(list[list["Fish"]], fish_layers)
 
@@ -104,7 +104,7 @@ class FishAI(AI["Fish"]):
         return None
 
     def _try_eat_other_non_fish(self, pond_viewer: PondViewer, cnt_fish: int) -> Optional[Decision]:
-        for food_layer in pond_viewer.get_visible_object_by_type(
+        for food_layer in pond_viewer.get_visible_objects_by_type(
                 self.pond_object.pos, self.pond_object.eyesight, FishType.get_edible_food(self.pond_object)
         ):
             for food in food_layer:
