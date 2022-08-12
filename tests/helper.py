@@ -27,6 +27,7 @@ def settings():
     s.pond_width = 5
     s.pond_height = 5
     s.no_worms_from_heaven = False
+    s.no_alga_from_hell = False
     return s
 
 
