@@ -22,6 +22,7 @@ class SimulationSettingsMock:
     fullscreen = False
     statistics = False
     no_worms_from_heaven = False
+    no_alga_from_hell = False
     empty_pond_setting = False
     get_user_settings = Mock()
 

@@ -19,6 +19,7 @@ class PlantHandler(PondObjectHandlerBundler):
         super().__init__(settings)
         self.alga_handler: AlgaHandler = AlgaHandler(settings)
         self.alga_maker_handler: AlgaMakerHandler = AlgaMakerHandler(settings)
+        self.alga_from_hell: bool = not settings.no_alga_from_hell
 
         self._handlers.extend([self.alga_handler, self.alga_maker_handler])
 
@@ -26,9 +27,10 @@ class PlantHandler(PondObjectHandlerBundler):
         self.alga_handler.handle_decisions(decisions)
         self.alga_maker_handler.handle_decisions(decisions)
 
-        for decision in decisions[DecisionType.REPRODUCE, ObjectKind.ALGA_MAKER]:
-            maker = cast(AlgaMaker, decision.pond_object)
-            self._detach_algae_from_maker(maker)
+        if self.alga_from_hell:
+            for decision in decisions[DecisionType.REPRODUCE, ObjectKind.ALGA_MAKER]:
+                maker = cast(AlgaMaker, decision.pond_object)
+                self._detach_algae_from_maker(maker)
 
     @overrides
     def add_random(self, amount: int) -> None:

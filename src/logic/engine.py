@@ -13,9 +13,9 @@ class Engine:
         self._interactor: Interactor = Interactor(self._settings)
         self._cycle_count: int = 0
 
-    def demo(self) -> None:
+    def prepare(self) -> None:
         if not self._settings.empty_pond_setting:
-            self._interactor.preparations()
+            self._interactor.prepare()
 
     @property
     def all_objects(self) -> list[PondObject]:

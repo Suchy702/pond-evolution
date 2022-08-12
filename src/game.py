@@ -24,7 +24,7 @@ class Game:
             sys.exit()
 
         self._engine = Engine(self._settings)
-        self._engine.demo()
+        self._engine.prepare()
         self._gui = GUI(self._settings, self._engine)
         self._statistics = Statistics(self._settings, self._engine)
 

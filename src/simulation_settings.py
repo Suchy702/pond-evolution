@@ -38,9 +38,10 @@ class SimulationSettings:
         self._add_statistics_setting(2, 'Show statistics (it may take a while after simulation)')
         self._add_empty_pond_setting(3, 'Empty pond')
         self._add_no_worms_from_heaven_setting(4, 'No worms from heaven')
+        self._add_no_alga_from_hell_setting(5, 'No alga from hell')
 
     def _add_run_simulation_button(self) -> None:
-        tk.Button(self._root, text="Run simulation", command=self._apply_settings).grid(row=5, column=0, columnspan=2)
+        tk.Button(self._root, text="Run simulation", command=self._apply_settings).grid(row=6, column=0, columnspan=2)
 
     def _row_config(self) -> None:
         # There are a few rows with 2 widgets and one with 1 widget
@@ -99,6 +100,12 @@ class SimulationSettings:
         no_worms_from_heaven = tk.Checkbutton(self._root, variable=self._no_worms_from_heaven_var)
         no_worms_from_heaven.grid(row=row, column=1, sticky='we')
 
+    def _add_no_alga_from_hell_setting(self, row, text) -> None:
+        tk.Label(self._root, text=f'{text}: ').grid(row=row, column=0, sticky='w')
+        self._no_alga_from_hell = tk.BooleanVar()
+        no_alga_from_hell = tk.Checkbutton(self._root, variable=self._no_alga_from_hell)
+        no_alga_from_hell.grid(row=row, column=1, sticky='we')
+
     def _resolution_apply(self) -> None:
         res = self._resolution_var.get().split('x')
         self.screen_width = int(res[0])
@@ -109,6 +116,7 @@ class SimulationSettings:
         self.statistics = self._statistics_var.get()
         self.empty_pond_setting = self._empty_pond_setting_var.get()
         self.no_worms_from_heaven = self._no_worms_from_heaven_var.get()
+        self.no_alga_from_hell = self._no_alga_from_hell.get()
 
     def _set_screen_dimensions(self) -> None:
         self.screen_pond_width = self.screen_width

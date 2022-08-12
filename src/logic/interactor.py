@@ -65,9 +65,8 @@ class Interactor:
     def _handle_decisions(self, decisions: DecisionSet) -> None:
         pass
 
-    # beta function for testing
-    def preparations(self) -> None:
-        self._plant_handler.add_random(10)
+    def prepare(self) -> None:
+        self._plant_handler.alga_maker_handler.add_random(10)
         self._fish_handler.add_random(50)
 
     def _find_pos_where_eat(self) -> list[Position]:
