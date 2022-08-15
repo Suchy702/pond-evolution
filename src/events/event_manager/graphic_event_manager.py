@@ -1,24 +1,27 @@
+from __future__ import annotations
+
 import time
-from typing import cast
+from typing import cast, TYPE_CHECKING
 
 import pygame
 from overrides import overrides
 
 from src.constants import SCREEN_MOVE_CHANGE, SCREEN_ZOOM_CHANGE, ANIMATION_SPEED_CHANGE
 from src.events.event import GraphicEvent, Event
-from src.events.event_emitter import EventEmitter
 from src.events.event_manager.event_manager import EventManager
 from src.events.event_type import GraphicEventType
-from src.graphics.gui import GUI
 
-event_emitter = EventEmitter()
+if TYPE_CHECKING:
+    from src.graphics.gui import GUI
+    from src.events.event_emitter import EventEmitter
 
 
 class GraphicEventManager(EventManager):
-    def __init__(self, gui: GUI):
+    def __init__(self, gui: GUI, event_emitter: EventEmitter):
         self._events: list[GraphicEvent] = []
         self._animation_events: list[GraphicEvent] = []
         self._gui: GUI = gui
+        self._event_emitter = event_emitter
 
         # Needed for fluent speed changing
         self._animation_speed_changed = False
@@ -109,11 +112,10 @@ class GraphicEventManager(EventManager):
             case "q":
                 self._gui.user_panel.next_add_object()
 
-    @staticmethod
-    def _add_event_with_next_step(event: GraphicEvent) -> None:
+    def _add_event_with_next_step(self, event: GraphicEvent) -> None:
         if event.have_to_make_next_step():
             event.step += 1
-            event_emitter.emit_event(event)
+            self._event_emitter.emit_event(event)
 
     def _no_need_to_set_rotate_angle(self, event: GraphicEvent) -> bool:
         is_anim_stay = event.event_type == GraphicEventType.ANIM_STAY

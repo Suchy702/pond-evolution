@@ -1,11 +1,15 @@
-from typing import cast
+from __future__ import annotations
+
+from typing import cast, TYPE_CHECKING
 
 from overrides import overrides
 
-from src.events.event import LogicEvent, Event
 from src.events.event_manager.event_manager import EventManager
+from src.events.event import LogicEvent, Event
 from src.events.event_type import LogicEventType
-from src.logic.engine import Engine
+
+if TYPE_CHECKING:
+    from src.logic.engine import Engine
 
 
 class LogicEventManager(EventManager):

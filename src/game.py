@@ -3,10 +3,6 @@ import sys
 
 from src.constants import FPS
 from src.events.event_emitter import EventEmitter
-from src.events.event_manager.clicking_event_manager import ClickingEventManager
-from src.events.event_manager.game_event_manager import GameEventManager
-from src.events.event_manager.graphic_event_manager import GraphicEventManager
-from src.events.event_manager.logic_event_manager import LogicEventManager
 from src.graphics.gui import GUI
 from src.logic.engine import Engine
 from src.simulation_settings import SimulationSettings
@@ -25,22 +21,24 @@ class Game:
 
         self._engine = Engine(self._settings)
         self._engine.prepare()
+
         self._gui = GUI(self._settings, self._engine)
+
         self._statistics = Statistics(self._settings, self._engine)
 
         self._event_emitter = EventEmitter()
-        self._game_event_manager = GameEventManager(self)
-        self._graphic_event_manager = GraphicEventManager(self._gui)
-        self._logic_event_manager = LogicEventManager(self._engine)
-        self._clicking_event_manager = ClickingEventManager(self._gui)
-
-        self._event_emitter.game_event_manager = self._game_event_manager
-        self._event_emitter.graphic_event_manager = self._graphic_event_manager
-        self._event_emitter.logic_event_manager = self._logic_event_manager
-        self._event_emitter.clicking_event_manager = self._clicking_event_manager
+        self._event_emitter.setup(self)
 
         self.running: bool = True
         self.skip: int = 0
+
+    @property
+    def gui(self) -> GUI:
+        return self._gui
+
+    @property
+    def engine(self) -> Engine:
+        return self._engine
 
     def _user_close_program(self):
         return self._settings.screen_height is None

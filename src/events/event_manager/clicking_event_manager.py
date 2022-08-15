@@ -1,23 +1,27 @@
-from typing import cast
+from __future__ import annotations
+
+from typing import cast, TYPE_CHECKING
 
 from overrides import overrides
 
 from src.events.event import Event, ClickEvent, LogicEvent, GraphicEvent
-from src.events.event_emitter import EventEmitter
 from src.events.event_manager.event_manager import EventManager
 from src.events.event_type import ClickEventType, LogicEventType, GraphicEventType
-from src.graphics.gui import GUI
 from src.object.object_kind import ObjectKind
 from src.object.pond_object import PondObject
 from src.position import Position
 
+if TYPE_CHECKING:
+    from src.graphics.gui import GUI
+    from src.events.event_emitter import EventEmitter
+
 
 class ClickingEventManager(EventManager):
-    def __init__(self, gui: GUI):
+    def __init__(self, gui: GUI, emitter: EventEmitter):
         self._events: list[ClickEvent] = []
 
         self._gui: GUI = gui
-        self.event_emitter: EventEmitter = EventEmitter()
+        self.event_emitter: EventEmitter = emitter
 
     def _is_clicked_on_pond(self, x: int, y: int) -> bool:
         return 0 <= x < self._gui.settings.screen_pond_width and 0 <= y < self._gui.settings.screen_pond_height

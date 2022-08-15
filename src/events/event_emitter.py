@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Optional, TYPE_CHECKING, Sequence
+from typing import TYPE_CHECKING, Sequence
 
 import pygame
 from pygame.locals import (  # type: ignore
@@ -23,33 +23,40 @@ from pygame.locals import (  # type: ignore
 from src.constants import LEFT_MOUSE_BUTTON
 from src.decision.decision import Decision
 from src.events.event import Event, GameEvent, LogicEvent, GraphicEvent, ClickEvent
+from src.events.event_manager.game_event_manager import GameEventManager
+from src.events.event_manager.graphic_event_manager import GraphicEventManager
+from src.events.event_manager.logic_event_manager import LogicEventManager
+from src.events.event_manager.clicking_event_manager import ClickingEventManager
 from src.events.event_type import GameEventType, GraphicEventType, ClickEventType
 from src.position import Position
 from src.singleton import Singleton
 
 if TYPE_CHECKING:
-    from src.events.event_manager.game_event_manager import GameEventManager
-    from src.events.event_manager.graphic_event_manager import GraphicEventManager
-    from src.events.event_manager.logic_event_manager import LogicEventManager
-    from src.events.event_manager.clicking_event_manager import ClickingEventManager
+    from src.game import Game
 
 
 class EventEmitter(metaclass=Singleton):
     def __init__(self):
-        self.game_event_manager: Optional[GameEventManager] = None
-        self.graphic_event_manager: Optional[GraphicEventManager] = None
-        self.logic_event_manager: Optional[LogicEventManager] = None
-        self.clicking_event_manager: Optional[ClickingEventManager] = None
+        self._game_event_manager: GameEventManager = None
+        self._graphic_event_manager: GraphicEventManager = None
+        self._logic_event_manager: LogicEventManager = None
+        self._clicking_event_manager: ClickingEventManager = None
+
+    def setup(self, game: Game) -> None:
+        self._game_event_manager = GameEventManager(game)
+        self._graphic_event_manager = GraphicEventManager(game.gui, self)
+        self._logic_event_manager = LogicEventManager(game.engine)
+        self._clicking_event_manager = ClickingEventManager(game.gui, self)
 
     def emit_event(self, event: Event) -> None:
         if isinstance(event, GameEvent):
-            self.game_event_manager.add_event(event)
+            self._game_event_manager.add_event(event)
         elif isinstance(event, GraphicEvent):
-            self.graphic_event_manager.add_event(event)
+            self._graphic_event_manager.add_event(event)
         elif isinstance(event, LogicEvent):
-            self.logic_event_manager.add_event(event)
+            self._logic_event_manager.add_event(event)
         elif isinstance(event, ClickEvent):
-            self.clicking_event_manager.add_event(event)
+            self._clicking_event_manager.add_event(event)
         else:
             raise Exception('Unknown type')
 
@@ -94,17 +101,17 @@ class EventEmitter(metaclass=Singleton):
 
     def handle_events(self) -> None:
         self._emit_pygame_events()
-        self.game_event_manager.handle_events()
-        self.graphic_event_manager.handle_events()
-        self.clicking_event_manager.handle_events()
-        self.logic_event_manager.handle_events()
+        self._game_event_manager.handle_events()
+        self._graphic_event_manager.handle_events()
+        self._clicking_event_manager.handle_events()
+        self._logic_event_manager.handle_events()
 
     def is_animation_event_present(self) -> bool:
-        return self.graphic_event_manager.is_animation_event()
+        return self._graphic_event_manager.is_animation_event()
 
     def clear_gui_events(self) -> None:
-        self.graphic_event_manager.clear()
-        self.clicking_event_manager.clear()
+        self._graphic_event_manager.clear()
+        self._clicking_event_manager.clear()
 
     def emit_anim_move_event(self, decision: Decision, n_pos: Position) -> None:
         self.emit_event(
