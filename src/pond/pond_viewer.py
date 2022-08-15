@@ -32,17 +32,29 @@ class PondViewer:
     def get_visible_objects_by_type(
             self, pos: Position, eyesight: int, obj_type: list[ObjectKind], negate: bool = False
     ) -> Generator[list[PondObject], None, None]:
+        """
+        If negate is false return objects of one of the types specified in `obj_type`. Otherwise return objects whose
+        type is not in `obj_type`.
+        """
         yield from self._get_visible_objects(pos, eyesight, lambda obj: obj.kind in obj_type, negate)
 
     def get_visible_object_by_trait(
             self, pos: Position, eyesight: int, traits: list[FishTrait], negate: bool = False
     ) -> Generator[list[Fish], None, None]:
+        """
+        If negate is false return objects whose traits are subset of `traits`. Otherwise return objects whose traits
+        are disjoint with `traits`.
+        """
+
+        def filter(obj: PondObject) -> bool:
+            fish = cast("Fish", obj)
+            return all(trait in traits for trait in fish.traits)
+
         for fish_layer in self.get_visible_objects_by_type(pos, eyesight, [ObjectKind.FISH], False):
             new_list = []
             for fish in fish_layer:
                 fish = cast("Fish", fish)
-                if (not negate and all(trait in traits for trait in fish.traits)) or \
-                        (negate and not any(trait in traits for trait in fish.traits)):
+                if self._check_condition(fish, filter, negate):
                     new_list.append(fish)
             if new_list:
                 yield new_list
@@ -106,11 +118,13 @@ class PondViewer:
                 continue
 
             for i in range(first_idx, last_idx + 1):
-                objects.extend(self._get_spot_objects(
-                    Position(p1.y + y_change * i, p1.x + x_change * i),
-                    obj_filter,
-                    negate
-                ))
+                objects.extend(
+                    self._get_spot_objects(
+                        Position(p1.y + y_change * i, p1.x + x_change * i),
+                        obj_filter,
+                        negate
+                    )
+                )
 
         return objects
 
@@ -154,13 +168,17 @@ class PondViewer:
         """Returns intersection of segment [a1, a2] with [b1, b2]"""
         return max(a1, b1), min(a2, b2)
 
+    @staticmethod
+    def _check_condition(obj: PondObject, obj_filter: Callable[[PondObject], bool], negate: bool) -> bool:
+        return obj_filter(obj) if not negate else not obj_filter(obj)
+
     def _get_spot_objects(
             self, pos: Position, obj_filter: Callable[[PondObject], bool], negate: bool
     ) -> list[PondObject]:
         objects = []
         for pond in self.ponds:
             for obj in pond.get_spot(pos):
-                if (negate and not obj_filter(obj)) or (not negate and obj_filter(obj)):
+                if self._check_condition(obj, obj_filter, negate):
                     objects.append(obj)
         return objects
 
