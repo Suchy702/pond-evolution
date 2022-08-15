@@ -95,7 +95,8 @@ class FishAI(AI["Fish"]):
         for fish_layer in fish_layers:
             for fish in fish_layer:
                 if self.pond_object.is_position_reachable(fish.pos):
-                    if fish.size < self.pond_object.size:
+                    if fish.size < self.pond_object.size and FishTrait.PREDATOR not in fish.traits:
+                        print("eating fish x:", fish.pos.x, " y: ", fish.pos.y)
                         return Decision(
                             DecisionType.MOVE, pond_object=self.pond_object, to_x=fish.pos.x, to_y=fish.pos.y
                         )
