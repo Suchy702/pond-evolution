@@ -1,7 +1,7 @@
 import pygame
 from pygame.surface import Surface
 
-from src.constants import LIGHT_BLUE
+from src.constants import BLACK, LIGHT_BLUE
 from src.events.event import GraphicEvent
 from src.events.event_emitter import EventEmitter
 from src.graphics.graphic_calculator import GraphicCalculator
@@ -34,6 +34,7 @@ class GUI:
         self.user_panel.set_engine(engine)
 
     def draw_empty_frame(self) -> None:
+        self._screen.fill(BLACK)
         self.draw_pond_area()
 
     def draw_pond_area(self) -> None:

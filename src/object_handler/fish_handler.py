@@ -38,14 +38,6 @@ class FishHandler(PondObjectHandlerHomogeneous):
         return [cast(Fish, fish) for fish in self.objects]
 
     @staticmethod
-    def _add_predator_trait(fish: Fish) -> None:
-        fish.traits.add(FishTrait.PREDATOR)
-        fish.fish_type = FishType.CARNIVORE
-        fish.eyesight -= 5
-        fish.speed += 5
-        fish.size += 5
-
-    @staticmethod
     def _is_getting_smart_trait() -> bool:
         return random() < CHANCE_TO_BE_SMART
 
@@ -64,7 +56,7 @@ class FishHandler(PondObjectHandlerHomogeneous):
             fish.traits.add(FishTrait.SMART)
 
         if self._is_getting_predator_trait():
-            self._add_predator_trait(fish)
+            fish.add_predator_trait()
 
     @overrides
     def create_random_single(self) -> PondObject:

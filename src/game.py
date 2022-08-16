@@ -41,7 +41,7 @@ class Game:
         return self._engine
 
     def _user_close_program(self):
-        return self._settings.screen_height is None
+        return not self._settings.finished_setup
 
     def _end_game_actions(self) -> None:
         self._gui.hide_screen()

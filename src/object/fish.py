@@ -108,7 +108,17 @@ class Fish(PondObject):
                 fish.traits.add(trait)
 
         if self._is_getting_new_trait():
-            fish.traits.add(FishTrait.get_random())
+            if (trait := FishTrait.get_random()) == FishTrait.PREDATOR:
+                self.add_predator_trait()
+            else:
+                fish.traits.add(trait)
+
+    def add_predator_trait(self) -> None:
+        self.traits.add(FishTrait.PREDATOR)
+        self.fish_type = FishType.CARNIVORE
+        self.eyesight -= 5
+        self.speed += 5
+        self.size += 5
 
     def _birth_fish(self) -> Fish:
         fish = self._make_child()

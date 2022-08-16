@@ -6,7 +6,9 @@ from src.position import Position
 
 @pytest.fixture
 def fish():
-    return Fish(0, 0, 0, Position(0, 0))
+    fish = Fish(0, 0, 0, Position(0, 0))
+    fish.vitality = 0
+    return fish
 
 
 def test_spoil_vitality(fish):
