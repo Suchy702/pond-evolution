@@ -1,13 +1,7 @@
 from src.simulation_settings import SimulationSettings
 
 from src.constants import CELL_MIN_PX_SIZE, CELL_MAX_PX_SIZE, START_ANIMATION_FPS, MAX_ANIMATION_FPS, MIN_ANIMATION_FPS
-
-
-def clip(val: int, a: int, b: int) -> int:
-    # Clips `val` to range [min(a, b), max(a, b)]
-    if a > b:
-        a, b = b, a
-    return min(max(val, a), b)
+from src.math import clip
 
 
 class GraphicValuesGuard:

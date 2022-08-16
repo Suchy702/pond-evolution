@@ -6,6 +6,8 @@ from typing import cast, Generator
 from overrides import overrides
 
 from src.constants import (
+    FISH_MIN_EYESIGHT,
+    FISH_MAX_EYESIGHT,
     FISH_MIN_SPEED,
     FISH_MAX_SPEED,
     FISH_MIN_SIZE,
@@ -54,7 +56,7 @@ class FishHandler(PondObjectHandlerHomogeneous):
     def _create_basic_random_fish(self) -> Fish:
         speed = randint(FISH_MIN_SPEED, FISH_MAX_SPEED)
         size = randint(FISH_MIN_SIZE, FISH_MAX_SIZE)
-        eyesight = randint(2, self._pond.height // 2) + 5
+        eyesight = randint(FISH_MIN_EYESIGHT, FISH_MAX_EYESIGHT)
         return Fish(speed, size, eyesight, self._pond.random_position())
 
     def _add_advanced_traits(self, fish) -> None:
