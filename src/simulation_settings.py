@@ -68,7 +68,7 @@ class SimulationSettings:
         self._add_no_alga_from_hell_setting(6, 'No alga from hell')
 
     def _add_run_simulation_button(self) -> None:
-        tk.Button(self._root, text="Run simulation", command=self._apply_settings).grid(row=6, column=0, columnspan=2)
+        tk.Button(self._root, text="Run simulation", command=self._apply_settings).grid(row=7, column=0, columnspan=2)
 
     def _add_resolution_setting(self, row: int, text: str) -> None:
         tk.Label(self._root, text=f'{text}: ').grid(row=row, column=0, sticky='w')
@@ -92,6 +92,7 @@ class SimulationSettings:
         spinbox_frame = tk.Frame(self._root)
         spinbox_frame.grid(row=row, column=1, sticky='nswe')
 
+        spinbox_frame.rowconfigure(0, weight=1)
         for i in range(3):
             spinbox_frame.columnconfigure(i, weight=1)
 
