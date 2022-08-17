@@ -29,6 +29,8 @@ class SimulationSettingsMock:
     size_penalty = 100
     speed_penalty = 100
     eyesight_penalty = 100
+    alga_energy = 15,
+    worm_energy = 30
 
 
 @patch('pygame.event.get')
