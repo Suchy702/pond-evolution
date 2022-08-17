@@ -37,8 +37,10 @@ class JITGraphicCalculator:
     @staticmethod
     @jit(nopython=True)
     def match_size_for_fish_calculations(fish_size: int, cell_size: int) -> int:
-        size = int(fish_size / ((FISH_MAX_SIZE + FISH_MIN_SIZE) // 2) * cell_size)
-        return size
+        percentage = (fish_size - FISH_MIN_SIZE) / (FISH_MAX_SIZE - FISH_MIN_SIZE)
+        scale = 1 + percentage - 0.5
+
+        return int(cell_size * scale)
 
     @staticmethod
     @jit(nopython=True)
