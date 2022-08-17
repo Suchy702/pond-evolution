@@ -33,6 +33,8 @@ class GUI:
         self.user_panel.set_image_loader(self._image_loader)
         self.user_panel.set_engine(engine)
 
+        self.draw_empty_frame()
+
     def draw_empty_frame(self) -> None:
         self._screen.fill(BLACK)
         self.draw_pond_area()
