@@ -13,8 +13,17 @@ from src.decision.decision_type import DecisionType
 from src.object.fish_trait import FishTrait
 from src.object.fish_type import FishType
 from src.object.object_kind import ObjectKind
+from src.object.pond_object import PondObject
 from src.pond.pond_viewer import PondViewer
 from src.position import Position
+
+from src.constants import (
+    CHANCE_TO_SMART_FISH_DO_RANDOM_MOVE,
+    CNT_FISH_DIV,
+    CHANCE_THAT_FISH_GO_FOR_FOOD,
+    CHANCE_THAT_FISH_GO_TO_BOTTOM_FOR_FOOD,
+    CHANCE_THAT_FISH_NOT_RUN
+)
 
 if TYPE_CHECKING:
     from src.object.fish import Fish
@@ -32,95 +41,111 @@ class FishAI(AI["Fish"]):
             return self._smart_movement_decision(pond_viewer)
         return self._random_movement_decision()
 
-    # TODO: później jak zaimplementujemy UI do dodawania rybek to trzeba będzie to całe AI przetestować, bo teraz
-    #   nie mam pojęcia czy działa tak jak należy
+    def _emit_move_decision(self, to_x: int, to_y: int) -> Decision:
+        return Decision(DecisionType.MOVE, pond_object=self.pond_object, to_x=to_x, to_y=to_y)
+
+    @staticmethod
+    def _is_smart_fish_do_random_move() -> bool:
+        return random() < CHANCE_TO_SMART_FISH_DO_RANDOM_MOVE
+
+    def _get_fish_layers(self, pond_viewer: PondViewer) -> list[list[Fish]]:
+        pos, eyesight = self.pond_object.pos, self.pond_object.eyesight
+        fish_layers = list(pond_viewer.get_visible_objects_by_type(pos, eyesight, [ObjectKind.FISH]))
+        fish_layers = cast(list[list["Fish"]], fish_layers)
+        return fish_layers
+
+    def _define_predator_move_decision(self, fish_layers: list[list[Fish]]) -> Decision:
+        decision = self._try_eat_other_fish(fish_layers)
+        return self._random_movement_decision() if decision is None else decision
+
+    def _define_non_predator_move_decision(
+            self, fish_layers: list[list[Fish]], cnt_fish: int, pond_viewer: PondViewer
+    ) -> Decision:
+        decision = self._run_away_if_predator_close(fish_layers, cnt_fish)
+        if decision is None:
+            decision = self._try_eat_other_non_fish(pond_viewer, cnt_fish)
+
+        return self._random_movement_decision() if decision is None else decision
+
     def _smart_movement_decision(self, pond_viewer: PondViewer) -> Decision:
-        if random() < 0.05:
+        if self._is_smart_fish_do_random_move():
             return self._random_movement_decision()
 
-        cnt_fish = 0
-        fish_layers = list(
-            pond_viewer.get_visible_objects_by_type(self.pond_object.pos, self.pond_object.eyesight, [ObjectKind.FISH])
-        )
-        fish_layers = cast(list[list["Fish"]], fish_layers)
-
-        for layer in fish_layers:
-            cnt_fish += len(layer)
+        fish_layers = self._get_fish_layers(pond_viewer)
+        cnt_fish = sum([len(layer) for layer in fish_layers])
 
         if FishTrait.PREDATOR in self.pond_object.traits:
-            decision = self._try_eat_other_fish(fish_layers)
-            if decision is not None:
-                return decision
-            else:
-                return self._random_movement_decision()
+            return self._define_predator_move_decision(fish_layers)
 
-        else:
-            decision = self._run_away_if_predator_close(fish_layers, cnt_fish)
-            if decision is not None:
-                return decision
+        return self._define_non_predator_move_decision(fish_layers, cnt_fish, pond_viewer)
 
-            decision = self._try_eat_other_non_fish(pond_viewer, cnt_fish)
-            if decision is not None:
-                return decision
+    def _is_fish_danger_predator(self, fish: Fish) -> bool:
+        return FishTrait.PREDATOR in fish.traits and fish.size > self.pond_object.size
 
-        return self._random_movement_decision()
-
-    def _run_away_if_predator_close(self, fish_layers: list[list[Fish]], cnt_fish: int) -> Optional[Decision]:
-        predator = None
+    def _find_danger_predator(self, fish_layers: list[list[Fish]]) -> Optional[Fish]:
         for fish_layer in fish_layers[1:-1]:  # skip predators that are in the same cell as current fish
             for fish in fish_layer:
-                if FishTrait.PREDATOR in fish.traits and fish.size > self.pond_object.size:
-                    predator = fish
-                    break
+                if self._is_fish_danger_predator(fish):
+                    return fish
+        return None
 
-        if predator is None or random() < 0.1 + cnt_fish / 20:
+    @staticmethod
+    def _fish_choose_not_to_run(predator: Fish, cnt_fish: int) -> bool:
+        return predator is None or random() < CHANCE_THAT_FISH_NOT_RUN + cnt_fish / CNT_FISH_DIV
+
+    def _calc_diff_x_run(self, predator: Fish) -> int:
+        max_diff_dist = min(abs(self.pond_object.pos.x - predator.pos.x), self.pond_object.speed)
+        return int(max_diff_dist * math.copysign(1, self.pond_object.pos.x - predator.pos.x))
+
+    def _calc_diff_y_run(self, predator: Fish) -> int:
+        max_diff_dist = min(abs(self.pond_object.pos.y - predator.pos.y), self.pond_object.speed)
+        return int(max_diff_dist * math.copysign(1, self.pond_object.pos.y - predator.pos.y))
+
+    def _run_away_if_predator_close(self, fish_layers: list[list[Fish]], cnt_fish: int) -> Optional[Decision]:
+        predator = self._find_danger_predator(fish_layers)
+
+        if self._fish_choose_not_to_run(predator, cnt_fish):
             return None
 
-        diff_x = int(min(
-            abs(self.pond_object.pos.x - predator.pos.x),
-            self.pond_object.speed) * math.copysign(1, self.pond_object.pos.x - predator.pos.x)
-                     )
+        diff_x = self._calc_diff_x_run(predator)
+        diff_y = self._calc_diff_y_run(predator)
 
-        diff_y = int(min(
-            abs(self.pond_object.pos.y - predator.pos.y),
-            self.pond_object.speed) * math.copysign(1, self.pond_object.pos.y - predator.pos.y)
-                     )
+        return self._emit_move_decision(self.pond_object.pos.x + diff_x, self.pond_object.pos.y + diff_y)
 
-        return Decision(
-            DecisionType.MOVE, pond_object=self.pond_object,
-            to_x=self.pond_object.pos.x + diff_x, to_y=self.pond_object.pos.y + diff_y
-        )
+    def _can_eat_other_fish(self, fish: Fish) -> bool:
+        return fish.size < self.pond_object.size and FishTrait.PREDATOR not in fish.traits
 
     def _try_eat_other_fish(self, fish_layers: list[list[Fish]]) -> Optional[Decision]:
         for fish_layer in fish_layers:
             for fish in fish_layer:
-                if self.pond_object.is_position_reachable(fish.pos):
-                    if fish.size < self.pond_object.size and FishTrait.PREDATOR not in fish.traits:
-                        return Decision(
-                            DecisionType.MOVE, pond_object=self.pond_object, to_x=fish.pos.x, to_y=fish.pos.y
-                        )
-                else:
+                if not self.pond_object.is_position_reachable(fish.pos):
                     break
+                if self._can_eat_other_fish(fish):
+                    return self._emit_move_decision(fish.pos.x, fish.pos.y)
         return None
 
+    @staticmethod
+    def _can_eat_other_non_fish(food: PondObject, pond_viewer: PondViewer, cnt_fish: int) -> bool:
+        if food.pos.y == pond_viewer.pond_height - 1:
+            return random() < CHANCE_THAT_FISH_GO_TO_BOTTOM_FOR_FOOD - cnt_fish / CNT_FISH_DIV
+        return random() < CHANCE_THAT_FISH_GO_FOR_FOOD - cnt_fish / CNT_FISH_DIV
+
     def _try_eat_other_non_fish(self, pond_viewer: PondViewer, cnt_fish: int) -> Optional[Decision]:
-        for food_layer in pond_viewer.get_visible_objects_by_type(
-                self.pond_object.pos, self.pond_object.eyesight, FishType.get_edible_food(self.pond_object)
-        ):
+        pos, eyesight = self.pond_object.pos, self.pond_object.eyesight
+        food_layers = pond_viewer.get_visible_objects_by_type(pos, eyesight, FishType.get_edible_food(self.pond_object))
+
+        for food_layer in food_layers:
             for food in food_layer:
-                if self.pond_object.is_position_reachable(food.pos):
-                    if (food.pos.y < pond_viewer.pond_height - 1 and random() < 0.8 - cnt_fish / 20) or \
-                            (food.pos.y == pond_viewer.pond_height - 1 and random() < 0.65 - cnt_fish / 20):
-                        return Decision(
-                            DecisionType.MOVE, pond_object=self.pond_object, to_x=food.pos.x, to_y=food.pos.y
-                        )
-                else:
+                if not self.pond_object.is_position_reachable(food.pos):
                     break
+                if self._can_eat_other_non_fish(food, pond_viewer, cnt_fish):
+                    return self._emit_move_decision(food.pos.x, food.pos.y)
+
         return None
 
     def _random_movement_decision(self) -> Decision:
         pos_to_move = self._find_random_pos_to_move()
-        return Decision(DecisionType.MOVE, pond_object=self.pond_object, to_x=pos_to_move.x, to_y=pos_to_move.y)
+        return self._emit_move_decision(pos_to_move.x, pos_to_move.y)
 
     def _reproduce_decision(self) -> Optional[Decision]:
         if self.pond_object.vitality > self.pond_object.vitality_need_to_breed:
@@ -132,8 +157,10 @@ class FishAI(AI["Fish"]):
         decisions = DecisionSet()
         reproduce_decision = self._reproduce_decision()
         decisions.add(reproduce_decision)
+
         if reproduce_decision is None:
             decisions.add(self._movement_decision(pond_viewer))
         else:
             decisions.add(Decision(DecisionType.STAY, pond_object=self.pond_object))
+
         return decisions
