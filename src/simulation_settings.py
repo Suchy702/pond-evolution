@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 
-from src.constants import CELL_MIN_PX_SIZE, SCREEN_DIMENSIONS
+from src.constants import CELL_MIN_PX_SIZE, SCREEN_DIMENSIONS, ALGA_ENERGY_VALUE, WORM_ENERGY_VALUE
 
 
 class SimulationSettings:
@@ -17,6 +17,9 @@ class SimulationSettings:
         self.speed_penalty: int = None
         self.size_penalty: int = None
         self.eyesight_penalty: int = None
+
+        self.alga_energy: int = None
+        self.worm_energy: int = None
 
         self.screen_width: int = None
         self.screen_height: int = None
@@ -71,9 +74,10 @@ class SimulationSettings:
         self._add_no_worms_from_heaven_setting(5, 'No worms from heaven')
         self._add_no_alga_from_hell_setting(6, 'No alga from hell')
         self._add_traits_penalty_setting(7, 'Traits penalty (size / speed / eyesight)')
+        self._add_energy_value_setting(8, 'Energy value (alga / worm)')
 
     def _add_run_simulation_button(self) -> None:
-        tk.Button(self._root, text="Run simulation", command=self._apply_settings).grid(row=8, column=0, columnspan=2)
+        tk.Button(self._root, text="Run simulation", command=self._apply_settings).grid(row=9, column=0, columnspan=2)
 
     def _add_resolution_setting(self, row: int, text: str) -> None:
         tk.Label(self._root, text=f'{text}: ').grid(row=row, column=0, sticky='w')
@@ -136,6 +140,25 @@ class SimulationSettings:
 
         self._update_resolution()
 
+    def _add_energy_value_setting(self, row: int, text: str) -> None:
+        tk.Label(self._root, text=f'{text}: ').grid(row=row, column=0, sticky='w')
+
+        spinbox_frame = tk.Frame(self._root)
+        spinbox_frame.grid(row=row, column=1, sticky='nswe')
+
+        spinbox_frame.rowconfigure(0, weight=1)
+
+        for i in range(3):
+            spinbox_frame.columnconfigure(i, weight=1)
+
+        self._alga_energy_var, self._worm_energy_var = tk.StringVar(), tk.StringVar()
+        self._alga_energy_var.set(value=str(ALGA_ENERGY_VALUE))
+        self._worm_energy_var.set(value=str(WORM_ENERGY_VALUE))
+        alga_energy = tk.Spinbox(spinbox_frame, from_=1, to=100, width=8, textvariable=self._alga_energy_var)
+        worm_energy = tk.Spinbox(spinbox_frame, from_=1, to=100, width=8, textvariable=self._worm_energy_var)
+        alga_energy.grid(row=0, column=0, sticky='w')
+        worm_energy.grid(row=0, column=2, sticky='e')
+
     def _add_statistics_setting(self, row: int, text: str) -> None:
         tk.Label(self._root, text=f'{text}: ').grid(row=row, column=0, sticky='w')
         self._statistics_var = tk.BooleanVar()
@@ -182,6 +205,8 @@ class SimulationSettings:
         self.speed_penalty = int(self._speed_penalty_var.get())
         self.size_penalty = int(self._size_penalty_var.get())
         self.eyesight_penalty = int(self._eyesight_penalty_var.get())
+        self.alga_energy = int(self._alga_energy_var.get())
+        self.worm_energy = int(self._worm_energy_var.get())
 
     def _set_screen_dimensions(self) -> None:
         self.screen_pond_width = self.screen_width

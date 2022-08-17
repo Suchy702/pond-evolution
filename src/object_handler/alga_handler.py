@@ -25,7 +25,7 @@ class AlgaHandler(PondObjectHandlerHomogeneous):
     @overrides
     def create_random_single(self) -> PondObject:
         pos = self._pond.random_position()
-        return Alga(ALGA_ENERGY_VALUE, pos, self._pond.height)
+        return Alga(self.settings.alga_energy, pos, self._pond.height)
 
     def handle_decisions(self, decisions: DecisionSet) -> None:
         for decision in decisions[DecisionType.MOVE, ObjectKind.ALGA]:

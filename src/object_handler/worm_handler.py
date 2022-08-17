@@ -27,7 +27,7 @@ class WormHandler(PondObjectHandlerHomogeneous):
     def create_random_single(self) -> PondObject:
         pos = self._pond.random_position()
         pos.y = 0
-        return Worm(WORM_ENERGY_VALUE, pos, self._pond.shape)
+        return Worm(self.settings.worm_energy, pos, self._pond.shape)
 
     def handle_decisions(self, decisions: DecisionSet):
         for decision in decisions[DecisionType.MOVE, ObjectKind.WORM]:

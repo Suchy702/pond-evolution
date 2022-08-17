@@ -185,6 +185,8 @@ class Interactor:
                 return self._plant_handler.alga_maker_handler
             case ObjectKind.FISH:
                 return self._fish_handler
+            case _:
+                return None
 
     def add_obj_by_click(self, event: LogicEvent) -> None:
         event.obj.pos = event.pos
