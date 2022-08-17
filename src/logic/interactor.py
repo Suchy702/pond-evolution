@@ -132,7 +132,8 @@ class Interactor:
         fish.sort(key=functools.cmp_to_key(lambda a, b: a.size - b.size))  # type: ignore
         return fish
 
-    def _can_fish_eat_other_fish(self, eaten_fish: Fish, other_fish: Fish) -> bool:
+    @staticmethod
+    def _can_fish_eat_other_fish(eaten_fish: Fish, other_fish: Fish) -> bool:
         return FishTrait.PREDATOR in other_fish.traits and eaten_fish.size < other_fish.size
 
     def _cnt_bigger_predators(self, i: int, fishes: list[Fish]) -> int:
@@ -147,7 +148,8 @@ class Interactor:
             if self._can_fish_eat_other_fish(fishes[i], fishes[j]):
                 fishes[j].vitality += fishes[i].vitality // cnt_bigger_predators
 
-    def _can_predator_defend_himself(self, fish: Fish) -> bool:
+    @staticmethod
+    def _can_predator_defend_himself(fish: Fish) -> bool:
         return FishTrait.PREDATOR in fish.traits and random() < PREDATOR_CHANCE_TO_DEFENCE
 
     def eat_other_fish_at_spot(self, pos: Position) -> None:
