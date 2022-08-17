@@ -10,7 +10,7 @@ from src.constants import (
     FISH_MAX_SIZE,
     FISH_MIN_EYESIGHT,
     FISH_MAX_EYESIGHT,
-    FISH_VITALITY_SPOIL_RATE,
+    FISH_VITALITY_SPOIL_COEFF,
     EVOLUTION_DEVIATION_DIV,
     MIN_FISH_TO_BIRTH,
     MAX_FISH_TO_BIRTH,
@@ -67,8 +67,12 @@ class Fish(PondObject):
     def eyesight(self, val: int):
         self._eyesight = clip(val, FISH_MIN_EYESIGHT, FISH_MAX_EYESIGHT)
 
-    def spoil_vitality(self) -> None:
-        self.vitality -= FISH_VITALITY_SPOIL_RATE
+    def spoil_vitality(self, size_penalty: int, speed_penalty: int) -> None:
+        size_percentage = (self.size - FISH_MIN_SIZE) / (FISH_MAX_SIZE - FISH_MIN_SIZE)
+        speed_percentage = (self.speed - FISH_MIN_SPEED) / (FISH_MAX_SPEED - FISH_MIN_SPEED)
+        self.vitality -= int(
+            FISH_VITALITY_SPOIL_COEFF * (size_penalty / 100 * size_percentage + speed_penalty / 100 * speed_percentage)
+        )
 
     def is_alive(self) -> bool:
         return self.vitality > 0 and not self.is_eaten

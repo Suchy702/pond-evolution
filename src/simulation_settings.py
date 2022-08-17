@@ -14,6 +14,10 @@ class SimulationSettings:
         self.fullscreen: bool = None
         self.statistics: bool = None
 
+        self.speed_penalty: int = None
+        self.size_penalty: int = None
+        self.eyesight_penalty: int = None
+
         self.screen_width: int = None
         self.screen_height: int = None
 
@@ -66,9 +70,10 @@ class SimulationSettings:
         self._add_empty_pond_setting(4, 'Empty pond')
         self._add_no_worms_from_heaven_setting(5, 'No worms from heaven')
         self._add_no_alga_from_hell_setting(6, 'No alga from hell')
+        self._add_traits_penalty_setting(7, 'Traits penalty (size / speed / eyesight)')
 
     def _add_run_simulation_button(self) -> None:
-        tk.Button(self._root, text="Run simulation", command=self._apply_settings).grid(row=7, column=0, columnspan=2)
+        tk.Button(self._root, text="Run simulation", command=self._apply_settings).grid(row=8, column=0, columnspan=2)
 
     def _add_resolution_setting(self, row: int, text: str) -> None:
         tk.Label(self._root, text=f'{text}: ').grid(row=row, column=0, sticky='w')
@@ -93,14 +98,41 @@ class SimulationSettings:
         spinbox_frame.grid(row=row, column=1, sticky='nswe')
 
         spinbox_frame.rowconfigure(0, weight=1)
+
         for i in range(3):
             spinbox_frame.columnconfigure(i, weight=1)
 
         self._pond_width_var, self._pond_height_var = tk.StringVar(), tk.StringVar()
-        pond_width = tk.Spinbox(spinbox_frame, from_=1, to=100, textvariable=self._pond_width_var)
-        pond_height = tk.Spinbox(spinbox_frame, from_=1, to=100, textvariable=self._pond_height_var)
+        pond_width = tk.Spinbox(spinbox_frame, from_=1, to=100, width=8, textvariable=self._pond_width_var)
+        pond_height = tk.Spinbox(spinbox_frame, from_=1, to=100, width=8, textvariable=self._pond_height_var)
         pond_width.grid(row=0, column=0, sticky='w')
         pond_height.grid(row=0, column=2, sticky='e')
+
+        self._update_resolution()
+
+    def _add_traits_penalty_setting(self, row: int, text: str) -> None:
+        tk.Label(self._root, text=f'{text}: ').grid(row=row, column=0, sticky='w')
+
+        spinbox_frame = tk.Frame(self._root)
+        spinbox_frame.grid(row=row, column=1, sticky='nswe')
+
+        spinbox_frame.rowconfigure(0, weight=1)
+        for i in range(5):
+            spinbox_frame.columnconfigure(i, weight=1)
+
+        self._speed_penalty_var, self._size_penalty_var, self._eyesight_penalty_var = \
+            tk.StringVar(), tk.StringVar(), tk.StringVar()
+        self._speed_penalty_var.set(value=str(100))
+        self._size_penalty_var.set(value=str(100))
+        self._eyesight_penalty_var.set(value=str(100))
+
+        size_penalty = tk.Spinbox(spinbox_frame, from_=0, to=100, width=8, textvariable=self._size_penalty_var)
+        speed_penalty = tk.Spinbox(spinbox_frame, from_=0, to=100, width=8, textvariable=self._speed_penalty_var)
+        eyesight_penalty = tk.Spinbox(spinbox_frame, from_=0, to=100, width=8, textvariable=self._eyesight_penalty_var)
+
+        size_penalty.grid(row=0, column=0, sticky='w')
+        speed_penalty.grid(row=0, column=2)
+        eyesight_penalty.grid(row=0, column=4, sticky='e')
 
         self._update_resolution()
 
@@ -147,6 +179,9 @@ class SimulationSettings:
         self.empty_pond_setting = self._empty_pond_setting_var.get()
         self.no_worms_from_heaven = self._no_worms_from_heaven_var.get()
         self.no_alga_from_hell = self._no_alga_from_hell.get()
+        self.speed_penalty = int(self._speed_penalty_var.get())
+        self.size_penalty = int(self._size_penalty_var.get())
+        self.eyesight_penalty = int(self._eyesight_penalty_var.get())
 
     def _set_screen_dimensions(self) -> None:
         self.screen_pond_width = self.screen_width

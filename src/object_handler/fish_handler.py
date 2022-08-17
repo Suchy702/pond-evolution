@@ -93,7 +93,7 @@ class FishHandler(PondObjectHandlerHomogeneous):
         fish = cast(Fish, decision.pond_object)
         n_pos = self._special_trim(decision.to_x, decision.to_y)
         self.event_emitter.emit_anim_move_event(decision, n_pos)
-        fish.spoil_vitality()
+        fish.spoil_vitality(self.settings.size_penalty, self.settings.speed_penalty)
         self._pond.change_position(fish, n_pos)
 
     def _special_trim(self, x, y):
