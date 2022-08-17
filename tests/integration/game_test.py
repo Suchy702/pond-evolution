@@ -26,6 +26,9 @@ class SimulationSettingsMock:
     empty_pond_setting = False
     get_user_settings = Mock()
     finished_setup = True
+    size_penalty = 100
+    speed_penalty = 100
+    eyesight_penalty = 100
 
 
 @patch('pygame.event.get')

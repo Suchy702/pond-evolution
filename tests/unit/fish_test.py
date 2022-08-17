@@ -12,7 +12,7 @@ def fish():
 
 
 def test_spoil_vitality(fish):
-    fish.spoil_vitality()
+    fish.spoil_vitality(100, 100)
     assert not fish.is_alive()
 
 
