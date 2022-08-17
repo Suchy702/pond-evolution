@@ -74,3 +74,6 @@ SCREEN_DIMENSIONS: tuple[str, str, str] = ('1920x1080', '1080x720', '720x480')
 
 # Event Emitter
 LEFT_MOUSE_BUTTON: int = 1
+
+#Interactor
+PREDATOR_CHANCE_TO_DEFENCE: float = 0.5
