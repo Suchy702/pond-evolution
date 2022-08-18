@@ -125,7 +125,7 @@ class PondViewer:
             self, offset: list[tuple[int, int]], radius: int, pos: Position, obj_filter: Callable[[PondObject], bool],
             negate: bool = False
     ) -> list[PondObject]:
-        objects = []
+        objects: list[PondObject] = []
 
         for dummy_p1, dummy_p2 in itertools.pairwise(offset + [(0, 1)]):
             self._get_edge_object(objects, dummy_p1, dummy_p2, pos, radius, obj_filter, negate)
