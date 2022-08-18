@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-python3.10 main.py &> /dev/null
+python main.py &> /dev/null
