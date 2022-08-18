@@ -32,6 +32,8 @@ class SimulationSettings:
 
         self.finished_setup: bool = False
 
+        self._exception = False
+
     def _root_setup(self) -> None:
         self._root = tk.Tk()
         self._root.title("Settings")
@@ -213,7 +215,80 @@ class SimulationSettings:
         self.screen_pond_height = int(self.screen_height * 0.9)
         self.screen_pond_height -= self.screen_pond_height % CELL_MIN_PX_SIZE
 
+    def _catch_no_digit_exception(self) -> None:
+        should_be_int = [
+            self._pond_width_var.get(), self._pond_height_var.get(),
+            self._speed_penalty_var.get(), self._size_penalty_var.get(), self._eyesight_penalty_var.get(),
+            self._alga_energy_var.get(), self._worm_energy_var.get(),
+        ]
+
+        for val in should_be_int:
+            if not val.isdigit():
+                self._exception_occurred("Wartości muszą być dodatnimi liczbami całkowitymi!")
+
+    def _is_pond_dimensions_too_small(self) -> bool:
+        too_small_height = self.pond_height < self.screen_pond_height // CELL_MIN_PX_SIZE
+        too_small_widht = self.pond_width < self.screen_pond_width // CELL_MIN_PX_SIZE
+        return too_small_height or too_small_widht
+
+    def _is_pond_dimensions_too_big(self) -> bool:
+        return self.pond_height > 200 or self.pond_width > 200
+
+    def _exception_occurred(self, text: str) -> None:
+        print(text)
+        self._exception = True
+
+    def _catch_pond_exceptions(self) -> None:
+        if self._is_pond_dimensions_too_small():
+            self._exception_occurred("Zbyt male wymiary stawu!")
+            return
+
+        if self._is_pond_dimensions_too_big():
+            self._exception_occurred("Zbyt duze wymiary stawu!")
+            return
+
+    def _is_traits_penalty_good(self) -> bool:
+        min_good = 1 <= min(self.speed_penalty, self.size_penalty, self.eyesight_penalty)
+        max_good = 100 >= max(self.speed_penalty, self.size_penalty, self.eyesight_penalty)
+        return min_good and max_good
+
+    def _catch_traits_penalty_exceptions(self) -> None:
+        if not self._is_traits_penalty_good():
+            self._exception_occurred("Nieodpowiendie wartości kar!")
+            return
+
+    def _is_energy_vals_good(self) -> bool:
+        min_good = 1 <= min(self.alga_energy, self.worm_energy)
+        max_good = 200 >= max(self.alga_energy, self.worm_energy)
+        return min_good and max_good
+
+    def _catch_energy_exceptions(self) -> None:
+        if not self._is_energy_vals_good():
+            self._exception_occurred("Nieodpowiednie wartości eenrgi!")
+            return
+
+    def _catch_exceptions(self) -> None:
+        self._catch_pond_exceptions()
+        if self._exception:
+            return
+        self._catch_traits_penalty_exceptions()
+        if self._exception:
+            return
+        self._catch_energy_exceptions()
+        if self._exception:
+            return
+
     def _apply_settings(self) -> None:
+        self._exception = False
+        self._catch_no_digit_exception()
+        if self._exception:
+            return
+
         self._get_user_choices()
+
+        self._catch_exceptions()
+        if self._exception:
+            return
+
         self.finished_setup = True
         self._root.destroy()
