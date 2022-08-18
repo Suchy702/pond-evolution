@@ -271,15 +271,14 @@ class SimulationSettings:
             raise ValueError("Energy values must be in range [0, 200]!")
 
     def _validate_data(self) -> None:
-        self._validate_value_type()
         self._validate_pond_size()
         self._validate_traits_penalty()
         self._validate_energy()
 
     def _apply_settings(self) -> None:
-        self._get_user_choices()
-
         try:
+            self._validate_value_type()
+            self._get_user_choices()
             self._validate_data()
         except Exception as e:
             self._exception_occurred(e)
