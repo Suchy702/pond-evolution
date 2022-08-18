@@ -31,6 +31,8 @@ class SimulationSettingsMock:
     eyesight_penalty = 100
     alga_energy = 15,
     worm_energy = 30
+    alga_intensity = 1
+    worm_intensity = 1
 
 
 @patch('pygame.event.get')
