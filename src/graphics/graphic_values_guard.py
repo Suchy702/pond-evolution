@@ -1,6 +1,8 @@
 from src.simulation_settings import SimulationSettings
 
-from src.constants import CELL_MIN_PX_SIZE, CELL_MAX_PX_SIZE, START_ANIMATION_FPS, MAX_ANIMATION_FPS, MIN_ANIMATION_FPS
+from src.constants import (
+    CELL_MIN_PX_SIZE, CELL_MAX_PX_SIZE, START_ANIMATION_SPEED, MAX_ANIMATION_SPEED, MIN_ANIMATION_SPEED
+)
 from src.math import clip
 
 
@@ -8,7 +10,7 @@ class GraphicValuesGuard:
     def __init__(self, settings: SimulationSettings):
         self._settings = settings
         self._cell_size: int = CELL_MIN_PX_SIZE  # length of cell's side in px. Cell is a square
-        self._animation_speed: int = START_ANIMATION_FPS
+        self._animation_speed: int = START_ANIMATION_SPEED
         self._x_offset: int = 0
         self._y_offset: int = 0
 
@@ -44,4 +46,4 @@ class GraphicValuesGuard:
 
     @animation_speed.setter
     def animation_speed(self, val: int) -> None:
-        self._animation_speed = clip(val, MIN_ANIMATION_FPS, MAX_ANIMATION_FPS)
+        self._animation_speed = clip(val, MIN_ANIMATION_SPEED, MAX_ANIMATION_SPEED)

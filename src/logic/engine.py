@@ -12,17 +12,15 @@ class Engine:
         self._settings: SimulationSettings = settings
         self._interactor: Interactor = Interactor(self._settings)
         self._cycle_count: int = 0
+        self._setup()
 
-    def prepare(self) -> None:
+    def _setup(self) -> None:
         if not self._settings.empty_pond_setting:
-            self._interactor.prepare()
+            self._interactor.setup()
 
     @property
     def all_objects(self) -> list[PondObject]:
         return self._interactor.all_objects
-
-    def objects_by_type(self, obj_type: ObjectKind) -> list[PondObject]:
-        return self._interactor.objects_by_type(obj_type)
 
     @property
     def all_handlers(self) -> list[PondObjectHandler]:
@@ -31,6 +29,9 @@ class Engine:
     @property
     def cycle_count(self):
         return self._cycle_count
+
+    def objects_by_type(self, obj_type: ObjectKind) -> list[PondObject]:
+        return self._interactor.get_objects_by_type(obj_type)
 
     def show_pond(self) -> None:
         board: list[list[list[str]]] = [
@@ -46,11 +47,12 @@ class Engine:
         self._interactor.remove_unnecessary_objects()
         self._interactor.handle_decisions()
         self._interactor.feed_fish()
+
         if len(self.all_objects):
             self._cycle_count += 1
 
     def add_obj_by_click(self, event: LogicEvent) -> None:
-        self._interactor.add_obj_by_click(event)
+        self._interactor.add_object_by_click(event)
 
     def get_dummy(self, dummy_type: DummyType) -> PondObject:
         return self._interactor.get_dummy(dummy_type)

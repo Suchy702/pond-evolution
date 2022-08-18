@@ -17,7 +17,7 @@ def test_spoil_vitality(fish):
 
 
 def test_birth(fish):
-    born = fish.birth_fish()
+    born = fish.reproduce()
     for f in born:
         assert id(f) != id(fish)
     assert not fish.is_alive()

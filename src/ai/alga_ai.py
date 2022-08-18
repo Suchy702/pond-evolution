@@ -15,15 +15,15 @@ if TYPE_CHECKING:
 
 
 class AlgaAI(AI["Alga"]):
+    @overrides
+    def get_decisions(self, pond_viewer: PondViewer) -> DecisionSet:
+        decisions = DecisionSet()
+        decisions.add(self._movement_decision())
+        return decisions
+
     def _find_pos_to_move(self) -> Position:
         return self.pond_object.pos.changed(-self.pond_object.surfacing_speed, 0)
 
     def _movement_decision(self) -> Decision:
         pos_to_move = self._find_pos_to_move()
         return Decision(DecisionType.MOVE, pond_object=self.pond_object, to_x=pos_to_move.x, to_y=pos_to_move.y)
-
-    @overrides
-    def get_decisions(self, pond_viewer: PondViewer) -> DecisionSet:
-        decisions = DecisionSet()
-        decisions.add(self._movement_decision())
-        return decisions

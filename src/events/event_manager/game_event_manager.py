@@ -29,12 +29,12 @@ class GameEventManager(EventManager):
         for event in cp_events:
             self._handle_event(event)
 
+    @overrides
+    def clear(self) -> None:
+        self._events.clear()
+
     def _handle_event(self, event: GameEvent) -> None:
         if event.event_type == GameEventType.QUIT:
             self._game.running = False
         elif event.event_type == GameEventType.SKIP:
             self._game.skip = 100
-
-    @overrides
-    def clear(self) -> None:
-        self._events.clear()

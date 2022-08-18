@@ -18,10 +18,10 @@ def test_graphic_event_copy(graphic_event):
         assert getattr(cp, attr) == getattr(graphic_event, attr)
 
 
-def test_have_to_make_next_step(graphic_event):
-    assert graphic_event.have_to_make_next_step()
+def test_should_make_next_step(graphic_event):
+    assert graphic_event.should_make_next_step()
     graphic_event.step = 10
-    assert not graphic_event.have_to_make_next_step()
+    assert not graphic_event.should_make_next_step()
 
 
 def test_graphic_event_str_format(graphic_event):

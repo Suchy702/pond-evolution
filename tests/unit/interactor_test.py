@@ -17,7 +17,7 @@ def test_find_pos_where_eat_when_fish_and_worm(interactor):
     f_1_1 = get_object(ObjectKind.FISH, pos=Position(1, 1))
     interactor._fish_handler.add_all([f_1_1])
     interactor._worm_handler.add_all([w_1_1])
-    assert interactor._find_pos_where_eat()[0] == Position(1, 1)
+    assert interactor._find_eating_spots()[0] == Position(1, 1)
 
 
 def test_find_pos_where_eat_when_fish_and_alg(interactor):
@@ -25,7 +25,7 @@ def test_find_pos_where_eat_when_fish_and_alg(interactor):
     f_1_1 = get_object(ObjectKind.FISH, pos=Position(1, 1))
     interactor._fish_handler.add_all([f_1_1])
     interactor._worm_handler.add_all([a_1_1])
-    assert interactor._find_pos_where_eat()[0] == Position(1, 1)
+    assert interactor._find_eating_spots()[0] == Position(1, 1)
 
 
 def test_eat_at_one_spot(interactor):

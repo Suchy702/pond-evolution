@@ -112,7 +112,6 @@ class PondObjectHandlerHomogeneous(PondObjectHandler):
     def get_spot_energy_val(self, pos: Position) -> int:
         return sum([obj.energy_val for obj in self.get_spot_obj(pos)])
 
-    # Wyrazenie listowe zeby zapobiec przekazaniu dalej referencji, co zmienialoby rozmiar setu podczas iteracji
     def remove_at_spot(self, pos: Position) -> None:
         self.remove_all(list(self._pond.get_spot(pos)))
 

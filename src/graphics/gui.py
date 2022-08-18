@@ -30,8 +30,8 @@ class GUI:
 
         self._image_loader = ImageLoader(self.user_panel.square_dim)
 
-        self.user_panel.set_image_loader(self._image_loader)
-        self.user_panel.set_engine(engine)
+        self.user_panel.image_loader = self._image_loader
+        self.user_panel.engine = engine
 
         self.draw_empty_frame()
 
@@ -51,15 +51,15 @@ class GUI:
         return x_in and y_in
 
     def draw_anim_event(self, event: GraphicEvent) -> None:
-        x, y = self.calcus.find_pos_to_draw(event, self.vals)
+        x, y = self.calcus.find_position_to_draw(event, self.vals)
         if self._is_visible_now(x, y):
             self.draw_object(event, x, y)
 
     def center_view(self) -> None:
-        self.vals.x_offset, self.vals.y_offset = self.calcus.calc_center_view(self.vals)
+        self.vals.x_offset, self.vals.y_offset = self.calcus.calculate_center_view(self.vals)
 
     def zoom(self, change: int) -> None:
-        self.calcus.calc_zoom(change, self.vals)
+        self.calcus.calculate_zoom(change, self.vals)
 
     def is_animation_finished(self) -> bool:
         return not self._event_emitter.is_animation_event_present()
@@ -77,13 +77,13 @@ class GUI:
         return image
 
     def draw_object(self, event: GraphicEvent, x: int, y: int) -> None:
-        size = self.calcus.match_size_for_fish(event, self.vals) if self.is_obj_fish(event) else self.vals.cell_size
+        size = self.calcus.get_fish_size(event, self.vals) if self.is_obj_fish(event) else self.vals.cell_size
         image = self._get_reformed_image(event, size)
-        x, y = self.calcus.reform_pos_to_be_in_center(x, y, self.vals, size)
+        x, y = self.calcus.center_position(x, y, self.vals, size)
         self._screen.blit(image, (x, y))
 
     def get_click_coor(self, click_pos: tuple[int, int]) -> tuple[int, int]:
-        return self.calcus.get_click_coor(click_pos, self.vals)
+        return self.calcus.get_click_coordinate(click_pos, self.vals)
 
     def hide_screen(self) -> None:
         self._screen = pygame.display.set_mode((0, 0), pygame.HIDDEN)

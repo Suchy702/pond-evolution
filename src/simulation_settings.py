@@ -4,7 +4,7 @@ import tkinter as tk
 from tkinter import ttk
 
 from src.constants import (
-    CELL_MIN_PX_SIZE, SCREEN_DIMENSIONS, ALGA_ENERGY_VALUE, WORM_ENERGY_VALUE, ALGA_INTENSITY, WORM_INTENSITY
+    CELL_MIN_PX_SIZE, SCREEN_DIMENSIONS, ALGA_DEFAULT_ENERGY_VALUE, WORM_DEFAULT_ENERGY_VALUE, ALGA_INTENSITY, WORM_INTENSITY
 )
 
 
@@ -165,8 +165,8 @@ class SimulationSettings:
             spinbox_frame.columnconfigure(i, weight=1)
 
         self._alga_energy_var, self._worm_energy_var = tk.StringVar(), tk.StringVar()
-        self._alga_energy_var.set(value=str(ALGA_ENERGY_VALUE))
-        self._worm_energy_var.set(value=str(WORM_ENERGY_VALUE))
+        self._alga_energy_var.set(value=str(ALGA_DEFAULT_ENERGY_VALUE))
+        self._worm_energy_var.set(value=str(WORM_DEFAULT_ENERGY_VALUE))
         alga_energy = tk.Spinbox(spinbox_frame, from_=1, to=100, width=8, textvariable=self._alga_energy_var)
         worm_energy = tk.Spinbox(spinbox_frame, from_=1, to=100, width=8, textvariable=self._worm_energy_var)
         alga_energy.grid(row=0, column=0, sticky='w')

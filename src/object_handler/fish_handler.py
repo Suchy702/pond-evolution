@@ -38,27 +38,6 @@ class FishHandler(PondObjectHandlerHomogeneous):
         objects = cast(list[Fish], self.objects)
         return objects
 
-    @staticmethod
-    def _is_getting_smart_trait() -> bool:
-        return random() < CHANCE_TO_BE_SMART
-
-    @staticmethod
-    def _is_getting_predator_trait() -> bool:
-        return random() < CHANCE_TO_BE_PREDATOR
-
-    def _create_basic_random_fish(self) -> Fish:
-        speed = randint(FISH_MIN_SPEED, FISH_MAX_SPEED)
-        size = randint(FISH_MIN_SIZE, FISH_MAX_SIZE)
-        eyesight = randint(FISH_MIN_EYESIGHT, FISH_MAX_EYESIGHT)
-        return Fish(speed, size, eyesight, self._pond.random_position())
-
-    def _add_advanced_traits(self, fish) -> None:
-        if self._is_getting_smart_trait():
-            fish.traits.add(FishTrait.SMART)
-
-        if self._is_getting_predator_trait():
-            fish.add_predator_trait()
-
     @overrides
     def create_random_single(self) -> PondObject:
         fish = self._create_basic_random_fish()
@@ -76,11 +55,6 @@ class FishHandler(PondObjectHandlerHomogeneous):
                 decisions += fish.get_decisions(pond_viewer)
             yield decisions
 
-    @staticmethod
-    def _cmp_by_movement_order(a: Fish, b: Fish):
-        # predators move last
-        return (FishTrait.PREDATOR in a.traits) - (FishTrait.PREDATOR in b.traits)
-
     def handle_decisions(self, decisions: DecisionSet):
         for decision in decisions[DecisionType.MOVE, ObjectKind.FISH]:
             self.move_fish(decision)
@@ -88,7 +62,7 @@ class FishHandler(PondObjectHandlerHomogeneous):
             self.event_emitter.emit_anim_stay_event(decision)
         for decision in decisions[DecisionType.REPRODUCE, ObjectKind.FISH]:
             fish = cast(Fish, decision.pond_object)
-            self.breed_fish(fish)
+            self.reproduce(fish)
 
     def move_fish(self, decision: Decision) -> None:
         fish = cast(Fish, decision.pond_object)
@@ -97,14 +71,41 @@ class FishHandler(PondObjectHandlerHomogeneous):
         fish.spoil_vitality(self.settings.size_penalty, self.settings.speed_penalty)
         self._pond.change_position(fish, n_pos)
 
+    def reproduce(self, fish: Fish) -> None:
+        self.add_all(fish.reproduce())
+        self.remove(fish)
+
+    def remove_dead_fish(self) -> None:
+        self.remove_all([fish for fish in self.fishes if not fish.is_alive()])
+
+    def _create_basic_random_fish(self) -> Fish:
+        speed = randint(FISH_MIN_SPEED, FISH_MAX_SPEED)
+        size = randint(FISH_MIN_SIZE, FISH_MAX_SIZE)
+        eyesight = randint(FISH_MIN_EYESIGHT, FISH_MAX_EYESIGHT)
+        return Fish(speed, size, eyesight, self._pond.random_position())
+
+    @staticmethod
+    def _cmp_by_movement_order(a: Fish, b: Fish):
+        # predators move last
+        return (FishTrait.PREDATOR in a.traits) - (FishTrait.PREDATOR in b.traits)
+
     def _special_trim(self, x, y):
         n_pos = self._pond.trim_position(Position(y, x))
         n_pos.y = min(n_pos.y, self._pond.height-2)
         return n_pos
 
-    def breed_fish(self, fish: Fish) -> None:
-        self.add_all(fish.birth_fish())
-        self.remove(fish)
+    @staticmethod
+    def _is_getting_smart_trait() -> bool:
+        return random() < CHANCE_TO_BE_SMART
 
-    def remove_dead_fish(self) -> None:
-        self.remove_all([fish for fish in self.fishes if not fish.is_alive()])
+    @staticmethod
+    def _is_getting_predator_trait() -> bool:
+        return random() < CHANCE_TO_BE_PREDATOR
+
+    def _add_advanced_traits(self, fish) -> None:
+        if self._is_getting_smart_trait():
+            fish.traits.add(FishTrait.SMART)
+
+        if self._is_getting_predator_trait():
+            fish.add_predator_trait()
+

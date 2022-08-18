@@ -49,6 +49,38 @@ class Interactor:
     def all_objects(self) -> list[PondObject]:
         return reduce(lambda list_, handler: list_ + handler.objects, self.handlers, [])
 
+    def setup(self) -> None:
+        self._plant_handler.alga_maker_handler.add_random(10)
+        self._fish_handler.add_random(50)
+
+    def handle_decisions(self) -> None:
+        for decisions, handler_idx in self._get_decisions():
+            self.handlers[handler_idx].handle_decisions(decisions)
+            self._handle_decisions(decisions)
+
+    def feed_fish(self) -> None:
+        for pos in self._find_eating_spots():
+            self._eat_at_spot(pos)
+
+    def remove_unnecessary_objects(self) -> None:
+        self._fish_handler.remove_dead_fish()
+        self._worm_handler.remove_worms_on_the_ground()
+        self._plant_handler.alga_handler.remove_algae_on_surface()
+
+    def add_object_by_click(self, event: LogicEvent) -> None:
+        event.obj.pos = event.pos
+        handler = self._dispatch_handler(event.obj.kind)
+        handler.add(event.obj)
+
+    def get_dummy(self, dummy_type: DummyType) -> PondObject:
+        dummy = self._get_non_fish_dummy(dummy_type)
+        if dummy is not None:
+            return dummy
+        return self._get_fish_dummy(dummy_type)
+
+    def get_objects_by_type(self, obj_type: ObjectKind) -> list[PondObject]:
+        return self._dispatch_handler(obj_type).objects
+
     def _get_decisions(self) -> Generator[tuple[DecisionSet, int], None, None]:
         for idx, (handler, ai_classes) in enumerate(zip(self.handlers, self.ai_classes)):
             if isinstance(ai_classes, tuple):
@@ -59,36 +91,47 @@ class Interactor:
             for decisions in handler.get_decisions(self._pond_viewer):
                 yield decisions, idx
 
-    def handle_decisions(self) -> None:
-        for decisions, handler_idx in self._get_decisions():
-            self.handlers[handler_idx].handle_decisions(decisions)
-            self._handle_decisions(decisions)
-
     def _handle_decisions(self, decisions: DecisionSet) -> None:
         pass
 
-    def prepare(self) -> None:
-        self._plant_handler.alga_maker_handler.add_random(10)
-        self._fish_handler.add_random(50)
+    def _find_eating_spots(self) -> list[Position]:
+        eating_spots = []
+        for fish in self._fish_handler.fishes:
+            if self._is_food_at_position(fish.pos) or self._is_predator_eating(fish):
+                eating_spots.append(fish.pos)
+        return eating_spots
 
-    def _is_food_at_pos(self, pos: Position) -> bool:
+    def _is_food_at_position(self, pos: Position) -> bool:
         return self._worm_handler.is_sth_at_pos(pos) or self._plant_handler.alga_handler.is_sth_at_pos(pos)
 
     def _is_predator_eating(self, fish: Fish) -> bool:
         return FishTrait.PREDATOR in fish.traits and len(self._fish_handler.get_spot_obj(fish.pos)) > 1
 
-    def _find_pos_where_eat(self) -> list[Position]:
-        pos_where_eat = []
-        for fish in self._fish_handler.fishes:
-            if self._is_food_at_pos(fish.pos) or self._is_predator_eating(fish):
-                pos_where_eat.append(fish.pos)
-        return pos_where_eat
-
     def _eat_at_spot(self, pos: Position) -> None:
-        self.eat_other_non_fish_at_spot(pos)
-        self.eat_other_fish_at_spot(pos)
+        self._eat_other_non_fish_at_spot(pos)
+        self._eat_other_fish_at_spot(pos)
 
-    def _cnt_fish_eating_specific_food(self, pos: Position, fish_types: list[FishType]) -> int:
+    def _eat_other_non_fish_at_spot(self, pos: Position) -> None:
+        self._update_fish_vitality(
+            pos, self._calc_worm_energy_distribution(pos), self._calc_algae_energy_distribution(pos)
+        )
+        self._remove_ate_objects(pos)
+
+    def _eat_other_fish_at_spot(self, pos: Position) -> None:
+        fishes = self._get_fish_at_spot_in_order(pos)
+
+        for i in range(len(fishes)):
+            if self._can_predator_defend_himself(fishes[i]):
+                continue
+
+            cnt_bigger_predators = self._count_bigger_predators(i, fishes)
+            if cnt_bigger_predators == 0:
+                continue
+
+            fishes[i].is_eaten = True
+            self._feed_predators(i, cnt_bigger_predators, fishes)
+
+    def _count_fish_eating_specific_food(self, pos: Position, fish_types: list[FishType]) -> int:
         cnt_fishes = 0
         for fish in self._fish_handler.get_spot_obj(pos):
             fish = cast(Fish, fish)
@@ -98,7 +141,17 @@ class Interactor:
                 cnt_fishes += 1
         return cnt_fishes
 
-    def _change_energy_fish_which_ate(self, pos: Position, worm_eating_val: int, algae_eating_val: int) -> None:
+    def _calc_algae_energy_distribution(self, pos: Position) -> int:
+        algae_energy_val = self._plant_handler.alga_handler.get_spot_energy_val(pos)
+        cnt_fish_eating_algae = self._count_fish_eating_specific_food(pos, [FishType.OMNIVORE, FishType.HERBIVORE])
+        return 0 if cnt_fish_eating_algae == 0 else algae_energy_val // cnt_fish_eating_algae
+
+    def _calc_worm_energy_distribution(self, pos: Position) -> int:
+        worm_energy_val = self._worm_handler.get_spot_energy_val(pos)
+        cnt_fish_eating_worms = self._count_fish_eating_specific_food(pos, [FishType.OMNIVORE, FishType.CARNIVORE])
+        return 0 if cnt_fish_eating_worms == 0 else worm_energy_val // cnt_fish_eating_worms
+
+    def _update_fish_vitality(self, pos: Position, worm_eating_val: int, algae_eating_val: int) -> None:
         for fish in self._fish_handler.get_spot_obj(pos):
             fish = cast(Fish, fish)
             if FishTrait.PREDATOR in fish.traits:
@@ -108,40 +161,15 @@ class Interactor:
             if fish.fish_type in [FishType.OMNIVORE, FishType.HERBIVORE]:
                 fish.vitality += algae_eating_val
 
-    def _calc_worm_eating_val(self, pos: Position) -> int:
-        worm_energy_val = self._worm_handler.get_spot_energy_val(pos)
-        cnt_fish_eating_worms = self._cnt_fish_eating_specific_food(pos, [FishType.OMNIVORE, FishType.CARNIVORE])
-        return 0 if cnt_fish_eating_worms == 0 else worm_energy_val // cnt_fish_eating_worms
-
-    def _calc_algae_eating_val(self, pos: Position) -> int:
-        algae_energy_val = self._plant_handler.alga_handler.get_spot_energy_val(pos)
-        cnt_fish_eating_algae = self._cnt_fish_eating_specific_food(pos, [FishType.OMNIVORE, FishType.HERBIVORE])
-        return 0 if cnt_fish_eating_algae == 0 else algae_energy_val // cnt_fish_eating_algae
-
     def _remove_ate_objects(self, pos: Position) -> None:
         self._worm_handler.remove_at_spot(pos)
         self._plant_handler.alga_handler.remove_at_spot(pos)
 
-    def eat_other_non_fish_at_spot(self, pos: Position) -> None:
-        self._change_energy_fish_which_ate(pos, self._calc_worm_eating_val(pos), self._calc_algae_eating_val(pos))
-        self._remove_ate_objects(pos)
-
-    def _get_fishes_at_same_spot_in_order(self, pos: Position) -> list[Fish]:
+    def _get_fish_at_spot_in_order(self, pos: Position) -> list[Fish]:
         fish = list(self._fish_handler.get_spot_obj(pos))
         fish = cast(list[Fish], fish)
         fish.sort(key=functools.cmp_to_key(lambda a, b: a.size - b.size))  # type: ignore
         return fish
-
-    @staticmethod
-    def _can_fish_eat_other_fish(eaten_fish: Fish, other_fish: Fish) -> bool:
-        return FishTrait.PREDATOR in other_fish.traits and eaten_fish.size < other_fish.size
-
-    def _cnt_bigger_predators(self, i: int, fishes: list[Fish]) -> int:
-        cnt_bigger_predators = 0
-        for j in range(i + 1, len(fishes)):
-            if self._can_fish_eat_other_fish(fishes[i], fishes[j]):
-                cnt_bigger_predators += 1
-        return cnt_bigger_predators
 
     def _feed_predators(self, i: int, cnt_bigger_predators: int, fishes: list[Fish]) -> None:
         for j in range(i + 1, len(fishes)):
@@ -149,31 +177,19 @@ class Interactor:
                 fishes[j].vitality += fishes[i].vitality // cnt_bigger_predators
 
     @staticmethod
+    def _can_fish_eat_other_fish(eaten_fish: Fish, other_fish: Fish) -> bool:
+        return FishTrait.PREDATOR in other_fish.traits and eaten_fish.size < other_fish.size
+
+    def _count_bigger_predators(self, i: int, fishes: list[Fish]) -> int:
+        cnt_bigger_predators = 0
+        for j in range(i + 1, len(fishes)):
+            if self._can_fish_eat_other_fish(fishes[i], fishes[j]):
+                cnt_bigger_predators += 1
+        return cnt_bigger_predators
+
+    @staticmethod
     def _can_predator_defend_himself(fish: Fish) -> bool:
         return FishTrait.PREDATOR in fish.traits and random() < PREDATOR_CHANCE_TO_DEFENCE
-
-    def eat_other_fish_at_spot(self, pos: Position) -> None:
-        fishes = self._get_fishes_at_same_spot_in_order(pos)
-
-        for i in range(len(fishes)):
-            if self._can_predator_defend_himself(fishes[i]):
-                continue
-
-            cnt_bigger_predators = self._cnt_bigger_predators(i, fishes)
-            if cnt_bigger_predators == 0:
-                continue
-
-            fishes[i].is_eaten = True
-            self._feed_predators(i, cnt_bigger_predators, fishes)
-
-    def feed_fish(self) -> None:
-        for pos in self._find_pos_where_eat():
-            self._eat_at_spot(pos)
-
-    def remove_unnecessary_objects(self) -> None:
-        self._fish_handler.remove_dead_fish()
-        self._worm_handler.remove_worms_on_the_ground()
-        self._plant_handler.alga_handler.remove_algae_on_surface()
 
     def _dispatch_handler(self, kind: ObjectKind) -> PondObjectHandlerHomogeneous:
         match kind:
@@ -188,11 +204,6 @@ class Interactor:
             case _:
                 return None
 
-    def add_obj_by_click(self, event: LogicEvent) -> None:
-        event.obj.pos = event.pos
-        handler = self._dispatch_handler(event.obj.kind)
-        handler.add(event.obj)
-
     def _get_non_fish_dummy(self, dummy_type: DummyType) -> Optional[PondObject]:
         match dummy_type:
             case DummyType.ALGA:
@@ -203,13 +214,6 @@ class Interactor:
                 return self._worm_handler.create_random_single()
             case _:
                 return None
-
-    def _create_basic_dummy_fish(self) -> Fish:
-        fish = self._fish_handler.create_random_single()
-        fish = cast(Fish, fish)
-        fish.traits.clear()
-        fish.traits.add(FishTrait.SMART)
-        return fish
 
     def _get_fish_dummy(self, dummy_type: DummyType) -> Fish:
         fish = self._create_basic_dummy_fish()
@@ -225,11 +229,9 @@ class Interactor:
                 fish.traits.add(FishTrait.PREDATOR)
         return fish
 
-    def get_dummy(self, dummy_type: DummyType) -> PondObject:
-        dummy = self._get_non_fish_dummy(dummy_type)
-        if dummy is not None:
-            return dummy
-        return self._get_fish_dummy(dummy_type)
-
-    def objects_by_type(self, obj_type: ObjectKind) -> list[PondObject]:
-        return self._dispatch_handler(obj_type).objects
+    def _create_basic_dummy_fish(self) -> Fish:
+        fish = self._fish_handler.create_random_single()
+        fish = cast(Fish, fish)
+        fish.traits.clear()
+        fish.traits.add(FishTrait.SMART)
+        return fish

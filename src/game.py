@@ -20,10 +20,7 @@ class Game:
             sys.exit()
 
         self._engine = Engine(self._settings)
-        self._engine.prepare()
-
         self._gui = GUI(self._settings, self._engine)
-
         self._statistics = Statistics(self._settings, self._engine)
 
         self._event_emitter = EventEmitter()
@@ -40,19 +37,21 @@ class Game:
     def engine(self) -> Engine:
         return self._engine
 
+    def run(self) -> None:
+        clock = pygame.time.Clock()
+        while self.running:
+            clock.tick(FPS)
+            self._game_type_decision()
+        self._end_game_actions()
+
     def _user_close_program(self):
         return not self._settings.finished_setup
 
-    def _end_game_actions(self) -> None:
-        self._gui.hide_screen()
-        self._statistics.show_statistics()
-
-    def _skipped_game(self) -> None:
-        self._event_emitter.clear_gui_events()
-        self._event_emitter.handle_events()
-        self._engine.cycle()
-        self._statistics.make_snapshot()
-        self.skip -= 1
+    def _game_type_decision(self) -> None:
+        if self.skip:
+            self._skipped_game()
+        else:
+            self._normal_game()
 
     def _normal_game(self) -> None:
         if self._gui.is_animation_finished():
@@ -61,15 +60,13 @@ class Game:
 
         self._event_emitter.handle_events()
 
-    def _game_type_decision(self) -> None:
-        if self.skip:
-            self._skipped_game()
-        else:
-            self._normal_game()
+    def _skipped_game(self) -> None:
+        self._event_emitter.clear_gui_events()
+        self._event_emitter.handle_events()
+        self._engine.cycle()
+        self._statistics.make_snapshot()
+        self.skip -= 1
 
-    def run(self) -> None:
-        clock = pygame.time.Clock()
-        while self.running:
-            clock.tick(FPS)
-            self._game_type_decision()
-        self._end_game_actions()
+    def _end_game_actions(self) -> None:
+        self._gui.hide_screen()
+        self._statistics.show_statistics()

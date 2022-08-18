@@ -78,14 +78,15 @@ class GraphicEventManager(EventManager):
         self._gui.user_panel.draw()
         pygame.display.update()
 
-    def is_too_small_time_diff_between_anim_changes(self) -> bool:
-        return time.time() - self._last_animation_speed_change_time < 0.1
+    def allow_animation_speed_change(self) -> bool:
+        return time.time() - self._last_animation_speed_change_time >= 0.1
 
     def change_animation_speed(self, val: int) -> None:
-        if self.is_too_small_time_diff_between_anim_changes():
+        if not self.allow_animation_speed_change():
             return
         else:
             self._last_animation_speed_change_time = time.time()
+
         self._gui.vals.animation_speed += val
         self._animation_speed_changed = True
 
@@ -110,10 +111,10 @@ class GraphicEventManager(EventManager):
             case ".":
                 self.change_animation_speed(-ANIMATION_SPEED_CHANGE)
             case "q":
-                self._gui.user_panel.next_add_object()
+                self._gui.user_panel.next_object()
 
     def _add_event_with_next_step(self, event: GraphicEvent) -> None:
-        if event.have_to_make_next_step():
+        if event.should_make_next_step():
             event.step += 1
             self._event_emitter.emit_event(event)
 

@@ -12,8 +12,8 @@ from src.constants import (
     FISH_MAX_EYESIGHT,
     FISH_VITALITY_SPOIL_COEFF,
     EVOLUTION_DEVIATION_DIV,
-    MIN_FISH_TO_BIRTH,
-    MAX_FISH_TO_BIRTH,
+    MIN_FISH_REPRODUCE_AMOUNT,
+    MAX_FISH_REPRODUCE_AMOUNT,
     FISH_NEED_MULTI_VITALITY_TO_BREED,
     CHANCE_TO_GET_PARENT_TRAIT,
     CHANCE_TO_GET_NEW_TRAIT,
@@ -74,19 +74,30 @@ class Fish(PondObject):
             FISH_VITALITY_SPOIL_COEFF * (size_penalty / 100 * size_percentage + speed_penalty / 100 * speed_percentage)
         )
 
+    def add_predator_trait(self) -> None:
+        self.traits.add(FishTrait.PREDATOR)
+        self.fish_type = FishType.CARNIVORE
+        self.eyesight -= 5
+        self.speed += 5
+        self.size += 5
+
+    def reproduce(self) -> list[Fish]:
+        return [self._reproduce() for _ in range(randint(MIN_FISH_REPRODUCE_AMOUNT, MAX_FISH_REPRODUCE_AMOUNT))]
+
     def is_alive(self) -> bool:
         return self.vitality > 0 and not self.is_eaten
 
     def is_position_reachable(self, pos: Position) -> bool:
         return abs(self.pos.x - pos.x) <= self.speed and abs(self.pos.y - pos.y) <= self.speed
 
-    @staticmethod
-    def _calc_deviation(val: int) -> int:
-        return val // EVOLUTION_DEVIATION_DIV
+    def _reproduce(self) -> Fish:
+        fish = self._make_child()
+        self._add_traits_to_child(fish)
 
-    def _calc_child_trait(self, parent_trait: int) -> int:
-        parent_trait_dev = self._calc_deviation(parent_trait)
-        return parent_trait + randint(-parent_trait_dev, parent_trait_dev)
+        if FishTrait.PREDATOR in fish.traits:
+            fish.fish_type = FishType.CARNIVORE
+
+        return fish
 
     def _make_child(self) -> Fish:
         child_speed = self._calc_child_trait(self.speed)
@@ -97,6 +108,14 @@ class Fish(PondObject):
         fish.fish_type = self.fish_type
 
         return fish
+
+    def _calc_child_trait(self, parent_trait: int) -> int:
+        parent_trait_dev = self._calc_deviation(parent_trait)
+        return parent_trait + randint(-parent_trait_dev, parent_trait_dev)
+
+    @staticmethod
+    def _calc_deviation(val: int) -> int:
+        return val // EVOLUTION_DEVIATION_DIV
 
     @staticmethod
     def _is_getting_parent_trait() -> bool:
@@ -116,22 +135,3 @@ class Fish(PondObject):
                 self.add_predator_trait()
             else:
                 fish.traits.add(trait)
-
-    def add_predator_trait(self) -> None:
-        self.traits.add(FishTrait.PREDATOR)
-        self.fish_type = FishType.CARNIVORE
-        self.eyesight -= 5
-        self.speed += 5
-        self.size += 5
-
-    def _birth_fish(self) -> Fish:
-        fish = self._make_child()
-        self._add_traits_to_child(fish)
-
-        if FishTrait.PREDATOR in fish.traits:
-            fish.fish_type = FishType.CARNIVORE
-
-        return fish
-
-    def birth_fish(self) -> list[Fish]:
-        return [self._birth_fish() for _ in range(randint(MIN_FISH_TO_BIRTH, MAX_FISH_TO_BIRTH))]

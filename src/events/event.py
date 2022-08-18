@@ -17,9 +17,9 @@ class Event(ABC, Generic[T]):
         self.event_type: T = event_type
         self.attributes: list[str] = ['event_type']
 
-        self._get_attr_names()
+        self._get_attribute_names()
 
-    def _get_attr_names(self) -> None:
+    def _get_attribute_names(self) -> None:
         for param in self.__init__.__code__.co_varnames[2:2 + self.__init__.__code__.co_kwonlyargcount]:  # type: ignore
             self.attributes.append(param)
 
@@ -82,7 +82,7 @@ class GraphicEvent(Event[GraphicEventType]):
         cp = cast(GraphicEvent, super().copy())
         return cp
 
-    def have_to_make_next_step(self) -> bool:
+    def should_make_next_step(self) -> bool:
         return self.step < self.total_steps
 
     def __str__(self):

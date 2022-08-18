@@ -22,9 +22,6 @@ class LogicEventManager(EventManager):
         event = cast(LogicEvent, event)
         self._events.append(event)
 
-    def _handle_add_event(self, event: LogicEvent) -> None:
-        self._engine.add_obj_by_click(event)
-
     @overrides
     def handle_events(self) -> None:
         cp_events = self._events.copy()
@@ -37,3 +34,6 @@ class LogicEventManager(EventManager):
     @overrides
     def clear(self) -> None:
         self._events.clear()
+
+    def _handle_add_event(self, event: LogicEvent) -> None:
+        self._engine.add_obj_by_click(event)

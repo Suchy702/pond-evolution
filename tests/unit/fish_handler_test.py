@@ -26,5 +26,5 @@ def test_breed_fish(fish_handler):
     fish_handler.add_all([father_fish])
     father_id = father_fish.id
     father_fish.vitality = INF
-    fish_handler.breed_fish(father_fish)
+    fish_handler.reproduce(father_fish)
     assert fish_handler.fishes[0].id != father_id

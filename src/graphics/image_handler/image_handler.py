@@ -26,6 +26,10 @@ class DynamicImageHandler(ImageHandler):
             self._base_image[img_path] = pygame.image.load(os.path.join(IMG_PATH_DIR, img_path)).convert_alpha()
             self._cache[img_path] = [None for _ in range(CELL_MAX_PX_SIZE - CELL_MIN_PX_SIZE + 100)]
 
+    def get_object_image(self, obj: PondObject, size: int) -> Surface:
+        img_name = self._choose_image(obj)
+        return self._load_image(img_name, size)
+
     @abstractmethod
     def _choose_image(self, obj: PondObject) -> str:
         pass
@@ -39,10 +43,6 @@ class DynamicImageHandler(ImageHandler):
             self._cache[name][size - CELL_MIN_PX_SIZE] = pygame.transform.smoothscale(surface, (size, size))
 
         return self._cache[name][size - CELL_MIN_PX_SIZE]
-
-    def get_object_image(self, obj: PondObject, size: int) -> Surface:
-        img_name = self._choose_image(obj)
-        return self._load_image(img_name, size)
 
 
 class StaticImageHandler(ImageHandler):

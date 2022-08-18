@@ -35,14 +35,6 @@ class Statistics:
         for fish in fish_list:
             self._add_record(fish)
 
-    def _add_record(self, fish: Fish) -> None:
-        data = [
-            self._engine.cycle_count - 1, fish.size, fish.speed, fish.eyesight,
-            'predator' if FishTrait.PREDATOR in fish.traits else fish.fish_type.name.lower(),
-            FishTrait.SMART in fish.traits
-        ]
-        self._data_raw.append(data)
-
     def show_statistics(self) -> None:
         if not self._settings.statistics:
             return
@@ -58,6 +50,14 @@ class Statistics:
 
         self._dataframe = self._dataframe.astype(dtypes)
         self._draw_plot()
+
+    def _add_record(self, fish: Fish) -> None:
+        data = [
+            self._engine.cycle_count - 1, fish.size, fish.speed, fish.eyesight,
+            'predator' if FishTrait.PREDATOR in fish.traits else fish.fish_type.name.lower(),
+            FishTrait.SMART in fish.traits
+        ]
+        self._data_raw.append(data)
 
     def _draw_plot(self) -> None:
         self._draw_plot1()
@@ -75,7 +75,3 @@ class Statistics:
     def _draw_plot2(self) -> None:
         df = self._dataframe.melt(id_vars=['cycle', 'type'], value_vars=['size', 'speed', 'eyesight'])
         sns.displot(df, x='cycle', y='value', col='type', row='variable', cbar=True)
-
-    def _switch_plots(self) -> None:
-        self._plot_idx = (self._plot_idx + 1) % 2
-        self._draw_plot()

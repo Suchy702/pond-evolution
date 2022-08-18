@@ -23,41 +23,10 @@ class ClickingEventManager(EventManager):
         self._gui: GUI = gui
         self.event_emitter: EventEmitter = emitter
 
-    def _is_clicked_on_pond(self, x: int, y: int) -> bool:
-        return 0 <= x < self._gui.settings.screen_pond_width and 0 <= y < self._gui.settings.screen_pond_height
-
     @overrides
     def add_event(self, event: Event) -> None:
         event = cast(ClickEvent, event)
         self._events.append(event)
-
-    def _emit_add_event(self, dummy: PondObject, click_coor: tuple[int, int]) -> None:
-        event = LogicEvent(LogicEventType.ADD, dummy, Position(click_coor[1], click_coor[0]))
-        self.event_emitter.emit_event(event)
-
-    def _emit_anim_new_event(self, dummy: PondObject, click_coor: tuple[int, int]) -> None:
-        event = GraphicEvent(GraphicEventType.ANIM_NEW, pond_object=dummy, x=click_coor[0], y=click_coor[1])
-        self.event_emitter.emit_event(event)
-
-    @staticmethod
-    def _is_alg(dummy: PondObject) -> bool:
-        return dummy.kind == ObjectKind.ALGA_MAKER
-
-    def _is_clicked_on_bottom(self, y: int) -> bool:
-        return y != self._gui.settings.pond_height - 1
-
-    def _handle_add_event(self, event: ClickEvent) -> None:
-        if not self._is_clicked_on_pond(event.pos[0], event.pos[1]):
-            return
-
-        dummy = self._gui.user_panel.get_dummy()
-        click_coor = self._gui.get_click_coor(event.pos)
-
-        if self._is_alg(dummy) and self._is_clicked_on_bottom(click_coor[1]):
-            return
-
-        self._emit_add_event(dummy, click_coor)
-        self._emit_anim_new_event(dummy, click_coor)
 
     @overrides
     def handle_events(self) -> None:
@@ -71,3 +40,34 @@ class ClickingEventManager(EventManager):
     @overrides
     def clear(self) -> None:
         self._events.clear()
+
+    def _handle_add_event(self, event: ClickEvent) -> None:
+        if not self._is_clicked_on_pond(event.pos[0], event.pos[1]):
+            return
+
+        dummy = self._gui.user_panel.get_dummy()
+        click_coor = self._gui.get_click_coor(event.pos)
+
+        if self._is_alga(dummy) and self._is_clicked_on_bottom(click_coor[1]):
+            return
+
+        self._emit_add_event(dummy, click_coor)
+        self._emit_anim_new_event(dummy, click_coor)
+
+    def _emit_add_event(self, dummy: PondObject, click_coor: tuple[int, int]) -> None:
+        event = LogicEvent(LogicEventType.ADD, dummy, Position(click_coor[1], click_coor[0]))
+        self.event_emitter.emit_event(event)
+
+    def _emit_anim_new_event(self, dummy: PondObject, click_coor: tuple[int, int]) -> None:
+        event = GraphicEvent(GraphicEventType.ANIM_NEW, pond_object=dummy, x=click_coor[0], y=click_coor[1])
+        self.event_emitter.emit_event(event)
+
+    def _is_clicked_on_pond(self, x: int, y: int) -> bool:
+        return 0 <= x < self._gui.settings.screen_pond_width and 0 <= y < self._gui.settings.screen_pond_height
+
+    @staticmethod
+    def _is_alga(dummy: PondObject) -> bool:
+        return dummy.kind == ObjectKind.ALGA_MAKER
+
+    def _is_clicked_on_bottom(self, y: int) -> bool:
+        return y != self._gui.settings.pond_height - 1
