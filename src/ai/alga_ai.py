@@ -26,4 +26,6 @@ class AlgaAI(AI["Alga"]):
 
     def _movement_decision(self) -> Decision:
         position_to_move = self._find_position_to_move()
-        return Decision(DecisionType.MOVE, pond_object=self.pond_object, to_x=position_to_move.x, to_y=position_to_move.y)
+        return Decision(
+            DecisionType.MOVE, pond_object=self.pond_object, to_x=position_to_move.x, to_y=position_to_move.y
+        )

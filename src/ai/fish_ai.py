@@ -7,6 +7,13 @@ from typing import Optional, TYPE_CHECKING, cast
 from overrides import overrides
 
 from src.ai.ai import AI
+from src.constants import (
+    CHANCE_SMART_FISH_DOES_RANDOM_MOVE,
+    CNT_FISH_DIV,
+    CHANCE_FISH_GOES_FOR_FOOD,
+    CHANCE_FISH_GOES_TO_BOTTOM_FOR_FOOD,
+    CHANCE_FISH_DOES_NOT_RUN
+)
 from src.decision.decision import Decision
 from src.decision.decision_set import DecisionSet
 from src.decision.decision_type import DecisionType
@@ -16,14 +23,6 @@ from src.object.object_kind import ObjectKind
 from src.object.pond_object import PondObject
 from src.pond.pond_viewer import PondViewer
 from src.position import Position
-
-from src.constants import (
-    CHANCE_SMART_FISH_DOES_RANDOM_MOVE,
-    CNT_FISH_DIV,
-    CHANCE_FISH_GOES_FOR_FOOD,
-    CHANCE_FISH_GOES_TO_BOTTOM_FOR_FOOD,
-    CHANCE_FISH_DOES_NOT_RUN
-)
 
 if TYPE_CHECKING:
     from src.object.fish import Fish
@@ -138,7 +137,7 @@ class FishAI(AI["Fish"]):
         return FishTrait.PREDATOR in fish.traits and fish.size > self.pond_object.size
 
     def _find_closest_predator(self, fish_layers: list[list[Fish]]) -> Optional[Fish]:
-        for fish_layer in fish_layers[1:-1]:  # skip predators that are in the same cell as current fish
+        for fish_layer in fish_layers[1:]:  # Skip predators that are in the same cell as current fish.
             for fish in fish_layer:
                 if self._can_fish_eat_current_fish(fish):
                     return fish

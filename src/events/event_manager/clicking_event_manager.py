@@ -46,13 +46,13 @@ class ClickingEventManager(EventManager):
             return
 
         dummy = self._gui.user_panel.get_dummy()
-        click_coor = self._gui.get_click_coordinate(event.position)
+        click_coordinate = self._gui.get_click_coordinate(event.position)
 
-        if self._is_alga(dummy) and self._is_clicked_on_bottom(click_coor[1]):
+        if self._is_alga(dummy) and self._is_clicked_on_bottom(click_coordinate[1]):
             return
 
-        self._emit_add_event(dummy, click_coor)
-        self._emit_anim_new_event(dummy, click_coor)
+        self._emit_add_event(dummy, click_coordinate)
+        self._emit_anim_new_event(dummy, click_coordinate)
 
     def _emit_add_event(self, dummy: PondObject, click_coor: tuple[int, int]) -> None:
         event = LogicEvent(LogicEventType.ADD, dummy, Position(click_coor[1], click_coor[0]))

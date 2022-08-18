@@ -3,7 +3,6 @@ from typing import cast
 
 from overrides import overrides
 
-from src.constants import WORM_SPAWN_DELAY
 from src.decision.decision import Decision
 from src.decision.decision_set import DecisionSet
 from src.decision.decision_type import DecisionType

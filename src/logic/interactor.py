@@ -10,6 +10,7 @@ from src.ai.alga_ai import AlgaAI
 from src.ai.alga_maker_ai import AlgaMakerAI
 from src.ai.fish_ai import FishAI
 from src.ai.worm_ai import WormAI
+from src.constants import PREDATOR_CHANCE_TO_DEFENCE
 from src.decision.decision_set import DecisionSet
 from src.events.event import LogicEvent
 from src.events.event_emitter import EventEmitter
@@ -26,8 +27,6 @@ from src.object_handler.worm_handler import WormHandler
 from src.pond.pond_viewer import PondViewer
 from src.position import Position
 from src.simulation_settings import SimulationSettings
-
-from src.constants import PREDATOR_CHANCE_TO_DEFENCE
 
 event_emitter = EventEmitter()
 
@@ -102,7 +101,8 @@ class Interactor:
         return eating_spots
 
     def _is_food_at_position(self, position: Position) -> bool:
-        return self._worm_handler.is_position_nonempty(position) or self._plant_handler.alga_handler.is_position_nonempty(position)
+        return self._worm_handler.is_position_nonempty(position) or \
+               self._plant_handler.alga_handler.is_position_nonempty(position)
 
     def _is_predator_eating(self, fish: Fish) -> bool:
         return FishTrait.PREDATOR in fish.traits and len(self._fish_handler.get_spot_objects(fish.position)) > 1

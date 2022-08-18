@@ -23,6 +23,7 @@ class Statistics:
         self._engine = engine
 
         self._raw_data: list[list] = []
+        self._dataframe: pd.DataFrame = None
         self._plot_idx = 0
 
     def make_snapshot(self) -> None:

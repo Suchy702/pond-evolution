@@ -26,6 +26,7 @@ class GameEventType(EventType):
     QUIT = auto()
     SKIP = auto()
 
+
 @unique
 class ClickEventType(EventType):
     LEFT_CLICK = auto()

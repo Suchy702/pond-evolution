@@ -1,15 +1,14 @@
-from src.simulation_settings import SimulationSettings
-
 from src.constants import (
     CELL_MIN_PX_SIZE, CELL_MAX_PX_SIZE, START_ANIMATION_SPEED, MAX_ANIMATION_SPEED, MIN_ANIMATION_SPEED
 )
 from src.math import clip
+from src.simulation_settings import SimulationSettings
 
 
 class GraphicValuesGuard:
     def __init__(self, settings: SimulationSettings):
         self._settings = settings
-        self._cell_size: int = CELL_MIN_PX_SIZE  # length of cell's side in px. Cell is a square
+        self._cell_size: int = CELL_MIN_PX_SIZE  # Length of cell's side in px. Cell is a square.
         self._animation_speed: int = START_ANIMATION_SPEED
         self._x_offset: int = 0
         self._y_offset: int = 0
