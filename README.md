@@ -32,9 +32,11 @@ Make sure you have Python 3.10 or newer. Run the following command from **pond-e
 
 ## Running
 
-To start the program execute **main.py** file. E.g you can run this command from **pond-evolution** directory:
+To start the program execute **main.py** file. E.g you can run this command from **pond-evolution** directory or use run.sh script:
 
 ```python main.py```
+or
+```./run.sh```
 
 ## Usage
 
@@ -53,7 +55,7 @@ Here one can tweak parameters of the simulation. The current options include:
 - **Empty pond** - by default simulation starts with randomly spawned fish and plants. This settings turns it off
 - **No worms from heaven** - by default worms fall from top to ocean ground. This settings removes worms completely.
 - **No alga from hell** - by default alga makers will keep spawning algae. This settings removes algae completely.
-- **Trait penalty** - changes degree to which negative effects of size/speed/eyesight influences fish (see "Traits" section). 0 turns it off completely. Values higher that 200 are not advised unless you significalty increase energy value of alga and worms.
+- **Trait penalty** - changes degree to which negative effects of size/speed/eyesight influences fish (see "Traits" section). 0 turns it off completely. Values higher that 200 are not advised.
 - **Energy value** - defines how much energy fish gets when it eats alga or worm.
 
 When "Run simulations" is clicked new window is opened. This is where the simulation happens.
