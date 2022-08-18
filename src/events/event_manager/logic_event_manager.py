@@ -24,10 +24,10 @@ class LogicEventManager(EventManager):
 
     @overrides
     def handle_events(self) -> None:
-        cp_events = self._events.copy()
+        events_copy = self._events.copy()
         self._events.clear()
 
-        for event in cp_events:
+        for event in events_copy:
             if event.event_type == LogicEventType.ADD:
                 self._handle_add_event(event)
 
@@ -36,4 +36,4 @@ class LogicEventManager(EventManager):
         self._events.clear()
 
     def _handle_add_event(self, event: LogicEvent) -> None:
-        self._engine.add_obj_by_click(event)
+        self._engine.add_object_by_click(event)

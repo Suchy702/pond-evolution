@@ -30,15 +30,15 @@ class Engine:
     def cycle_count(self):
         return self._cycle_count
 
-    def objects_by_type(self, obj_type: ObjectKind) -> list[PondObject]:
-        return self._interactor.get_objects_by_type(obj_type)
+    def objects_by_type(self, object_type: ObjectKind) -> list[PondObject]:
+        return self._interactor.get_objects_by_type(object_type)
 
     def show_pond(self) -> None:
         board: list[list[list[str]]] = [
             [[] for _ in range(self._settings.pond_width)] for _ in range(self._settings.pond_height)
         ]
         for obj in self.all_objects:
-            board[obj.pos.y][obj.pos.x].append(str(obj))
+            board[obj.position.y][obj.position.x].append(str(obj))
         for row in board:
             print(row)
 
@@ -51,7 +51,7 @@ class Engine:
         if len(self.all_objects):
             self._cycle_count += 1
 
-    def add_obj_by_click(self, event: LogicEvent) -> None:
+    def add_object_by_click(self, event: LogicEvent) -> None:
         self._interactor.add_object_by_click(event)
 
     def get_dummy(self, dummy_type: DummyType) -> PondObject:

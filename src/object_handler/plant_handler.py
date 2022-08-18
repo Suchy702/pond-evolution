@@ -38,8 +38,8 @@ class PlantHandler(PondObjectHandlerBundler):
         self.alga_maker_handler.add_random(amount)
 
     @overrides
-    def get_spot_obj(self, pos: Position) -> set[PondObject]:
-        return self.alga_handler.get_spot_obj(pos) | self.alga_maker_handler.get_spot_obj(pos)
+    def get_spot_objects(self, position: Position) -> set[PondObject]:
+        return self.alga_handler.get_spot_objects(position) | self.alga_maker_handler.get_spot_objects(position)
 
     def _detach_algae_from_maker(self, maker: AlgaMaker) -> None:
         self.alga_handler.add_all(self.alga_maker_handler.create_algae(maker))

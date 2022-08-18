@@ -4,7 +4,8 @@ import tkinter as tk
 from tkinter import ttk
 
 from src.constants import (
-    CELL_MIN_PX_SIZE, SCREEN_DIMENSIONS, ALGA_DEFAULT_ENERGY_VALUE, WORM_DEFAULT_ENERGY_VALUE, ALGA_INTENSITY, WORM_INTENSITY
+    CELL_MIN_PX_SIZE, SCREEN_DIMENSIONS, ALGA_DEFAULT_ENERGY_VALUE, WORM_DEFAULT_ENERGY_VALUE, ALGA_INTENSITY,
+    WORM_INTENSITY
 )
 
 
@@ -14,6 +15,18 @@ class SimulationSettings:
         self._resolution_var: tk.StringVar = None
         self._fullscreen_var: tk.BooleanVar = None
         self._statistics_var: tk.BooleanVar = None
+        self._empty_pond_setting_var: tk.BooleanVar = None
+        self._no_alga_from_hell_var: tk.BooleanVar = None
+        self._no_worms_from_heaven_var: tk.BooleanVar = None
+        self._pond_height_var: tk.StringVar = None
+        self._pond_width_var: tk.StringVar = None
+        self._size_penalty_var: tk.StringVar = None
+        self._speed_penalty_var: tk.StringVar = None
+        self._eyesight_penalty_var: tk.StringVar = None
+        self._alga_energy_var: tk.StringVar = None
+        self._worm_energy_var: tk.StringVar = None
+        self._alga_intensity_var: tk.StringVar = None
+        self._worm_intensity_var: tk.StringVar = None
 
         self.fullscreen: bool = None
         self.statistics: bool = None
@@ -39,34 +52,16 @@ class SimulationSettings:
 
         self.finished_setup: bool = False
 
+    def get_user_settings(self) -> None:
+        self._root_setup()
+        self._add_buttons()
+        self._frame_configuration()
+        self._root.mainloop()
+
     def _root_setup(self) -> None:
         self._root = tk.Tk()
         self._root.title("Settings")
         self._root.geometry("700x400")
-
-    def _column_config(self) -> None:
-        self._root.columnconfigure(0, weight=1)
-        self._root.columnconfigure(1, weight=2)
-
-    def _row_config(self) -> None:
-        # There are a few rows with 2 widgets and two with 1 widget
-        for i in range((len(self._root.winfo_children())) // 2 + 1):
-            self._root.rowconfigure(i, weight=1)
-
-    def _grid_config(self) -> None:
-        for child in self._root.winfo_children():
-            child.grid_configure(padx=10)
-
-    def get_user_settings(self) -> None:
-        self._root_setup()
-        self._add_buttons()
-        self._surface_configuration()
-        self._root.mainloop()
-
-    def _surface_configuration(self) -> None:
-        self._column_config()
-        self._row_config()
-        self._grid_config()
 
     def _add_buttons(self) -> None:
         self._add_settings_buttons()
@@ -84,6 +79,24 @@ class SimulationSettings:
         self._add_traits_penalty_setting(7, 'Traits penalty (size / speed / eyesight)')
         self._add_energy_value_setting(8, 'Energy value (alga / worm)')
         self._add_intensity_setting(9, 'Intensity (alga / worm)')
+
+    def _frame_configuration(self) -> None:
+        self._configure_columns()
+        self._configure_rows()
+        self._add_padding()
+
+    def _configure_columns(self) -> None:
+        self._root.columnconfigure(0, weight=1)
+        self._root.columnconfigure(1, weight=2)
+
+    def _configure_rows(self) -> None:
+        # There are a few rows with 2 widgets and two with 1 widget
+        for i in range((len(self._root.winfo_children())) // 2 + 1):
+            self._root.rowconfigure(i, weight=1)
+
+    def _add_padding(self) -> None:
+        for child in self._root.winfo_children():
+            child.grid_configure(padx=10)
 
     def _add_error_prompt(self) -> None:
         self._error_msg_var = tk.StringVar()
@@ -211,8 +224,8 @@ class SimulationSettings:
 
     def _add_no_alga_from_hell_setting(self, row, text) -> None:
         tk.Label(self._root, text=f'{text}: ').grid(row=row, column=0, sticky='w')
-        self._no_alga_from_hell = tk.BooleanVar()
-        no_alga_from_hell = tk.Checkbutton(self._root, variable=self._no_alga_from_hell)
+        self._no_alga_from_hell_var = tk.BooleanVar()
+        no_alga_from_hell = tk.Checkbutton(self._root, variable=self._no_alga_from_hell_var)
         no_alga_from_hell.grid(row=row, column=1, sticky='we')
 
     def _apply_resolution(self) -> None:
@@ -227,91 +240,10 @@ class SimulationSettings:
         self._pond_width_var.set(str(self.screen_pond_width // CELL_MIN_PX_SIZE))
         self._pond_height_var.set(str(self.screen_pond_height // CELL_MIN_PX_SIZE))
 
-    def _get_user_choices(self) -> None:
-        self.fullscreen = self._fullscreen_var.get()
-        self.pond_width, self.pond_height = int(self._pond_width_var.get()), int(self._pond_height_var.get())
-        self.statistics = self._statistics_var.get()
-        self.empty_pond_setting = self._empty_pond_setting_var.get()
-        self.no_worms_from_heaven = self._no_worms_from_heaven_var.get()
-        self.no_alga_from_hell = self._no_alga_from_hell.get()
-        self.speed_penalty = int(self._speed_penalty_var.get())
-        self.size_penalty = int(self._size_penalty_var.get())
-        self.eyesight_penalty = int(self._eyesight_penalty_var.get())
-        self.alga_energy = int(self._alga_energy_var.get())
-        self.worm_energy = int(self._worm_energy_var.get())
-        self.alga_intensity = int(self._alga_intensity_var.get())
-        self.worm_intensity = int(self._worm_intensity_var.get())
-
     def _set_screen_dimensions(self) -> None:
         self.screen_pond_width = self.screen_width
         self.screen_pond_height = int(self.screen_height * 0.9)
         self.screen_pond_height -= self.screen_pond_height % CELL_MIN_PX_SIZE
-
-    def _validate_value_type(self) -> None:
-        should_be_int = [
-            self._pond_width_var.get(), self._pond_height_var.get(),
-            self._speed_penalty_var.get(), self._size_penalty_var.get(), self._eyesight_penalty_var.get(),
-            self._alga_energy_var.get(), self._worm_energy_var.get(),
-            self._alga_intensity_var.get(), self._worm_intensity_var.get()
-        ]
-
-        for val in should_be_int:
-            if not val.isdigit():
-                raise TypeError("Values must be non-negative integer!")
-
-    def _is_pond_dimensions_too_small(self) -> bool:
-        too_small_height = self.pond_height < self.screen_pond_height // CELL_MIN_PX_SIZE
-        too_small_widht = self.pond_width < self.screen_pond_width // CELL_MIN_PX_SIZE
-        return too_small_height or too_small_widht
-
-    def _is_pond_dimensions_too_big(self) -> bool:
-        return self.pond_height > 200 or self.pond_width > 200
-
-    def _exception_occurred(self, exception: Exception) -> None:
-        print(traceback.format_exc())
-        self._error_msg_var.set(str(exception))
-
-    def _validate_pond_size(self) -> None:
-        if self._is_pond_dimensions_too_small():
-            min_width = self.screen_pond_width // CELL_MIN_PX_SIZE
-            min_height = self.screen_pond_height // CELL_MIN_PX_SIZE
-            raise ValueError(f'Pond size must be bigger than {min_width}x{min_height}!')
-
-        if self._is_pond_dimensions_too_big():
-            raise ValueError("Pond size must be smaller than 200x200!")
-
-    def _is_traits_penalty_good(self) -> bool:
-        min_good = 0 <= min(self.speed_penalty, self.size_penalty, self.eyesight_penalty)
-        max_good = 200 >= max(self.speed_penalty, self.size_penalty, self.eyesight_penalty)
-        return min_good and max_good
-
-    def _validate_traits_penalty(self) -> None:
-        if not self._is_traits_penalty_good():
-            raise ValueError("Penalties must be in range [0, 200]!")
-
-    def _is_energy_vals_good(self) -> bool:
-        min_good = 0 <= min(self.alga_energy, self.worm_energy)
-        max_good = 200 >= max(self.alga_energy, self.worm_energy)
-        return min_good and max_good
-
-    def _validate_energy(self) -> None:
-        if not self._is_energy_vals_good():
-            raise ValueError("Energy values must be in range [0, 200]!")
-
-    def _is_intenisty_good(self) -> bool:
-        min_good = 1 <= min(self.alga_intensity, self.worm_intensity)
-        max_good = 20 >= max(self.alga_intensity, self.worm_intensity)
-        return min_good and max_good
-
-    def _validate_intensity(self) -> None:
-        if not self._is_intenisty_good():
-            raise ValueError("Intensity must be in range [1, 20]!")
-
-    def _validate_data(self) -> None:
-        self._validate_pond_size()
-        self._validate_traits_penalty()
-        self._validate_energy()
-        self._validate_intensity()
 
     def _apply_settings(self) -> None:
         try:
@@ -324,3 +256,84 @@ class SimulationSettings:
 
         self.finished_setup = True
         self._root.destroy()
+
+    def _validate_data(self) -> None:
+        self._validate_pond_size()
+        self._validate_traits_penalty()
+        self._validate_energy()
+        self._validate_intensity()
+
+    def _validate_value_type(self) -> None:
+        should_be_int = [
+            self._pond_width_var.get(), self._pond_height_var.get(),
+            self._speed_penalty_var.get(), self._size_penalty_var.get(), self._eyesight_penalty_var.get(),
+            self._alga_energy_var.get(), self._worm_energy_var.get(),
+            self._alga_intensity_var.get(), self._worm_intensity_var.get()
+        ]
+
+        for value in should_be_int:
+            if not value.isdigit():
+                raise TypeError("Values must be non-negative integer!")
+
+    def _get_user_choices(self) -> None:
+        self.fullscreen = self._fullscreen_var.get()
+        self.pond_width, self.pond_height = int(self._pond_width_var.get()), int(self._pond_height_var.get())
+        self.statistics = self._statistics_var.get()
+        self.empty_pond_setting = self._empty_pond_setting_var.get()
+        self.no_worms_from_heaven = self._no_worms_from_heaven_var.get()
+        self.no_alga_from_hell = self._no_alga_from_hell_var.get()
+        self.speed_penalty = int(self._speed_penalty_var.get())
+        self.size_penalty = int(self._size_penalty_var.get())
+        self.eyesight_penalty = int(self._eyesight_penalty_var.get())
+        self.alga_energy = int(self._alga_energy_var.get())
+        self.worm_energy = int(self._worm_energy_var.get())
+        self.alga_intensity = int(self._alga_intensity_var.get())
+        self.worm_intensity = int(self._worm_intensity_var.get())
+
+    def _validate_pond_size(self) -> None:
+        if self._is_pond_dimensions_too_small():
+            min_width = self.screen_pond_width // CELL_MIN_PX_SIZE
+            min_height = self.screen_pond_height // CELL_MIN_PX_SIZE
+            raise ValueError(f'Pond size must be bigger than {min_width}x{min_height}!')
+
+        if self._is_pond_dimensions_too_big():
+            raise ValueError("Pond size must be smaller than 200x200!")
+
+    def _is_pond_dimensions_too_small(self) -> bool:
+        too_small_height = self.pond_height < self.screen_pond_height // CELL_MIN_PX_SIZE
+        too_small_widht = self.pond_width < self.screen_pond_width // CELL_MIN_PX_SIZE
+        return too_small_height or too_small_widht
+
+    def _is_pond_dimensions_too_big(self) -> bool:
+        return self.pond_height > 200 or self.pond_width > 200
+
+    def _validate_traits_penalty(self) -> None:
+        if not self._is_traits_penalty_good():
+            raise ValueError("Penalties must be in range [0, 200]!")
+
+    def _is_traits_penalty_good(self) -> bool:
+        min_good = 0 <= min(self.speed_penalty, self.size_penalty, self.eyesight_penalty)
+        max_good = 200 >= max(self.speed_penalty, self.size_penalty, self.eyesight_penalty)
+        return min_good and max_good
+
+    def _validate_energy(self) -> None:
+        if not self._is_energy_vals_good():
+            raise ValueError("Energy values must be in range [0, 200]!")
+
+    def _is_energy_vals_good(self) -> bool:
+        min_good = 0 <= min(self.alga_energy, self.worm_energy)
+        max_good = 200 >= max(self.alga_energy, self.worm_energy)
+        return min_good and max_good
+
+    def _validate_intensity(self) -> None:
+        if not self._is_intenisty_good():
+            raise ValueError("Intensity must be in range [1, 20]!")
+
+    def _is_intenisty_good(self) -> bool:
+        min_good = 1 <= min(self.alga_intensity, self.worm_intensity)
+        max_good = 20 >= max(self.alga_intensity, self.worm_intensity)
+        return min_good and max_good
+
+    def _exception_occurred(self, exception: Exception) -> None:
+        print(traceback.format_exc())
+        self._error_msg_var.set(str(exception))

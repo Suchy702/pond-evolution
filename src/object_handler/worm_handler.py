@@ -31,9 +31,9 @@ class WormHandler(PondObjectHandlerHomogeneous):
 
     @overrides
     def create_random_single(self) -> PondObject:
-        pos = self._pond.random_position()
-        pos.y = 0
-        return Worm(self.settings.worm_energy, pos, self._pond.shape)
+        position = self._pond.random_position()
+        position.y = 0
+        return Worm(self.settings.worm_energy, position, self._pond.shape)
 
     def handle_decisions(self, decisions: DecisionSet):
         for decision in decisions[DecisionType.MOVE, ObjectKind.WORM]:
@@ -42,12 +42,12 @@ class WormHandler(PondObjectHandlerHomogeneous):
             self.add_worms()
 
     def move_worm(self, decision: Decision) -> None:
-        n_pos = self._pond.trim_position(Position(decision.to_y, decision.to_x))
-        self.event_emitter.emit_anim_move_event(decision, n_pos)
-        self._pond.change_position(decision.pond_object, n_pos)
+        new_position = self._pond.trim_position(Position(decision.to_y, decision.to_x))
+        self.event_emitter.emit_anim_move_event(decision, new_position)
+        self._pond.change_position(decision.pond_object, new_position)
 
-    def remove_worms_on_the_ground(self) -> None:
-        self.remove_all([worm for worm in self.worms if self._pond.is_on_ground(worm.pos)])
+    def remove_worms_on_ground(self) -> None:
+        self.remove_all([worm for worm in self.worms if self._pond.is_on_ground(worm.position)])
 
     def _choose_worm_amount(self):
         min_, max_ = self.settings.worm_intensity, int(self.settings.worm_intensity*1.5)

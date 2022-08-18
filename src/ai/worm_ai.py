@@ -21,7 +21,7 @@ class WormAI(AI["Worm"]):
     def _find_pos_to_move(self) -> Position:
         y = self.pond_object.falling_speed
         x = randint(-self.pond_object.bounce_ratio, self.pond_object.bounce_ratio)
-        return self.pond_object.pos.changed(y, x)
+        return self.pond_object.position.changed(y, x)
 
     def _movement_decision(self) -> Decision:
         pos_to_move = self._find_pos_to_move()

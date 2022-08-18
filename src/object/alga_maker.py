@@ -10,8 +10,8 @@ from src.position import Position
 
 
 class AlgaMaker(PondObject):
-    def __init__(self, pos: Position, pond_height: int):
-        super().__init__(ObjectKind.ALGA_MAKER, pos, AlgaMakerAI(self))
+    def __init__(self, position: Position, pond_height: int):
+        super().__init__(ObjectKind.ALGA_MAKER, position, AlgaMakerAI(self))
         self._pond_height: int = pond_height
 
     def create_algae(self, pond: Pond, intensity: int) -> list[Alga]:
@@ -25,4 +25,4 @@ class AlgaMaker(PondObject):
         return int(randint(intensity, int(intensity*1.5)))
 
     def _find_pos_to_create_alg(self) -> Position:
-        return self.pos.changed(1, randint(-1, 1))
+        return self.position.changed(1, randint(-1, 1))

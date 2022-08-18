@@ -22,7 +22,7 @@ class Statistics:
         self._settings = settings
         self._engine = engine
 
-        self._data_raw: list[list] = []
+        self._raw_data: list[list] = []
         self._plot_idx = 0
 
     def make_snapshot(self) -> None:
@@ -40,7 +40,7 @@ class Statistics:
             return
 
         self._dataframe: pd.DataFrame = pd.DataFrame(
-            self._data_raw,
+            self._raw_data,
             columns=['cycle', 'size', 'speed', 'eyesight', 'type', 'is_smart']
         )
         dtypes = {
@@ -57,21 +57,21 @@ class Statistics:
             'predator' if FishTrait.PREDATOR in fish.traits else fish.fish_type.name.lower(),
             FishTrait.SMART in fish.traits
         ]
-        self._data_raw.append(data)
+        self._raw_data.append(data)
 
     def _draw_plot(self) -> None:
-        self._draw_plot1()
-        self._draw_plot2()
+        self._draw_population_plot()
+        self._draw_traits_plot()
 
         plt.tight_layout()
         plt.show(block=True)
 
-    def _draw_plot1(self) -> None:
+    def _draw_population_plot(self) -> None:
         df = self._dataframe[['cycle', 'type', 'speed']].rename(columns={'speed': 'count'})
         df = df.groupby(['cycle', 'type']).count().astype('int32').reset_index()
 
         sns.relplot(x='cycle', y='count', hue='type', kind='line', ci=None, data=df)
 
-    def _draw_plot2(self) -> None:
+    def _draw_traits_plot(self) -> None:
         df = self._dataframe.melt(id_vars=['cycle', 'type'], value_vars=['size', 'speed', 'eyesight'])
         sns.displot(df, x='cycle', y='value', col='type', row='variable', cbar=True)

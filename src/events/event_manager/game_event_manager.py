@@ -23,10 +23,10 @@ class GameEventManager(EventManager):
         self._events.append(event)
 
     def handle_events(self) -> None:
-        cp_events = self._events.copy()
+        events_copy = self._events.copy()
         self._events.clear()
 
-        for event in cp_events:
+        for event in events_copy:
             self._handle_event(event)
 
     @overrides

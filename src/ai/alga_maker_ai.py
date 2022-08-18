@@ -24,7 +24,7 @@ class AlgaMakerAI(AI["AlgaMaker"]):
         return decisions
 
     def _movement_decision(self) -> Decision:
-        to_x, to_y = self.pond_object.pos.x, self.pond_object.pos.y
+        to_x, to_y = self.pond_object.position.x, self.pond_object.position.y
         return Decision(DecisionType.STAY, pond_object=self.pond_object, to_x=to_x, to_y=to_y)
 
     def _reproduce_decision(self) -> Optional[Decision]:

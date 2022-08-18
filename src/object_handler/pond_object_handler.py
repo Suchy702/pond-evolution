@@ -35,7 +35,7 @@ class PondObjectHandler(ABC):
         pass
 
     @abstractmethod
-    def get_spot_obj(self, pos: Position) -> set[PondObject]:
+    def get_spot_objects(self, position: Position) -> set[PondObject]:
         pass
 
     @property
@@ -45,8 +45,8 @@ class PondObjectHandler(ABC):
 
     def get_decisions(self, pond_viewer: PondViewer) -> Generator[DecisionSet, None, None]:
         decisions = DecisionSet()
-        for obj in self.objects:
-            decisions += obj.get_decisions(pond_viewer)
+        for object_ in self.objects:
+            decisions += object_.get_decisions(pond_viewer)
 
         yield decisions
 
@@ -77,28 +77,28 @@ class PondObjectHandlerHomogeneous(PondObjectHandler):
     def ponds(self) -> list[Pond]:
         return [self._pond]
 
-    def add(self, obj: PondObject) -> None:
-        self._object_database.add(obj)
-        self._pond.add(obj)
+    def add(self, object_: PondObject) -> None:
+        self._object_database.add(object_)
+        self._pond.add(object_)
 
-    def remove(self, obj: PondObject) -> None:
-        self._object_database.remove(obj)
-        self._pond.remove(obj)
+    def remove(self, object_: PondObject) -> None:
+        self._object_database.remove(object_)
+        self._pond.remove(object_)
 
     def add_all(self, objects: Iterable[PondObject]) -> None:
-        for obj in objects:
-            self.add(obj)
+        for object_ in objects:
+            self.add(object_)
 
     def remove_all(self, objects: Iterable[PondObject]) -> None:
-        for obj in objects:
-            self.remove(obj)
+        for object_ in objects:
+            self.remove(object_)
 
     @overrides
     def add_random(self, amount: int) -> None:
         self.add_all(self.create_random(amount))
 
     def create_random(self, amount: int) -> Generator[PondObject, None, None]:
-        for i in range(amount):
+        for _ in range(amount):
             yield self.create_random_single()
 
     @abstractmethod
@@ -106,16 +106,16 @@ class PondObjectHandlerHomogeneous(PondObjectHandler):
         pass
 
     @overrides
-    def get_spot_obj(self, pos: Position) -> set[PondObject]:
-        return self._pond.get_spot(pos)
+    def get_spot_objects(self, position: Position) -> set[PondObject]:
+        return self._pond.get_spot(position)
 
-    def get_spot_energy_val(self, pos: Position) -> int:
-        return sum([obj.energy_val for obj in self.get_spot_obj(pos)])
+    def get_spot_energy_value(self, pos: Position) -> int:
+        return sum([obj.energy_value for obj in self.get_spot_objects(pos)])
 
     def remove_at_spot(self, pos: Position) -> None:
         self.remove_all(list(self._pond.get_spot(pos)))
 
-    def is_sth_at_pos(self, pos) -> bool:
+    def is_position_nonempty(self, pos) -> bool:
         return len(self._pond.get_spot(pos)) > 0
 
 

@@ -59,18 +59,18 @@ class Interactor:
             self._handle_decisions(decisions)
 
     def feed_fish(self) -> None:
-        for pos in self._find_eating_spots():
-            self._eat_at_spot(pos)
+        for position in self._find_eating_spots():
+            self._eat_at_spot(position)
 
     def remove_unnecessary_objects(self) -> None:
         self._fish_handler.remove_dead_fish()
-        self._worm_handler.remove_worms_on_the_ground()
+        self._worm_handler.remove_worms_on_ground()
         self._plant_handler.alga_handler.remove_algae_on_surface()
 
     def add_object_by_click(self, event: LogicEvent) -> None:
-        event.obj.pos = event.pos
-        handler = self._dispatch_handler(event.obj.kind)
-        handler.add(event.obj)
+        event.pond_object.position = event.position
+        handler = self._dispatch_handler(event.pond_object.kind)
+        handler.add(event.pond_object)
 
     def get_dummy(self, dummy_type: DummyType) -> PondObject:
         dummy = self._get_non_fish_dummy(dummy_type)
@@ -78,8 +78,8 @@ class Interactor:
             return dummy
         return self._get_fish_dummy(dummy_type)
 
-    def get_objects_by_type(self, obj_type: ObjectKind) -> list[PondObject]:
-        return self._dispatch_handler(obj_type).objects
+    def get_objects_by_type(self, object_type: ObjectKind) -> list[PondObject]:
+        return self._dispatch_handler(object_type).objects
 
     def _get_decisions(self) -> Generator[tuple[DecisionSet, int], None, None]:
         for idx, (handler, ai_classes) in enumerate(zip(self.handlers, self.ai_classes)):
@@ -97,84 +97,88 @@ class Interactor:
     def _find_eating_spots(self) -> list[Position]:
         eating_spots = []
         for fish in self._fish_handler.fishes:
-            if self._is_food_at_position(fish.pos) or self._is_predator_eating(fish):
-                eating_spots.append(fish.pos)
+            if self._is_food_at_position(fish.position) or self._is_predator_eating(fish):
+                eating_spots.append(fish.position)
         return eating_spots
 
-    def _is_food_at_position(self, pos: Position) -> bool:
-        return self._worm_handler.is_sth_at_pos(pos) or self._plant_handler.alga_handler.is_sth_at_pos(pos)
+    def _is_food_at_position(self, position: Position) -> bool:
+        return self._worm_handler.is_position_nonempty(position) or self._plant_handler.alga_handler.is_position_nonempty(position)
 
     def _is_predator_eating(self, fish: Fish) -> bool:
-        return FishTrait.PREDATOR in fish.traits and len(self._fish_handler.get_spot_obj(fish.pos)) > 1
+        return FishTrait.PREDATOR in fish.traits and len(self._fish_handler.get_spot_objects(fish.position)) > 1
 
-    def _eat_at_spot(self, pos: Position) -> None:
-        self._eat_other_non_fish_at_spot(pos)
-        self._eat_other_fish_at_spot(pos)
+    def _eat_at_spot(self, position: Position) -> None:
+        self._eat_other_non_fish_at_spot(position)
+        self._eat_other_fish_at_spot(position)
 
-    def _eat_other_non_fish_at_spot(self, pos: Position) -> None:
+    def _eat_other_non_fish_at_spot(self, position: Position) -> None:
         self._update_fish_vitality(
-            pos, self._calc_worm_energy_distribution(pos), self._calc_algae_energy_distribution(pos)
+            position, self._get_worm_energy_distribution(position), self._get_alga_energy_distribution(position)
         )
-        self._remove_ate_objects(pos)
+        self._remove_eaten_objects(position)
 
-    def _eat_other_fish_at_spot(self, pos: Position) -> None:
-        fishes = self._get_fish_at_spot_in_order(pos)
+    def _eat_other_fish_at_spot(self, position: Position) -> None:
+        fishes = self._get_fish_at_spot_in_order(position)
 
         for i in range(len(fishes)):
             if self._can_predator_defend_himself(fishes[i]):
                 continue
 
-            cnt_bigger_predators = self._count_bigger_predators(i, fishes)
-            if cnt_bigger_predators == 0:
+            count_bigger_predators = self._count_bigger_predators(i, fishes)
+            if count_bigger_predators == 0:
                 continue
 
             fishes[i].is_eaten = True
-            self._feed_predators(i, cnt_bigger_predators, fishes)
+            self._feed_predators(i, count_bigger_predators, fishes)
 
-    def _count_fish_eating_specific_food(self, pos: Position, fish_types: list[FishType]) -> int:
-        cnt_fishes = 0
-        for fish in self._fish_handler.get_spot_obj(pos):
+    def _count_fish_eating_specific_food(self, position: Position, fish_types: list[FishType]) -> int:
+        count_fishes = 0
+        for fish in self._fish_handler.get_spot_objects(position):
             fish = cast(Fish, fish)
             if FishTrait.PREDATOR in fish.traits:
                 continue
             if fish.fish_type in fish_types:
-                cnt_fishes += 1
-        return cnt_fishes
+                count_fishes += 1
+        return count_fishes
 
-    def _calc_algae_energy_distribution(self, pos: Position) -> int:
-        algae_energy_val = self._plant_handler.alga_handler.get_spot_energy_val(pos)
-        cnt_fish_eating_algae = self._count_fish_eating_specific_food(pos, [FishType.OMNIVORE, FishType.HERBIVORE])
-        return 0 if cnt_fish_eating_algae == 0 else algae_energy_val // cnt_fish_eating_algae
+    def _get_alga_energy_distribution(self, position: Position) -> int:
+        algae_energy_value = self._plant_handler.alga_handler.get_spot_energy_value(position)
+        count_fish_eating_algae = self._count_fish_eating_specific_food(
+            position, [FishType.OMNIVORE, FishType.HERBIVORE]
+        )
+        return 0 if count_fish_eating_algae == 0 else algae_energy_value // count_fish_eating_algae
 
-    def _calc_worm_energy_distribution(self, pos: Position) -> int:
-        worm_energy_val = self._worm_handler.get_spot_energy_val(pos)
-        cnt_fish_eating_worms = self._count_fish_eating_specific_food(pos, [FishType.OMNIVORE, FishType.CARNIVORE])
-        return 0 if cnt_fish_eating_worms == 0 else worm_energy_val // cnt_fish_eating_worms
+    def _get_worm_energy_distribution(self, position: Position) -> int:
+        worm_energy_value = self._worm_handler.get_spot_energy_value(position)
+        count_fish_eating_worms = self._count_fish_eating_specific_food(
+            position, [FishType.OMNIVORE, FishType.CARNIVORE]
+        )
+        return 0 if count_fish_eating_worms == 0 else worm_energy_value // count_fish_eating_worms
 
-    def _update_fish_vitality(self, pos: Position, worm_eating_val: int, algae_eating_val: int) -> None:
-        for fish in self._fish_handler.get_spot_obj(pos):
+    def _update_fish_vitality(self, position: Position, worm_eating_value: int, alga_eating_value: int) -> None:
+        for fish in self._fish_handler.get_spot_objects(position):
             fish = cast(Fish, fish)
             if FishTrait.PREDATOR in fish.traits:
                 continue
             if fish.fish_type in [FishType.OMNIVORE, FishType.CARNIVORE]:
-                fish.vitality += worm_eating_val
+                fish.vitality += worm_eating_value
             if fish.fish_type in [FishType.OMNIVORE, FishType.HERBIVORE]:
-                fish.vitality += algae_eating_val
+                fish.vitality += alga_eating_value
 
-    def _remove_ate_objects(self, pos: Position) -> None:
-        self._worm_handler.remove_at_spot(pos)
-        self._plant_handler.alga_handler.remove_at_spot(pos)
+    def _remove_eaten_objects(self, position: Position) -> None:
+        self._worm_handler.remove_at_spot(position)
+        self._plant_handler.alga_handler.remove_at_spot(position)
 
-    def _get_fish_at_spot_in_order(self, pos: Position) -> list[Fish]:
-        fish = list(self._fish_handler.get_spot_obj(pos))
+    def _get_fish_at_spot_in_order(self, position: Position) -> list[Fish]:
+        fish = list(self._fish_handler.get_spot_objects(position))
         fish = cast(list[Fish], fish)
         fish.sort(key=functools.cmp_to_key(lambda a, b: a.size - b.size))  # type: ignore
         return fish
 
-    def _feed_predators(self, i: int, cnt_bigger_predators: int, fishes: list[Fish]) -> None:
+    def _feed_predators(self, i: int, count_bigger_predators: int, fishes: list[Fish]) -> None:
         for j in range(i + 1, len(fishes)):
             if self._can_fish_eat_other_fish(fishes[i], fishes[j]):
-                fishes[j].vitality += fishes[i].vitality // cnt_bigger_predators
+                fishes[j].vitality += fishes[i].vitality // count_bigger_predators
 
     @staticmethod
     def _can_fish_eat_other_fish(eaten_fish: Fish, other_fish: Fish) -> bool:

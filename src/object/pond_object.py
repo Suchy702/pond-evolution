@@ -13,16 +13,16 @@ if TYPE_CHECKING:
 
 
 class PondObject(ABC):
-    def __init__(self, obj_kind: ObjectKind, obj_pos: Position, ai: AI):
+    def __init__(self, object_kind: ObjectKind, position: Position, ai: AI):
         self._id: int = -1
-        self._kind: ObjectKind = obj_kind
-        self.pos: Position = obj_pos
-        self._energy_val: int = 0
+        self._kind: ObjectKind = object_kind
+        self.position: Position = position
+        self._energy_value: int = 0
         self.ai = ai
 
     @property
-    def energy_val(self) -> int:
-        return self._energy_val
+    def energy_value(self) -> int:
+        return self._energy_value
 
     @property
     def kind(self) -> ObjectKind:

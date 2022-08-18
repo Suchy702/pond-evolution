@@ -25,24 +25,24 @@ class Event(ABC, Generic[T]):
 
     def copy(self) -> Event:
         kwargs = {}
-        for attr in self.attributes:
-            if attr == 'event_type':
+        for attribute in self.attributes:
+            if attribute == 'event_type':
                 continue
-            kwargs[attr] = getattr(self, attr)
+            kwargs[attribute] = getattr(self, attribute)
 
         return self.__class__(self.event_type, **kwargs)
 
 
 class LogicEvent(Event[LogicEventType]):
-    def __init__(self, event_type: LogicEventType, obj: PondObject, pos: Position):
+    def __init__(self, event_type: LogicEventType, pond_object: PondObject, position: Position):
         super().__init__(event_type)
-        self.obj = obj
-        self.pos = pos
+        self.pond_object = pond_object
+        self.position = position
 
     @overrides
     def copy(self) -> LogicEvent:
-        cp = cast(LogicEvent, super().copy())
-        return cp
+        copy_ = cast(LogicEvent, super().copy())
+        return copy_
 
     def __str__(self):
         return f'LogicEvent({self.event_type.name})'
@@ -79,8 +79,8 @@ class GraphicEvent(Event[GraphicEventType]):
 
     @overrides
     def copy(self) -> GraphicEvent:
-        cp = cast(GraphicEvent, super().copy())
-        return cp
+        copy_ = cast(GraphicEvent, super().copy())
+        return copy_
 
     def should_make_next_step(self) -> bool:
         return self.step < self.total_steps
@@ -95,17 +95,17 @@ class GameEvent(Event[GameEventType]):
 
     @overrides
     def copy(self) -> GameEvent:
-        cp = cast(GameEvent, super().copy())
-        return cp
+        copy_ = cast(GameEvent, super().copy())
+        return copy_
 
     def __str__(self):
         return f'GameEvent({self.event_type.name})'
 
 
 class ClickEvent(Event[ClickEventType]):
-    def __init__(self, event_type: ClickEventType, pos: tuple[int, int]):
+    def __init__(self, event_type: ClickEventType, position: tuple[int, int]):
         super().__init__(event_type)
-        self.pos: tuple[int, int] = pos
+        self.position: tuple[int, int] = position
 
     def __str__(self):
         return f'ClickEvent({self.event_type.name})'

@@ -27,8 +27,8 @@ from src.position import Position
 
 
 class Fish(PondObject):
-    def __init__(self, speed: int, size: int, eyesight: int, pos: Position):
-        super().__init__(ObjectKind.FISH, pos, FishAI(self))
+    def __init__(self, speed: int, size: int, eyesight: int, position: Position):
+        super().__init__(ObjectKind.FISH, position, FishAI(self))
         self.fish_type: FishType = FishType.OMNIVORE
         self.traits: set[FishTrait] = set()
 
@@ -40,7 +40,7 @@ class Fish(PondObject):
         self.eyesight = eyesight
 
         self.vitality: int = self.speed + self.size
-        self.vitality_need_to_breed: int = self.vitality * FISH_NEED_MULTI_VITALITY_TO_BREED
+        self.reproduction_vitality: int = self.vitality * FISH_NEED_MULTI_VITALITY_TO_BREED
         self.is_eaten: bool = False
 
     @property
@@ -87,8 +87,8 @@ class Fish(PondObject):
     def is_alive(self) -> bool:
         return self.vitality > 0 and not self.is_eaten
 
-    def is_position_reachable(self, pos: Position) -> bool:
-        return abs(self.pos.x - pos.x) <= self.speed and abs(self.pos.y - pos.y) <= self.speed
+    def is_position_reachable(self, position: Position) -> bool:
+        return abs(self.position.x - position.x) <= self.speed and abs(self.position.y - position.y) <= self.speed
 
     def _reproduce(self) -> Fish:
         fish = self._make_child()
@@ -100,21 +100,21 @@ class Fish(PondObject):
         return fish
 
     def _make_child(self) -> Fish:
-        child_speed = self._calc_child_trait(self.speed)
-        child_size = self._calc_child_trait(self.size)
-        child_eyesight = self._calc_child_trait(self.eyesight)
+        child_speed = self._get_child_trait(self.speed)
+        child_size = self._get_child_trait(self.size)
+        child_eyesight = self._get_child_trait(self.eyesight)
 
-        fish = Fish(child_speed, child_size, child_eyesight, self.pos)
+        fish = Fish(child_speed, child_size, child_eyesight, self.position)
         fish.fish_type = self.fish_type
 
         return fish
 
-    def _calc_child_trait(self, parent_trait: int) -> int:
-        parent_trait_dev = self._calc_deviation(parent_trait)
+    def _get_child_trait(self, parent_trait: int) -> int:
+        parent_trait_dev = self._get_deviation(parent_trait)
         return parent_trait + randint(-parent_trait_dev, parent_trait_dev)
 
     @staticmethod
-    def _calc_deviation(val: int) -> int:
+    def _get_deviation(val: int) -> int:
         return val // EVOLUTION_DEVIATION_DIV
 
     @staticmethod

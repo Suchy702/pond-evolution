@@ -7,9 +7,6 @@ from src.constants import FISH_MAX_SIZE, FISH_MIN_SIZE, CELL_MAX_PX_SIZE, CELL_M
 
 
 class JITGraphicCalculator:
-    def __init__(self):
-        pass
-
     @staticmethod
     @jit(nopython=True)
     def is_not_linear_fun(x1: int, x2: int) -> bool:
@@ -51,14 +48,14 @@ class JITGraphicCalculator:
 
     @staticmethod
     @jit(nopython=True)
-    def get_stay_position(e_x: int, e_y: int, cell_size: int, x_off: int, y_off: int) -> tuple[int, int]:
+    def get_stay_animation_position(e_x: int, e_y: int, cell_size: int, x_off: int, y_off: int) -> tuple[int, int]:
         x = e_x * cell_size + x_off
         y = e_y * cell_size + y_off
         return x, y
 
     @staticmethod
     @jit(nopython=True)
-    def get_begin_point_of_animation(x: int, y: int, cell_size: int, x_off: int, y_off: int) -> tuple[int, int]:
+    def get_start_point_of_animation(x: int, y: int, cell_size: int, x_off: int, y_off: int) -> tuple[int, int]:
         x = x * cell_size + x_off
         y = y * cell_size + y_off
         return x, y
@@ -72,14 +69,14 @@ class JITGraphicCalculator:
 
     @staticmethod
     @jit(nopython=True)
-    def get_visible_grid_x_coordinates(x_off: int, cell_size: int, screen_pond_width: int) -> tuple[int, int]:
+    def get_visible_x_coordinates(x_off: int, cell_size: int, screen_pond_width: int) -> tuple[int, int]:
         x_min = int(ceil(-x_off / cell_size))
         x_max = (screen_pond_width - cell_size - x_off) // cell_size
         return x_min, x_max
 
     @staticmethod
     @jit(nopython=True)
-    def get_visible_grid_y_coordinates(y_off: int, cell_size: int, screen_pond_height: int) -> tuple[int, int]:
+    def get_visible_y_coordinates(y_off: int, cell_size: int, screen_pond_height: int) -> tuple[int, int]:
         y_min = int(ceil(-y_off / cell_size))
         y_max = (screen_pond_height - cell_size - y_off) // cell_size
         return y_min, y_max

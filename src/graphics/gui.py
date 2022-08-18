@@ -16,8 +16,8 @@ from src.simulation_settings import SimulationSettings
 class GUI:
     def __init__(self, settings: SimulationSettings, engine: Engine):
         self.settings: SimulationSettings = settings
-        self.vals: GraphicValuesGuard = GraphicValuesGuard(settings)
-        self.calcus: GraphicCalculator = GraphicCalculator(settings)
+        self.value_guard: GraphicValuesGuard = GraphicValuesGuard(settings)
+        self.calculator: GraphicCalculator = GraphicCalculator(settings)
 
         screen_flags = pygame.SCALED | pygame.FULLSCREEN if self.settings.fullscreen else 0
         screen_resolution = [self.settings.screen_width, self.settings.screen_height]
@@ -26,7 +26,7 @@ class GUI:
 
         self._event_emitter = EventEmitter()
 
-        self.user_panel = UserPanel(self.settings, self._screen, self.vals)
+        self.user_panel = UserPanel(self.settings, self._screen, self.value_guard)
 
         self._image_loader = ImageLoader(self.user_panel.square_dim)
 
@@ -40,35 +40,35 @@ class GUI:
         self.draw_pond_area()
 
     def draw_pond_area(self) -> None:
-        rect_width = self.settings.pond_width * self.vals.cell_size
-        rect_height = self.settings.pond_height * self.vals.cell_size
-        rect = pygame.Rect(self.vals.x_offset, self.vals.y_offset, rect_width, rect_height)
+        rect_width = self.settings.pond_width * self.value_guard.cell_size
+        rect_height = self.settings.pond_height * self.value_guard.cell_size
+        rect = pygame.Rect(self.value_guard.x_offset, self.value_guard.y_offset, rect_width, rect_height)
         pygame.draw.rect(self._screen, LIGHT_BLUE, rect, 0)
 
     def _is_visible_now(self, x, y) -> bool:
-        x_in: bool = 0 - self.vals.cell_size <= x <= self.settings.screen_pond_width + self.vals.cell_size
-        y_in: bool = 0 - self.vals.cell_size <= y <= self.settings.screen_pond_height + self.vals.cell_size
+        x_in: bool = 0 - self.value_guard.cell_size <= x <= self.settings.screen_pond_width + self.value_guard.cell_size
+        y_in: bool = 0 - self.value_guard.cell_size <= y <= self.settings.screen_pond_height + self.value_guard.cell_size
         return x_in and y_in
 
-    def draw_anim_event(self, event: GraphicEvent) -> None:
-        x, y = self.calcus.find_position_to_draw(event, self.vals)
+    def draw_animation_event(self, event: GraphicEvent) -> None:
+        x, y = self.calculator.get_animation_position(event, self.value_guard)
         if self._is_visible_now(x, y):
             self.draw_object(event, x, y)
 
     def center_view(self) -> None:
-        self.vals.x_offset, self.vals.y_offset = self.calcus.calculate_center_view(self.vals)
+        self.value_guard.x_offset, self.value_guard.y_offset = self.calculator.get_center_view_offset(self.value_guard)
 
     def zoom(self, change: int) -> None:
-        self.calcus.calculate_zoom(change, self.vals)
+        self.calculator.calculate_zoom(change, self.value_guard)
 
     def is_animation_finished(self) -> bool:
         return not self._event_emitter.is_animation_event_present()
 
     @staticmethod
-    def is_obj_fish(event: GraphicEvent) -> bool:
+    def is_event_for_fish(event: GraphicEvent) -> bool:
         return event.pond_object.kind == ObjectKind.FISH
 
-    def _get_reformed_image(self, event: GraphicEvent, size: int) -> Surface:
+    def _get_transformed_image(self, event: GraphicEvent, size: int) -> Surface:
         image = self._image_loader.get_object_image(event.pond_object, size)
         if event.is_flipped:
             image = pygame.transform.flip(image, True, False)
@@ -77,13 +77,18 @@ class GUI:
         return image
 
     def draw_object(self, event: GraphicEvent, x: int, y: int) -> None:
-        size = self.calcus.get_fish_size(event, self.vals) if self.is_obj_fish(event) else self.vals.cell_size
-        image = self._get_reformed_image(event, size)
-        x, y = self.calcus.center_position(x, y, self.vals, size)
+        if self.is_event_for_fish(event):
+            size =  self.calculator.get_fish_size(event, self.value_guard)
+        else:
+            size = self.value_guard.cell_size
+
+        image = self._get_transformed_image(event, size)
+        x, y = self.calculator.center_position(x, y, self.value_guard, size)
+
         self._screen.blit(image, (x, y))
 
-    def get_click_coor(self, click_pos: tuple[int, int]) -> tuple[int, int]:
-        return self.calcus.get_click_coordinate(click_pos, self.vals)
+    def get_click_coordinate(self, click_position: tuple[int, int]) -> tuple[int, int]:
+        return self.calculator.get_click_coordinate(click_position, self.value_guard)
 
     def hide_screen(self) -> None:
         self._screen = pygame.display.set_mode((0, 0), pygame.HIDDEN)

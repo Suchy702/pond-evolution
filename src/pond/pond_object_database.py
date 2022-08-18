@@ -14,16 +14,16 @@ class PondObjectDatabase:
     def size(self) -> int:
         return len(self._object_database)
 
-    def add(self, obj: PondObject) -> None:
-        if obj.id in self._object_database:
+    def add(self, object_: PondObject) -> None:
+        if object_.id in self._object_database:
             raise Exception("Object already in database!")
 
         self._id_counter += 1
-        obj.id = self._id_counter
-        self._object_database[obj.id] = obj
+        object_.id = self._id_counter
+        self._object_database[object_.id] = object_
 
-    def remove(self, obj: PondObject) -> None:
-        if obj.id not in self._object_database:
+    def remove(self, object_: PondObject) -> None:
+        if object_.id not in self._object_database:
             raise Exception("Object not in database!")
 
-        self._object_database.pop(obj.id)
+        self._object_database.pop(object_.id)

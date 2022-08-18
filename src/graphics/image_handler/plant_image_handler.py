@@ -9,13 +9,13 @@ from src.object.pond_object import PondObject
 
 
 class PlantImageHandler(DynamicImageHandler):
-    img_paths: ClassVar[list[str]] = ['seaweed.svg', 'alga.svg']
+    image_paths: ClassVar[list[str]] = ['seaweed.svg', 'alga.svg']
 
     @overrides
-    def _choose_image(self, obj: PondObject) -> str:
-        if isinstance(obj, Alga):
-            return self.img_paths[1]
-        elif isinstance(obj, AlgaMaker):
-            return self.img_paths[0]
+    def _choose_image(self, object_: PondObject) -> str:
+        if isinstance(object_, Alga):
+            return self.image_paths[1]
+        elif isinstance(object_, AlgaMaker):
+            return self.image_paths[0]
         else:
             raise Exception('Incorrect object type')

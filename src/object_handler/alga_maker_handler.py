@@ -31,9 +31,9 @@ class AlgaMakerHandler(PondObjectHandlerHomogeneous):
 
     @overrides
     def create_random_single(self) -> PondObject:
-        pos = self._pond.random_position()
-        pos.y = self._pond.height - 1
-        return AlgaMaker(pos, self._pond.height)
+        position = self._pond.random_position()
+        position.y = self._pond.height - 1
+        return AlgaMaker(position, self._pond.height)
 
     def create_algae(self, algae_maker: AlgaMaker) -> list[Alga]:
         return algae_maker.create_algae(self._pond, self.settings.alga_intensity)

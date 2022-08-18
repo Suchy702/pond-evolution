@@ -13,7 +13,7 @@ def pond(settings):
 
 def test_add(pond, pond_object):
     pond.add(pond_object)
-    assert pond_object in pond.get_spot(pond_object.pos)
+    assert pond_object in pond.get_spot(pond_object.position)
 
 
 def test_adding_same_obj_twice(pond, pond_object):
@@ -25,7 +25,7 @@ def test_adding_same_obj_twice(pond, pond_object):
 def test_remove(pond, pond_object):
     pond.add(pond_object)
     pond.remove(pond_object)
-    assert len(pond.get_spot(pond_object.pos)) == 0
+    assert len(pond.get_spot(pond_object.position)) == 0
 
 
 def test_removing_object_not_in_spot(pond, pond_object):

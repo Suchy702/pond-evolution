@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import  TYPE_CHECKING, Sequence
+from typing import TYPE_CHECKING, Sequence
 
 import pygame
 from pygame.locals import (  # type: ignore
@@ -72,7 +72,7 @@ class EventEmitter(metaclass=Singleton):
         self._logic_event_manager.handle_events()
 
     def is_animation_event_present(self) -> bool:
-        return self._graphic_event_manager.is_animation_event()
+        return self._graphic_event_manager.is_animation_event_present()
 
     def clear_gui_events(self) -> None:
         self._graphic_event_manager.clear()
@@ -82,13 +82,13 @@ class EventEmitter(metaclass=Singleton):
         self.emit_event(
             GraphicEvent(
                 GraphicEventType.ANIM_MOVE, pond_object=decision.pond_object,
-                from_x=decision.pond_object.pos.x, from_y=decision.pond_object.pos.y,
+                from_x=decision.pond_object.position.x, from_y=decision.pond_object.position.y,
                 to_x=n_pos.x, to_y=n_pos.y
             )
         )
 
     def emit_anim_stay_event(self, decision: Decision) -> None:
-        x, y = decision.pond_object.pos.x, decision.pond_object.pos.y
+        x, y = decision.pond_object.position.x, decision.pond_object.position.y
         self.emit_event(GraphicEvent(GraphicEventType.ANIM_STAY, pond_object=decision.pond_object, x=x, y=y))
 
     def _emit_pygame_events(self) -> None:

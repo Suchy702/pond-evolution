@@ -28,4 +28,4 @@ def test_detach_algae_from_maker(plant_handler):
 def test_get_spot_object(plant_handler):
     plant_handler.alga_handler.add(Alga(10, Position(0, 3), 5))
     plant_handler.alga_maker_handler.add(AlgaMaker(Position(0, 3), 5))
-    assert len(plant_handler.get_spot_obj(Position(0, 3))) == 2
+    assert len(plant_handler.get_spot_objects(Position(0, 3))) == 2

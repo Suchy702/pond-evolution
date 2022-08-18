@@ -30,10 +30,10 @@ class ClickingEventManager(EventManager):
 
     @overrides
     def handle_events(self) -> None:
-        cp_events = self._events.copy()
+        events_copy = self._events.copy()
         self._events.clear()
 
-        for event in cp_events:
+        for event in events_copy:
             if event.event_type == ClickEventType.LEFT_CLICK:
                 self._handle_add_event(event)
 
@@ -42,11 +42,11 @@ class ClickingEventManager(EventManager):
         self._events.clear()
 
     def _handle_add_event(self, event: ClickEvent) -> None:
-        if not self._is_clicked_on_pond(event.pos[0], event.pos[1]):
+        if not self._is_clicked_on_pond(event.position[0], event.position[1]):
             return
 
         dummy = self._gui.user_panel.get_dummy()
-        click_coor = self._gui.get_click_coor(event.pos)
+        click_coor = self._gui.get_click_coordinate(event.position)
 
         if self._is_alga(dummy) and self._is_clicked_on_bottom(click_coor[1]):
             return

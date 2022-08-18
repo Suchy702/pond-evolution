@@ -6,11 +6,7 @@ from src.position import Position
 
 
 class Alga(PondObject):
-    def __init__(self, energy_val: int, pos: Position, pond_height: int):
-        super().__init__(ObjectKind.ALGA, pos, AlgaAI(self))
-        self._energy_val: int = energy_val
+    def __init__(self, energy_value: int, position: Position, pond_height: int):
+        super().__init__(ObjectKind.ALGA, position, AlgaAI(self))
+        self._energy_value = energy_value
         self.surfacing_speed: int = max(1, pond_height // ALGA_SURFACING_STEPS)
-
-    @property
-    def energy_val(self) -> int:
-        return self._energy_val

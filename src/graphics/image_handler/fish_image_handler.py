@@ -9,22 +9,22 @@ from src.object.pond_object import PondObject
 
 
 class FishImageHandler(DynamicImageHandler):
-    img_paths: ClassVar[list[str]] = [
+    image_paths: ClassVar[list[str]] = [
         'carnivore_fish.svg', 'herbivore_fish.svg', 'omnivore_fish.svg', 'predator_fish.svg'
     ]
 
     @overrides
-    def _choose_image(self, obj: PondObject) -> str:
-        fish = cast(Fish, obj)
+    def _choose_image(self, object_: PondObject) -> str:
+        fish = cast(Fish, object_)
         if FishTrait.PREDATOR in fish.traits:
-            return self.img_paths[3]
+            return self.image_paths[3]
 
         match fish.fish_type.name:
             case 'CARNIVORE':
-                return self.img_paths[0]
+                return self.image_paths[0]
             case 'HERBIVORE':
-                return self.img_paths[1]
+                return self.image_paths[1]
             case 'OMNIVORE':
-                return self.img_paths[2]
+                return self.image_paths[2]
             case _:
                 raise Exception

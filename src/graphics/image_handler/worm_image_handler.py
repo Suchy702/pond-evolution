@@ -7,8 +7,8 @@ from src.object.pond_object import PondObject
 
 
 class WormImageHandler(DynamicImageHandler):
-    img_paths: ClassVar[list[str]] = ['worm.svg']
+    image_paths: ClassVar[list[str]] = ['worm.svg']
 
     @overrides
-    def _choose_image(self, obj: PondObject) -> str:
-        return self.img_paths[0]
+    def _choose_image(self, object_: PondObject) -> str:
+        return self.image_paths[0]

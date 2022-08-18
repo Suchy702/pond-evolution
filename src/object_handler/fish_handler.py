@@ -47,7 +47,7 @@ class FishHandler(PondObjectHandlerHomogeneous):
 
     @overrides
     def get_decisions(self, pond_viewer: PondViewer) -> Generator[DecisionSet, None, None]:
-        sorted_fish = sorted(self.fishes, key=functools.cmp_to_key(self._cmp_by_movement_order))
+        sorted_fish = sorted(self.fishes, key=functools.cmp_to_key(self._compare_by_movement_order))
 
         for key, group in itertools.groupby(sorted_fish, lambda f: FishTrait.PREDATOR in f.traits):
             decisions = DecisionSet()
@@ -66,10 +66,10 @@ class FishHandler(PondObjectHandlerHomogeneous):
 
     def move_fish(self, decision: Decision) -> None:
         fish = cast(Fish, decision.pond_object)
-        n_pos = self._special_trim(decision.to_x, decision.to_y)
-        self.event_emitter.emit_anim_move_event(decision, n_pos)
+        new_position = self._trim_without_ground_level(decision.to_x, decision.to_y)
+        self.event_emitter.emit_anim_move_event(decision, new_position)
         fish.spoil_vitality(self.settings.size_penalty, self.settings.speed_penalty)
-        self._pond.change_position(fish, n_pos)
+        self._pond.change_position(fish, new_position)
 
     def reproduce(self, fish: Fish) -> None:
         self.add_all(fish.reproduce())
@@ -85,14 +85,14 @@ class FishHandler(PondObjectHandlerHomogeneous):
         return Fish(speed, size, eyesight, self._pond.random_position())
 
     @staticmethod
-    def _cmp_by_movement_order(a: Fish, b: Fish):
-        # predators move last
+    def _compare_by_movement_order(a: Fish, b: Fish):
+        # Predators move last.
         return (FishTrait.PREDATOR in a.traits) - (FishTrait.PREDATOR in b.traits)
 
-    def _special_trim(self, x, y):
-        n_pos = self._pond.trim_position(Position(y, x))
-        n_pos.y = min(n_pos.y, self._pond.height-2)
-        return n_pos
+    def _trim_without_ground_level(self, x, y):
+        new_position = self._pond.trim_position(Position(y, x))
+        new_position.y = min(new_position.y, self._pond.height-2)
+        return new_position
 
     @staticmethod
     def _is_getting_smart_trait() -> bool:
@@ -108,4 +108,3 @@ class FishHandler(PondObjectHandlerHomogeneous):
 
         if self._is_getting_predator_trait():
             fish.add_predator_trait()
-

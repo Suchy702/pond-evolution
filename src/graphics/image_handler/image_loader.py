@@ -18,13 +18,13 @@ class ImageLoader:
         self.plant_image_handler: PlantImageHandler = PlantImageHandler()
         self.ui_image_handler: UIImageHandler = UIImageHandler(static_size)
 
-    def get_object_image(self, obj: PondObject, size: int) -> Surface:
-        if isinstance(obj, Fish):
-            return self.fish_image_handler.get_object_image(obj, size)
-        elif isinstance(obj, Worm):
-            return self.worm_image_handler.get_object_image(obj, size)
-        elif isinstance(obj, Alga) or isinstance(obj, AlgaMaker):
-            return self.plant_image_handler.get_object_image(obj, size)
+    def get_object_image(self, object_: PondObject, size: int) -> Surface:
+        if isinstance(object_, Fish):
+            return self.fish_image_handler.get_object_image(object_, size)
+        elif isinstance(object_, Worm):
+            return self.worm_image_handler.get_object_image(object_, size)
+        elif isinstance(object_, Alga) or isinstance(object_, AlgaMaker):
+            return self.plant_image_handler.get_object_image(object_, size)
         else:
             raise Exception("Unknown object type")
 

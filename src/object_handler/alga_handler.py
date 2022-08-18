@@ -24,17 +24,17 @@ class AlgaHandler(PondObjectHandlerHomogeneous):
 
     @overrides
     def create_random_single(self) -> PondObject:
-        pos = self._pond.random_position()
-        return Alga(self.settings.alga_energy, pos, self._pond.height)
+        position = self._pond.random_position()
+        return Alga(self.settings.alga_energy, position, self._pond.height)
 
     def handle_decisions(self, decisions: DecisionSet) -> None:
         for decision in decisions[DecisionType.MOVE, ObjectKind.ALGA]:
             self.move_alga(decision)
 
     def move_alga(self, decision: Decision) -> None:
-        n_pos = self._pond.trim_position(Position(decision.to_y, decision.to_x))
-        self.event_emitter.emit_anim_move_event(decision, n_pos)
-        self._pond.change_position(decision.pond_object, n_pos)
+        new_position = self._pond.trim_position(Position(decision.to_y, decision.to_x))
+        self.event_emitter.emit_anim_move_event(decision, new_position)
+        self._pond.change_position(decision.pond_object, new_position)
 
     def remove_algae_on_surface(self) -> None:
-        self.remove_all([alga for alga in self.algae if self._pond.is_on_surface(alga.pos)])
+        self.remove_all([alga for alga in self.algae if self._pond.is_on_surface(alga.position)])

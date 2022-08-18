@@ -19,6 +19,6 @@ def test_kill_worms_on_ground(worm_handler):
     w4 = get_object(ObjectKind.WORM, pos=Position(4, 2))
 
     worm_handler.add_all([w1, w2, w3, w4])
-    worm_handler.remove_worms_on_the_ground()
+    worm_handler.remove_worms_on_ground()
 
     assert worm_handler._object_database.size == 1
