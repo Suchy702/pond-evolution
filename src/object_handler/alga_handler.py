@@ -2,7 +2,6 @@ from typing import cast
 
 from overrides import overrides
 
-from src.constants import ALGA_ENERGY_VALUE
 from src.decision.decision import Decision
 from src.decision.decision_set import DecisionSet
 from src.decision.decision_type import DecisionType
@@ -19,8 +18,9 @@ class AlgaHandler(PondObjectHandlerHomogeneous):
         super().__init__(settings)
 
     @property
-    def algae(self):
-        return [cast(Alga, alga) for alga in self.objects]
+    def algae(self) -> list[Alga]:
+        objects = cast(list[Alga], self.objects)
+        return objects
 
     @overrides
     def create_random_single(self) -> PondObject:

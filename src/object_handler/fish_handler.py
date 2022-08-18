@@ -35,7 +35,8 @@ class FishHandler(PondObjectHandlerHomogeneous):
 
     @property
     def fishes(self) -> list[Fish]:
-        return [cast(Fish, fish) for fish in self.objects]
+        objects = cast(list[Fish], self.objects)
+        return objects
 
     @staticmethod
     def _is_getting_smart_trait() -> bool:

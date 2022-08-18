@@ -47,7 +47,7 @@ class PondViewer:
         """
 
         def filter_(obj: PondObject) -> bool:
-            fish = cast("Fish", obj)
+            fish = cast(Fish, obj)
             return all(trait in traits for trait in fish.traits)
 
         for fish_layer in self.get_visible_objects_by_type(pos, eyesight, [ObjectKind.FISH], False):

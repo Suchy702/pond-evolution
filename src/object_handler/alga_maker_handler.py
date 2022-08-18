@@ -18,8 +18,9 @@ class AlgaMakerHandler(PondObjectHandlerHomogeneous):
         super().__init__(settings)
 
     @property
-    def alga_makers(self):
-        return [cast(AlgaMaker, alga_maker) for alga_maker in self.objects]
+    def alga_makers(self) -> list[AlgaMaker]:
+        objects = cast(list[AlgaMaker], self.objects)
+        return objects
 
     def handle_decisions(self, decisions: DecisionSet):
         for decision in decisions[DecisionType.STAY, ObjectKind.ALGA_MAKER]:
