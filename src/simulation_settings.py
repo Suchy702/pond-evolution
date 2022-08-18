@@ -1,3 +1,5 @@
+import traceback
+
 import tkinter as tk
 from tkinter import ttk
 
@@ -32,8 +34,6 @@ class SimulationSettings:
 
         self.finished_setup: bool = False
 
-        self._exception = False
-
     def _root_setup(self) -> None:
         self._root = tk.Tk()
         self._root.title("Settings")
@@ -44,8 +44,8 @@ class SimulationSettings:
         self._root.columnconfigure(1, weight=2)
 
     def _row_config(self) -> None:
-        # There are a few rows with 2 widgets and one with 1 widget
-        for i in range((len(self._root.winfo_children()) + 1) // 2):
+        # There are a few rows with 2 widgets and two with 1 widget
+        for i in range((len(self._root.winfo_children())) // 2 + 1):
             self._root.rowconfigure(i, weight=1)
 
     def _grid_config(self) -> None:
@@ -65,6 +65,7 @@ class SimulationSettings:
 
     def _add_buttons(self) -> None:
         self._add_settings_buttons()
+        self._add_error_prompt()
         self._add_run_simulation_button()
 
     def _add_settings_buttons(self) -> None:
@@ -78,8 +79,12 @@ class SimulationSettings:
         self._add_traits_penalty_setting(7, 'Traits penalty (size / speed / eyesight)')
         self._add_energy_value_setting(8, 'Energy value (alga / worm)')
 
+    def _add_error_prompt(self) -> None:
+        self._error_msg_var = tk.StringVar()
+        tk.Label(self._root, fg='red', textvariable=self._error_msg_var).grid(row=9, column=0, columnspan=2)
+
     def _add_run_simulation_button(self) -> None:
-        tk.Button(self._root, text="Run simulation", command=self._apply_settings).grid(row=9, column=0, columnspan=2)
+        tk.Button(self._root, text="Run simulation", command=self._apply_settings).grid(row=10, column=0, columnspan=2)
 
     def _add_resolution_setting(self, row: int, text: str) -> None:
         tk.Label(self._root, text=f'{text}: ').grid(row=row, column=0, sticky='w')
@@ -215,7 +220,7 @@ class SimulationSettings:
         self.screen_pond_height = int(self.screen_height * 0.9)
         self.screen_pond_height -= self.screen_pond_height % CELL_MIN_PX_SIZE
 
-    def _catch_no_digit_exception(self) -> None:
+    def _validate_value_type(self) -> None:
         should_be_int = [
             self._pond_width_var.get(), self._pond_height_var.get(),
             self._speed_penalty_var.get(), self._size_penalty_var.get(), self._eyesight_penalty_var.get(),
@@ -224,7 +229,7 @@ class SimulationSettings:
 
         for val in should_be_int:
             if not val.isdigit():
-                self._exception_occurred("Wartości muszą być dodatnimi liczbami całkowitymi!")
+                raise TypeError("Values must be nonnegative integer!")
 
     def _is_pond_dimensions_too_small(self) -> bool:
         too_small_height = self.pond_height < self.screen_pond_height // CELL_MIN_PX_SIZE
@@ -234,60 +239,50 @@ class SimulationSettings:
     def _is_pond_dimensions_too_big(self) -> bool:
         return self.pond_height > 200 or self.pond_width > 200
 
-    def _exception_occurred(self, text: str) -> None:
-        print(text)
-        self._exception = True
+    def _exception_occurred(self, exception: Exception) -> None:
+        print(traceback.format_exc())
+        self._error_msg_var.set(str(exception))
 
-    def _catch_pond_exceptions(self) -> None:
+    def _validate_pond_size(self) -> None:
         if self._is_pond_dimensions_too_small():
-            self._exception_occurred("Zbyt male wymiary stawu!")
-            return
+            min_width = self.screen_pond_width // CELL_MIN_PX_SIZE
+            min_height = self.screen_pond_height // CELL_MIN_PX_SIZE
+            raise ValueError(f'Pond size must be bigger than {min_width}x{min_height}!')
 
         if self._is_pond_dimensions_too_big():
-            self._exception_occurred("Zbyt duze wymiary stawu!")
-            return
+            raise ValueError("Pond size must be smaller than 200x200!")
 
     def _is_traits_penalty_good(self) -> bool:
-        min_good = 1 <= min(self.speed_penalty, self.size_penalty, self.eyesight_penalty)
-        max_good = 100 >= max(self.speed_penalty, self.size_penalty, self.eyesight_penalty)
+        min_good = 0 <= min(self.speed_penalty, self.size_penalty, self.eyesight_penalty)
+        max_good = 200 >= max(self.speed_penalty, self.size_penalty, self.eyesight_penalty)
         return min_good and max_good
 
-    def _catch_traits_penalty_exceptions(self) -> None:
+    def _validate_traits_penalty(self) -> None:
         if not self._is_traits_penalty_good():
-            self._exception_occurred("Nieodpowiendie wartości kar!")
-            return
+            raise ValueError("Penalties must be in range [0, 200]!")
 
     def _is_energy_vals_good(self) -> bool:
-        min_good = 1 <= min(self.alga_energy, self.worm_energy)
+        min_good = 0 <= min(self.alga_energy, self.worm_energy)
         max_good = 200 >= max(self.alga_energy, self.worm_energy)
         return min_good and max_good
 
-    def _catch_energy_exceptions(self) -> None:
+    def _validate_energy(self) -> None:
         if not self._is_energy_vals_good():
-            self._exception_occurred("Nieodpowiednie wartości eenrgi!")
-            return
+            raise ValueError("Energy values must be in range [0, 200]!")
 
-    def _catch_exceptions(self) -> None:
-        self._catch_pond_exceptions()
-        if self._exception:
-            return
-        self._catch_traits_penalty_exceptions()
-        if self._exception:
-            return
-        self._catch_energy_exceptions()
-        if self._exception:
-            return
+    def _validate_data(self) -> None:
+        self._validate_value_type()
+        self._validate_pond_size()
+        self._validate_traits_penalty()
+        self._validate_energy()
 
     def _apply_settings(self) -> None:
-        self._exception = False
-        self._catch_no_digit_exception()
-        if self._exception:
-            return
-
         self._get_user_choices()
 
-        self._catch_exceptions()
-        if self._exception:
+        try:
+            self._validate_data()
+        except Exception as e:
+            self._exception_occurred(e)
             return
 
         self.finished_setup = True
