@@ -1,4 +1,6 @@
-from typing import cast
+from __future__ import annotations
+
+from typing import cast, TYPE_CHECKING
 
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -8,7 +10,9 @@ from src.logic.engine import Engine
 from src.object.fish import Fish
 from src.object.fish_trait import FishTrait
 from src.object.object_kind import ObjectKind
-from src.simulation_settings import SimulationSettings
+
+if TYPE_CHECKING:
+    from src.simulation_settings import SimulationSettings
 
 sns.set_theme(style="darkgrid")
 

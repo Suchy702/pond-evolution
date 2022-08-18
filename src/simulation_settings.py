@@ -3,7 +3,9 @@ import traceback
 import tkinter as tk
 from tkinter import ttk
 
-from src.constants import CELL_MIN_PX_SIZE, SCREEN_DIMENSIONS, ALGA_ENERGY_VALUE, WORM_ENERGY_VALUE
+from src.constants import (
+    CELL_MIN_PX_SIZE, SCREEN_DIMENSIONS, ALGA_ENERGY_VALUE, WORM_ENERGY_VALUE, ALGA_INTENSITY, WORM_INTENSITY
+)
 
 
 class SimulationSettings:
@@ -22,6 +24,9 @@ class SimulationSettings:
 
         self.alga_energy: int = None
         self.worm_energy: int = None
+
+        self.alga_intensity: int = None
+        self.worm_intensity: int = None
 
         self.screen_width: int = None
         self.screen_height: int = None
@@ -78,13 +83,14 @@ class SimulationSettings:
         self._add_no_alga_from_hell_setting(6, 'No alga from hell')
         self._add_traits_penalty_setting(7, 'Traits penalty (size / speed / eyesight)')
         self._add_energy_value_setting(8, 'Energy value (alga / worm)')
+        self._add_intensity_setting(9, 'Intensity (alga / worm)')
 
     def _add_error_prompt(self) -> None:
         self._error_msg_var = tk.StringVar()
-        tk.Label(self._root, fg='red', textvariable=self._error_msg_var).grid(row=9, column=0, columnspan=2)
+        tk.Label(self._root, fg='red', textvariable=self._error_msg_var).grid(row=10, column=0, columnspan=2)
 
     def _add_run_simulation_button(self) -> None:
-        tk.Button(self._root, text="Run simulation", command=self._apply_settings).grid(row=10, column=0, columnspan=2)
+        tk.Button(self._root, text="Run simulation", command=self._apply_settings).grid(row=11, column=0, columnspan=2)
 
     def _add_resolution_setting(self, row: int, text: str) -> None:
         tk.Label(self._root, text=f'{text}: ').grid(row=row, column=0, sticky='w')
@@ -166,6 +172,25 @@ class SimulationSettings:
         alga_energy.grid(row=0, column=0, sticky='w')
         worm_energy.grid(row=0, column=2, sticky='e')
 
+    def _add_intensity_setting(self, row: int, text: str) -> None:
+        tk.Label(self._root, text=f'{text}: ').grid(row=row, column=0, sticky='w')
+
+        spinbox_frame = tk.Frame(self._root)
+        spinbox_frame.grid(row=row, column=1, sticky='nswe')
+
+        spinbox_frame.rowconfigure(0, weight=1)
+
+        for i in range(3):
+            spinbox_frame.columnconfigure(i, weight=1)
+
+        self._alga_intensity_var, self._worm_intensity_var = tk.StringVar(), tk.StringVar()
+        self._alga_intensity_var.set(value=str(ALGA_INTENSITY))
+        self._worm_intensity_var.set(value=str(WORM_INTENSITY))
+        alga_intensity = tk.Spinbox(spinbox_frame, from_=1, to=20, width=8, textvariable=self._alga_intensity_var)
+        worm_intensity = tk.Spinbox(spinbox_frame, from_=1, to=20, width=8, textvariable=self._worm_intensity_var)
+        alga_intensity.grid(row=0, column=0, sticky='w')
+        worm_intensity.grid(row=0, column=2, sticky='e')
+
     def _add_statistics_setting(self, row: int, text: str) -> None:
         tk.Label(self._root, text=f'{text}: ').grid(row=row, column=0, sticky='w')
         self._statistics_var = tk.BooleanVar()
@@ -214,6 +239,8 @@ class SimulationSettings:
         self.eyesight_penalty = int(self._eyesight_penalty_var.get())
         self.alga_energy = int(self._alga_energy_var.get())
         self.worm_energy = int(self._worm_energy_var.get())
+        self.alga_intensity = int(self._alga_intensity_var.get())
+        self.worm_intensity = int(self._worm_intensity_var.get())
 
     def _set_screen_dimensions(self) -> None:
         self.screen_pond_width = self.screen_width
@@ -225,11 +252,12 @@ class SimulationSettings:
             self._pond_width_var.get(), self._pond_height_var.get(),
             self._speed_penalty_var.get(), self._size_penalty_var.get(), self._eyesight_penalty_var.get(),
             self._alga_energy_var.get(), self._worm_energy_var.get(),
+            self._alga_intensity_var.get(), self._worm_intensity_var.get()
         ]
 
         for val in should_be_int:
             if not val.isdigit():
-                raise TypeError("Values must be nonnegative integer!")
+                raise TypeError("Values must be non-negative integer!")
 
     def _is_pond_dimensions_too_small(self) -> bool:
         too_small_height = self.pond_height < self.screen_pond_height // CELL_MIN_PX_SIZE
@@ -270,10 +298,20 @@ class SimulationSettings:
         if not self._is_energy_vals_good():
             raise ValueError("Energy values must be in range [0, 200]!")
 
+    def _is_intenisty_good(self) -> bool:
+        min_good = 1 <= min(self.alga_intensity, self.worm_intensity)
+        max_good = 20 >= max(self.alga_intensity, self.worm_intensity)
+        return min_good and max_good
+
+    def _validate_intensity(self) -> None:
+        if not self._is_intenisty_good():
+            raise ValueError("Intensity must be in range [1, 20]!")
+
     def _validate_data(self) -> None:
         self._validate_pond_size()
         self._validate_traits_penalty()
         self._validate_energy()
+        self._validate_intensity()
 
     def _apply_settings(self) -> None:
         try:

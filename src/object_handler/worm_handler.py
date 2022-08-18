@@ -1,3 +1,4 @@
+from random import randint
 from typing import cast
 
 from overrides import overrides
@@ -41,9 +42,13 @@ class WormHandler(PondObjectHandlerHomogeneous):
         self.event_emitter.emit_anim_move_event(decision, n_pos)
         self._pond.change_position(decision.pond_object, n_pos)
 
+    def _choose_worm_amount(self):
+        min_, max_ = self.settings.worm_intensity, int(self.settings.worm_intensity*1.5)
+        return randint(min_, max_)
+
     def add_worms(self) -> None:
         if self.worms_from_heaven:
-            self.add_all([self.create_random_single() for _ in range(NUM_OF_NEW_WORMS_AT_CYCLE)])
+            self.add_all([self.create_random_single() for _ in range(self._choose_worm_amount())])
 
     def remove_worms_on_the_ground(self) -> None:
         self.remove_all([worm for worm in self.worms if self._pond.is_on_ground(worm.pos)])

@@ -36,4 +36,4 @@ class AlgaMakerHandler(PondObjectHandlerHomogeneous):
         return AlgaMaker(pos, self._pond.height)
 
     def create_algae(self, algae_maker: AlgaMaker) -> list[Alga]:
-        return algae_maker.create_algae(self._pond)
+        return algae_maker.create_algae(self._pond, self.settings.alga_intensity)

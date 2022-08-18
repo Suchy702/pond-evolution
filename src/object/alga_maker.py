@@ -18,11 +18,11 @@ class AlgaMaker(PondObject):
         return Alga(ALGA_ENERGY_VALUE, pond.trim_position(self._find_pos_to_create_alg()), self._pond_height)
 
     @staticmethod
-    def choose_algae_amount() -> int:
-        return int(randint(MIN_ALGAE_TO_CREATE, MAX_ALGAE_TO_CREATE))
+    def choose_algae_amount(intensity: int) -> int:
+        return int(randint(intensity, int(intensity*1.5)))
 
-    def create_algae(self, pond: Pond) -> list[Alga]:
-        return [self.create_alga(pond) for _ in range(self.choose_algae_amount())]
+    def create_algae(self, pond: Pond, intensity: int) -> list[Alga]:
+        return [self.create_alga(pond) for _ in range(self.choose_algae_amount(intensity))]
 
     def _find_pos_to_create_alg(self) -> Position:
         return self.pos.changed(1, randint(-1, 1))
