@@ -1,3 +1,5 @@
+import os
+
 import pygame
 from pygame import Rect
 from pygame.font import Font
@@ -23,6 +25,7 @@ from src.object.pond_object import PondObject
 from src.simulation_settings import SimulationSettings
 
 pygame.font.init()
+FONT_PATH = os.path.join('resources', 'font', 'Ubuntu-M.ttf')
 
 
 class UserPanel:
@@ -45,7 +48,7 @@ class UserPanel:
         self._adding_object_list: list[DummyType] = list(DummyType)
         self._adding_object_idx: int = 0
 
-        self._font: Font = pygame.font.SysFont("Comic Sans MS", int(self._square_dim * TEXT_SIZE_SQUARE_DIM_RATIO))
+        self._font: Font = pygame.font.Font(FONT_PATH, int(self._square_dim * TEXT_SIZE_SQUARE_DIM_RATIO))
 
     @property
     def square_dim(self) -> int:
