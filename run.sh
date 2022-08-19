@@ -6,4 +6,4 @@ if [[ ! -e installed ]]; then
     touch installed
 fi
 
-python main.py &> /dev/null
+python main.py > /dev/null
