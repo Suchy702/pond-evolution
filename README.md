@@ -24,19 +24,13 @@ A simple yet estetic program that simulates wild life deep beneath the ocean flo
   <img src="https://github.com/Suchy702/pond-evolution/blob/master/resources/demo/demo3.gif" alt="demo" width="720px"/>
 </p>
 
-## Installation
-
-Make sure you have Python 3.10 or newer. Run the following command from **pond-evolution** directory:
-
-```pip install -r requirements.txt```
-
 ## Running
 
-To start the program execute **main.py** file. E.g you can run this command from **pond-evolution** directory or use run.sh script:
-
-```python main.py```
-or
-```./run.sh```
+Make sure you have python3.10 or newer installed.
+To start the program execute **run_for_linux.sh** or **run_for_windows.bat** depending on which OS is being used. Alternatively run the following command from **pond-evolution** directory:
+```
+python main.py
+```
 
 ## Usage
 
