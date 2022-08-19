@@ -42,11 +42,11 @@ Upon start of the program user is greeted with the following window:
 
 Here one can tweak parameters of the simulation. The current options include:
 
-- **Resolution** - defines resolution of the simulation and window size (unless fullscreen mode is selected)
-- **Full screen mode** - defines whether or not program should be run in fullscreen mode. Program will be rendered in previously selected resolution and then scaled to fit user's screen
+- **Resolution** - defines resolution of the simulation and window size (unless fullscreen mode is selected).
+- **Full screen mode** - defines whether or not program should be run in fullscreen mode. Program will be rendered in previously selected resolution and then scaled to fit user's screen.
 - **Pond size** - size of pond in which simulation takes place. Default value depends on selected resolution and guarantees that whole pond is visible without any need to move camera.
-- **Show statistics** - after simulation ends various graphs can be shown to represent how the number of fish and their traits varied with respect to time
-- **Empty pond** - by default simulation starts with randomly spawned fish and plants. This settings turns it off
+- **Show statistics** - after simulation ends various graphs can be shown to represent how the number of fish and their traits varied with respect to time.
+- **Empty pond** - by default simulation starts with randomly spawned fish and plants. This settings turns it off.
 - **No worms from heaven** - by default worms fall from top to ocean ground. This settings removes worms completely.
 - **No alga from hell** - by default alga makers will keep spawning algae. This settings removes algae completely.
 - **Trait penalty** - changes degree to which negative effects of size/speed/eyesight influences fish (see "Traits" section). 0 turns it off completely. Values higher that 200 are not advised.
