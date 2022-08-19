@@ -40,7 +40,7 @@ class Statistics:
         if not self._settings.statistics:
             return
 
-        self._dataframe: pd.DataFrame = pd.DataFrame(
+        self._dataframe = pd.DataFrame(
             self._raw_data,
             columns=['cycle', 'size', 'speed', 'eyesight', 'type', 'is_smart']
         )
