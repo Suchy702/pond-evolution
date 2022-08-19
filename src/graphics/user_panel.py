@@ -12,10 +12,7 @@ from src.constants import (
     BLACK,
     GRAY,
     EDGE_UI_HEIGHT_RATIO,
-    TEXT_SIZE_SQUARE_DIM_RATIO,
-    TEXT_CENTER_CORRECT_SQUARE_DIM_RATIO,
-    X_TEXT_CENTER_SQUARE_DIM_RATIO,
-    Y_TEXT_CENTER_SQUARE_DIM_RATIO,
+    TEXT_SIZE_RATIO,
     TEXT_Y_OFFSET_RATIO
 )
 from src.graphics.graphic_values_guard import GraphicValuesGuard
@@ -49,7 +46,7 @@ class UserPanel:
         self._adding_object_list: list[DummyType] = list(DummyType)
         self._adding_object_idx: int = 0
 
-        self._font_size = int(self._square_dim * TEXT_SIZE_SQUARE_DIM_RATIO)
+        self._font_size = int(self._square_dim * TEXT_SIZE_RATIO)
         self._font: Font = pygame.font.Font(FONT_PATH, self._font_size)
 
     @property
@@ -99,20 +96,22 @@ class UserPanel:
     def _draw_square(self, x: int, name: str) -> None:
         self._screen.blit(self.image_loader.get_ui_image(name), self._get_rect(x))
 
-    def _get_rect(self, x: int) -> Rect:
-        return pygame.Rect(x, self._square_up, self._square_dim, self._square_dim)
-
-    def _calc_text_rendering_pos(self, x: int) -> tuple[int, int]:
-        correct = (len(str(self.engine.cycle_count)) - 1) * self._square_dim * TEXT_CENTER_CORRECT_SQUARE_DIM_RATIO
-        x_pos = x + int(self._square_dim * X_TEXT_CENTER_SQUARE_DIM_RATIO - correct)
-        y_pos_offset = (self._ui_height - self._font_size) // 2 + self._ui_height * TEXT_Y_OFFSET_RATIO
-        y_pos = self._settings.screen_pond_height + y_pos_offset
-        return x_pos, y_pos
-
-    def _render_cycles_count_text(self, x: int) -> None:
-        text_surface = self._font.render(str(self.engine.cycle_count), True, BLACK)
-        self._screen.blit(text_surface, self._calc_text_rendering_pos(x))
-
     def _draw_cycle_square(self, x: int) -> None:
         self._draw_square(x, "panel_11")
         self._render_cycles_count_text(x)
+
+    def _get_rect(self, x: int) -> Rect:
+        return pygame.Rect(x, self._square_up, self._square_dim, self._square_dim)
+
+    def _render_cycles_count_text(self, x: int) -> None:
+        text_surface = self._font.render(str(self.engine.cycle_count), True, BLACK)
+        text_height = int(self._ui_height * TEXT_SIZE_RATIO)
+        text_width = int(text_height / text_surface.get_height() * text_surface.get_width())
+        text_surface = pygame.transform.scale(text_surface, (text_width, text_height))
+        self._screen.blit(text_surface, self._get_cycles_counter_position(x, text_surface))
+
+    def _get_cycles_counter_position(self, x: int, text_surface: Surface) -> tuple[int, int]:
+        y_offset = int(self._ui_height * TEXT_Y_OFFSET_RATIO) + (self._ui_height - text_surface.get_height()) // 2
+        y_pos = self._settings.screen_pond_height + y_offset
+        x_pos = x + (self._square_dim - text_surface.get_width()) // 2
+        return x_pos, y_pos
