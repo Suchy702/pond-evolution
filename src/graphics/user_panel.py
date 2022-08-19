@@ -16,6 +16,7 @@ from src.constants import (
     TEXT_CENTER_CORRECT_SQUARE_DIM_RATIO,
     X_TEXT_CENTER_SQUARE_DIM_RATIO,
     Y_TEXT_CENTER_SQUARE_DIM_RATIO,
+    TEXT_Y_OFFSET_RATIO
 )
 from src.graphics.graphic_values_guard import GraphicValuesGuard
 from src.graphics.image_handler.image_loader import ImageLoader
@@ -48,7 +49,8 @@ class UserPanel:
         self._adding_object_list: list[DummyType] = list(DummyType)
         self._adding_object_idx: int = 0
 
-        self._font: Font = pygame.font.Font(FONT_PATH, int(self._square_dim * TEXT_SIZE_SQUARE_DIM_RATIO))
+        self._font_size = int(self._square_dim * TEXT_SIZE_SQUARE_DIM_RATIO)
+        self._font: Font = pygame.font.Font(FONT_PATH, self._font_size)
 
     @property
     def square_dim(self) -> int:
@@ -103,7 +105,8 @@ class UserPanel:
     def _calc_text_rendering_pos(self, x: int) -> tuple[int, int]:
         correct = (len(str(self.engine.cycle_count)) - 1) * self._square_dim * TEXT_CENTER_CORRECT_SQUARE_DIM_RATIO
         x_pos = x + int(self._square_dim * X_TEXT_CENTER_SQUARE_DIM_RATIO - correct)
-        y_pos = self._settings.screen_pond_height + int(self._ui_height*Y_TEXT_CENTER_SQUARE_DIM_RATIO)
+        y_pos_offset = (self._ui_height - self._font_size) // 2 + self._ui_height * TEXT_Y_OFFSET_RATIO
+        y_pos = self._settings.screen_pond_height + y_pos_offset
         return x_pos, y_pos
 
     def _render_cycles_count_text(self, x: int) -> None:
