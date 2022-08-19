@@ -23,5 +23,5 @@ echo "Creating environment..."
 virtualenv --python="$(which python3.10)" "venv"
 source venv/bin/activate
 echo "Installing development packages..."
-python3.10 -m pip install -r config/requirements_dev.txt
+python3.10 -m pip install -r requirements_dev.txt
 echo "Configuration done"
