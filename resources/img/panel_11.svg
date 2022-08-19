@@ -4,10 +4,10 @@
 <svg
    width="400"
    height="400"
-   viewBox="0 0 105.83333 105.83333"
+   viewBox="0 0 400 400"
    version="1.1"
    id="svg5"
-   inkscape:version="1.2.1 (ef4d3fba62, 2022-07-19, custom)"
+   inkscape:version="1.2.1 (9c6d41e410, 2022-07-14)"
    sodipodi:docname="panel_11.svg"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
@@ -25,12 +25,12 @@
      inkscape:document-units="mm"
      showgrid="true"
      inkscape:zoom="1.9099422"
-     inkscape:cx="312.83669"
-     inkscape:cy="151.31348"
+     inkscape:cx="296.34405"
+     inkscape:cy="151.83706"
      inkscape:window-width="1920"
-     inkscape:window-height="1013"
-     inkscape:window-x="0"
-     inkscape:window-y="30"
+     inkscape:window-height="1057"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
      inkscape:window-maximized="1"
      inkscape:current-layer="layer1">
     <inkscape:grid
@@ -45,7 +45,7 @@
        x="1.862012"
        y="6.633348"
        width="883.79102"
-       height="259.25642"
+       height="259.25641"
        id="rect3915" />
     <rect
        x="186.06348"
@@ -93,7 +93,7 @@
        style="font-size:192px;font-family:KacstDecorative;-inkscape-font-specification:KacstDecorative;white-space:pre;shape-inside:url(#rect2393);fill:#000000" />
     <g
        aria-label="cycle:"
-       transform="matrix(0.26458333,0,0,0.26458333,2.4117271,-4.8817315)"
+       transform="matrix(1.0460872,0,0,1.0460872,-2.0838606,-23.090331)"
        id="text3913"
        style="font-size:133.333px;font-family:KacstDecorative;-inkscape-font-specification:KacstDecorative;white-space:pre;shape-inside:url(#rect3915)">
       <path
