@@ -46,8 +46,8 @@ class GUI:
         pygame.draw.rect(self._screen, LIGHT_BLUE, rect, 0)
 
     def _is_visible_now(self, x, y) -> bool:
-        x_in: bool = 0 - self.value_guard.cell_size <= x <= self.settings.screen_pond_width + self.value_guard.cell_size
-        y_in: bool = 0 - self.value_guard.cell_size <= y <= self.settings.screen_pond_height + self.value_guard.cell_size
+        x_in = -self.value_guard.cell_size <= x <= self.settings.screen_pond_width + self.value_guard.cell_size
+        y_in = -self.value_guard.cell_size <= y <= self.settings.screen_pond_height + self.value_guard.cell_size
         return x_in and y_in
 
     def draw_animation_event(self, event: GraphicEvent) -> None:
@@ -78,7 +78,7 @@ class GUI:
 
     def draw_object(self, event: GraphicEvent, x: int, y: int) -> None:
         if self.is_event_for_fish(event):
-            size =  self.calculator.get_fish_size(event, self.value_guard)
+            size = self.calculator.get_fish_size(event, self.value_guard)
         else:
             size = self.value_guard.cell_size
 
