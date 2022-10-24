@@ -62,17 +62,17 @@ class PondObjectHandlerHomogeneous(PondObjectHandler):
         self._object_database: PondObjectDatabase = PondObjectDatabase()
         self.event_emitter: EventEmitter = event_emitter
 
-    @property  # type: ignore
+    @property
     @overrides
     def size(self) -> int:
         return self._object_database.size
 
-    @property  # type: ignore
+    @property
     @overrides
     def objects(self) -> list[PondObject]:
         return self._object_database.objects
 
-    @property  # type: ignore
+    @property
     @overrides
     def ponds(self) -> list[Pond]:
         return [self._pond]
@@ -124,17 +124,17 @@ class PondObjectHandlerBundler(PondObjectHandler):
         super().__init__(settings)
         self._handlers: list[PondObjectHandlerHomogeneous] = []
 
-    @property  # type: ignore
+    @property
     @overrides
     def size(self) -> int:
         return reduce(lambda acc, h: acc + h.size, self._handlers, 0)
 
-    @property  # type: ignore
+    @property
     @overrides
     def objects(self) -> list[PondObject]:
         return reduce(lambda list_, handler: list_ + handler.objects, self._handlers, [])
 
-    @property  # type: ignore
+    @property
     @overrides
     def ponds(self) -> list[Pond]:
         return reduce(lambda list_, handler: list_ + handler.ponds, self._handlers, [])
