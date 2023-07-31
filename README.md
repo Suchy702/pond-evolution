@@ -15,6 +15,7 @@
 ![license](https://img.shields.io/github/license/Suchy702/pond-evolution?colorA=192330&colorB=c70039&style=for-the-badge)
 ![status](https://img.shields.io/badge/status-finished-green?colorA=192330&colorB=00e600&style=for-the-badge)
 ![python](https://img.shields.io/badge/python-3.10-blue?colorA=192330&colorB=309cdd&style=for-the-badge)
+![python](https://img.shields.io/badge/python-3.10-blue?colorA=192330&colorB=309cdd&style=for-the-badge)
 ![issues](https://img.shields.io/github/issues-raw/Suchy702/pond-evolution?colorA=192330&style=for-the-badge)
 ![build](https://img.shields.io/github/workflow/status/Suchy702/pond-evolution/test_pond_evolution/master?colorA=192330&style=for-the-badge)
 
