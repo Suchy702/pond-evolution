@@ -45,7 +45,7 @@ class GUI:
         rect = pygame.Rect(self.value_guard.x_offset, self.value_guard.y_offset, rect_width, rect_height)
         pygame.draw.rect(self._screen, LIGHT_BLUE, rect, 0)
 
-    def _is_visible_now(self, x, y) -> bool:
+    def _is_visible_now(self, x: int, y: int) -> bool:
         x_in = -self.value_guard.cell_size <= x <= self.settings.screen_pond_width + self.value_guard.cell_size
         y_in = -self.value_guard.cell_size <= y <= self.settings.screen_pond_height + self.value_guard.cell_size
         return x_in and y_in
